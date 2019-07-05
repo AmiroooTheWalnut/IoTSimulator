@@ -3,24 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/MetricManager.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/GUI/GeneratedDataPanel.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/GUI/MainFrame.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/GUI/CSVDataPanel.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/GUI/SimulatorSetupDialog.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/IOTSimulator.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/Structure/Topology.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/Structure/Device.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/SolutionStorageManager.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/TriggerMonitor.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/Structure/TopologyLevel.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/GUI/SetupSensorDataDialog.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/Optimizer.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/TimeController.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/TopologyDefinition.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/Structure/Metric.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/GUI/SetupTopologyDialog.java</file>
-            <file>file:/F:/My_software_develops/IOTSimulationIBM/IOTSimulator/src/iotsimulator/TriggerPredictor.java</file>
+            <file>file:/F:/My_software_develops/IOTSimulationIBM/IoTSimulator/src/iotsimulator/GUI/SetupSimulatorDialog.java</file>
+            <file>file:/F:/My_software_develops/IOTSimulationIBM/IoTSimulator/src/iotsimulator/GUI/MainFrame.java</file>
         </group>
     </open-files>
 </project-private>

@@ -19,11 +19,20 @@ public class Metric implements Serializable{
     public String name;
     int columnIndex=-1;
     String columnName=null;
-    int frequency=1;//IN SECONDS
+    public double frequency=1;//IN SECONDS
     
     public boolean isAssigned=false;
     
+    public double memoryUsageForActivity=1;
+    public double cPUUsageForActivity=1;
+    public double storageUsageForActivity=1;
+    public double bandwidthUsageForEachTransmit=-1;
+    public double memoryUsageForEachTransmit=-1;
+    public double cPUUsageForEachTransmit=-1;
+    public double storageUsageForTransmit=-1;
+    
     ArrayList<Double> predictionBuffer=new ArrayList();
+    ArrayList<Double> interpolationBuffer=new ArrayList();
     
     public Metric(int passed_columnIndex,String passed_columnName)
     {

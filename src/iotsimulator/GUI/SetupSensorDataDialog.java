@@ -113,14 +113,12 @@ public class SetupSensorDataDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
-        // TODO add your handling code here:
         jPanel2.removeAll();
         jPanel2.add(cSVDataPanel);
         jPanel2.repaint();
     }//GEN-LAST:event_jRadioButton2ActionPerformed
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
-        // TODO add your handling code here:
         jPanel2.removeAll();
         jPanel2.add(generatedDataPanel);
         jPanel2.repaint();
@@ -140,7 +138,7 @@ public class SetupSensorDataDialog extends javax.swing.JDialog {
             {
                 parent.iOTSimulator.metricManager.selectedMetrics.add(parent.iOTSimulator.metricManager.availableMetrics.get(i));
             }
-            System.out.println(cSVDataPanel.buttonGroup2.getSelection().getActionCommand());
+            parent.iOTSimulator.metricManager.timeType=cSVDataPanel.buttonGroup1.getSelection().getActionCommand();
             parent.iOTSimulator.metricManager.smallestTimeScale=cSVDataPanel.buttonGroup2.getSelection().getActionCommand();
         }
         this.setVisible(false);

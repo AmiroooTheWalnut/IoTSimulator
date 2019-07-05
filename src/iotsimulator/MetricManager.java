@@ -29,7 +29,7 @@ public class MetricManager implements Serializable{
     public String smallestTimeScale;
     public String timeType;
     
-    public void getMetricValue(Metric metric,int currentTime)
+    public void getMetricValue(Metric metric,int nearestPassedReordTime,int requestedTime)
     {
         
     }

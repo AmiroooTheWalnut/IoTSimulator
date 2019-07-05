@@ -21,10 +21,10 @@ public class Device implements Serializable{
     public Device child;
     public int parentDeviceIndex=-1;
     public ArrayList<Metric> metrics=new ArrayList();
-    public double bandWidthCapacity=1;
-    public double memoryCapacity=1;
-    public double storageCapacity=1;
-    public double CPUCapacity=1;
+    public double bandWidthCapacity=10;
+    public double memoryCapacity=10;
+    public double storageCapacity=10;
+    public double CPUCapacity=10;
     public int metricIndices[];
     
 }

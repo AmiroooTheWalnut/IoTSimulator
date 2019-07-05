@@ -18,6 +18,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     SetupSensorDataDialog setupSensorDataDialog;
     SetupTopologyDialog setupTopologyDialog;
+    SetupSimulatorDialog simulatorSetupDialog;
+    SimulationRunDialog simulationRunDialog;
     IOTSimulator iOTSimulator;
     
     /**
@@ -34,6 +36,7 @@ public class MainFrame extends javax.swing.JFrame {
     {
         setupSensorDataDialog=new SetupSensorDataDialog(this,true);
         setupTopologyDialog=new SetupTopologyDialog(this,true);
+        simulatorSetupDialog=new SetupSimulatorDialog(this,true);
         /**UNDER CONSTRUCTION
         * IT SHOULD BE AUTO-FILLED IF A PROJECT IS LOADED.
         */
@@ -86,6 +89,11 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         jButton4.setText("Run simulation");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Load kryo");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -195,17 +203,15 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         setupSensorDataDialog.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        setupTopologyDialog.refreshDialog();
         setupTopologyDialog.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
         JFileChooser fc_save = new JFileChooser();
         fc_save.setAcceptAllFileFilterUsed(false);
         int returnVal = fc_save.showSaveDialog(this);
@@ -220,7 +226,6 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
         JFileChooser jFileChooser1 = new javax.swing.JFileChooser();
         jFileChooser1.setAcceptAllFileFilterUsed(false);
         int returnVal = jFileChooser1.showOpenDialog(this);
@@ -230,7 +235,6 @@ public class MainFrame extends javax.swing.JFrame {
             if (file_name.lastIndexOf(".") != -1) {
                 file_name = file_name.substring(0, file_name.lastIndexOf("."));
             }
-
             final String passed_file_name = file_name;
             Thread readThread = new Thread(new Runnable() {
                 @Override
@@ -249,7 +253,6 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
         JFileChooser fc_save = new JFileChooser();
         fc_save.setAcceptAllFileFilterUsed(false);
         int returnVal = fc_save.showSaveDialog(this);
@@ -258,12 +261,12 @@ public class MainFrame extends javax.swing.JFrame {
             try {
                 iOTSimulator.saveSerializable(save_file_path);
             } catch (Exception ex) {
+                
             }
         }
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        // TODO add your handling code here:
         JFileChooser jFileChooser1 = new javax.swing.JFileChooser();
         jFileChooser1.setAcceptAllFileFilterUsed(false);
         int returnVal = jFileChooser1.showOpenDialog(this);
@@ -292,11 +295,15 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        
+        simulatorSetupDialog.refreshDialog();
+        simulatorSetupDialog.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        simulationRunDialog=new SimulationRunDialog(this,true);
+        simulationRunDialog.setVisible(true);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     
     /**
      * @param args the command line arguments

@@ -28,8 +28,7 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
         initComponents();
         parent=(MainFrame)passed_parent;
         
-        refreshTopologyLayerList();
-        refreshDevicesList();
+        refreshDialog();
         
         jList4.setSelectionModel(new DefaultListSelectionModel() {
             @Override
@@ -92,7 +91,12 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                 }
             }
         });
-        
+    }
+    
+    public void refreshDialog()
+    {
+        refreshTopologyLayerList();
+        refreshDevicesList();
     }
 
     /**
@@ -159,6 +163,12 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
 
         jLabel2.setText("Name:");
 
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextField1KeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -217,6 +227,12 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
 
         jLabel4.setText("Device name:");
 
+        jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextField2KeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -259,18 +275,38 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
         jLabel5.setText("Bandwidth (KB/s):");
 
         jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        jFormattedTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jFormattedTextField1KeyPressed(evt);
+            }
+        });
 
         jLabel6.setText("Memory (MB):");
 
         jFormattedTextField2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        jFormattedTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jFormattedTextField2KeyPressed(evt);
+            }
+        });
 
         jLabel7.setText("Storage (MB):");
 
         jFormattedTextField3.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        jFormattedTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jFormattedTextField3KeyPressed(evt);
+            }
+        });
 
         jLabel8.setText("CPU (Ghz):");
 
         jFormattedTextField4.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        jFormattedTextField4.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jFormattedTextField4KeyPressed(evt);
+            }
+        });
 
         jLabel9.setText("Parent device:");
 
@@ -372,7 +408,6 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jSpinner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner1StateChanged
-        // TODO add your handling code here:
         int numCurrentTopologyLevels=parent.iOTSimulator.topologyDefinition.topology.topologyLevels.size();
         int targetTopologyLevels=(int)jSpinner1.getValue();
         if(targetTopologyLevels>numCurrentTopologyLevels)
@@ -395,7 +430,6 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jSpinner1StateChanged
 
     private void jSpinner2StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner2StateChanged
-        // TODO add your handling code here:
         int topologySelectionLevel=jList1.getSelectedIndex();
         if(topologySelectionLevel>-1)
         {
@@ -417,7 +451,6 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jSpinner2StateChanged
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-        // TODO add your handling code here:
         int topologySelectionLevel=jList1.getSelectedIndex();
         if(topologySelectionLevel>-1)
         {
@@ -427,7 +460,6 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jList1ValueChanged
 
     private void jList2ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList2ValueChanged
-        // TODO add your handling code here:
         int topologySelectionLevel=jList1.getSelectedIndex();
         int deviceSelection=jList2.getSelectedIndex();
         if (deviceSelection > -1) {
@@ -490,7 +522,6 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jList2ValueChanged
 
     private void jList4ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList4ValueChanged
-        // TODO add your handling code here:
         int selectedIndices[] = jList4.getSelectedIndices();
         int topologySelectionLevel = jList1.getSelectedIndex();
         int deviceSelection = jList2.getSelectedIndex();
@@ -513,7 +544,6 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jList4ValueChanged
 
     private void jList3ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList3ValueChanged
-        // TODO add your handling code here:
         int topologySelectionLevel=jList1.getSelectedIndex()-1;
         int deviceSelection = jList2.getSelectedIndex();
         int selectedParentIndex=jList3.getSelectedIndex();
@@ -525,6 +555,42 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
         }
         
     }//GEN-LAST:event_jList3ValueChanged
+
+    private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            jList1.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_jTextField1KeyPressed
+
+    private void jTextField2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyPressed
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            jList2.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_jTextField2KeyPressed
+
+    private void jFormattedTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField1KeyPressed
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            jPanel3.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_jFormattedTextField1KeyPressed
+
+    private void jFormattedTextField2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField2KeyPressed
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            jPanel3.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_jFormattedTextField2KeyPressed
+
+    private void jFormattedTextField3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField3KeyPressed
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            jPanel3.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_jFormattedTextField3KeyPressed
+
+    private void jFormattedTextField4KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField4KeyPressed
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            jPanel3.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_jFormattedTextField4KeyPressed
 
     public void refreshNotAssignedMetrics()
     {

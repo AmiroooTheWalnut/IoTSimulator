@@ -28,7 +28,7 @@ public class CSVDataPanel extends javax.swing.JPanel {
     MainFrame parent;
     public int availableMetricIndices[];
     List<String> columns;
-    
+
     CsvReader cSVReader = new CsvReader();
 
     /**
@@ -37,10 +37,18 @@ public class CSVDataPanel extends javax.swing.JPanel {
     public CSVDataPanel(MainFrame passed_parent) {
         initComponents();
         parent = passed_parent;
-        if(parent.iOTSimulator.metricManager.data!=null)
-        {
+        if (parent.iOTSimulator.metricManager.data != null) {
             fillPanel(parent.iOTSimulator.metricManager);
         }
+        jRadioButton1.setActionCommand(jRadioButton1.getText());
+        jRadioButton2.setActionCommand(jRadioButton2.getText());
+        jRadioButton3.setActionCommand(jRadioButton3.getText());
+        jRadioButton4.setActionCommand(jRadioButton4.getText());
+        jRadioButton5.setActionCommand(jRadioButton5.getText());
+        jRadioButton6.setActionCommand(jRadioButton6.getText());
+        jRadioButton7.setActionCommand(jRadioButton7.getText());
+        jRadioButton8.setActionCommand(jRadioButton8.getText());
+        jRadioButton9.setActionCommand(jRadioButton9.getText());
     }
 
     /**
@@ -143,6 +151,12 @@ public class CSVDataPanel extends javax.swing.JPanel {
 
         buttonGroup1.add(jRadioButton7);
         jRadioButton7.setText("Custom date format");
+
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextField1KeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -301,120 +315,118 @@ public class CSVDataPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV file", "csv");
-        jfc.addChoosableFileFilter(filter);
+            JFileChooser jfc = new JFileChooser();
+            jfc.setCurrentDirectory(new java.io.File("."));
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV file", "csv");
+            jfc.addChoosableFileFilter(filter);
 
-        int returnValue = jfc.showOpenDialog(null);
+            int returnValue = jfc.showOpenDialog(null);
 
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = jfc.getSelectedFile();
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = jfc.getSelectedFile();
 
-            parent.iOTSimulator.metricManager.cSVFilePath = selectedFile.getAbsolutePath();
-            System.out.println(parent.iOTSimulator.metricManager.cSVFilePath);
+                parent.iOTSimulator.metricManager.cSVFilePath = selectedFile.getAbsolutePath();
+                System.out.println(parent.iOTSimulator.metricManager.cSVFilePath);
 
-            File file = new File(selectedFile.getAbsolutePath());
-            
-            cSVReader.setContainsHeader(jCheckBox1.isSelected());
+                File file = new File(selectedFile.getAbsolutePath());
 
-            try {
-                parent.iOTSimulator.metricManager.data=cSVReader.read(file, StandardCharsets.UTF_8);
-                
-                columns = parent.iOTSimulator.metricManager.data.getHeader();
-                jList1.setModel(new javax.swing.AbstractListModel() {
-                    @Override
-                    public int getSize() {
-                        return columns.size();
+                cSVReader.setContainsHeader(jCheckBox1.isSelected());
+
+                try {
+                    parent.iOTSimulator.metricManager.data = cSVReader.read(file, StandardCharsets.UTF_8);
+
+                    columns = parent.iOTSimulator.metricManager.data.getHeader();
+                    jList1.setModel(new javax.swing.AbstractListModel() {
+                        @Override
+                        public int getSize() {
+                            return columns.size();
+                        }
+
+                        @Override
+                        public Object getElementAt(int index) {
+                            return columns.get(index);
+                        }
+                    });
+                    int timeIndex = -1;
+                    for (int i = 0; i < columns.size(); i++) {
+                        if (columns.get(i).toLowerCase().contains("time")) {
+                            jList1.setSelectedIndex(i);
+                            timeIndex = i;
+                            break;
+                        }
                     }
 
-                    @Override
-                    public Object getElementAt(int index) {
-                        return columns.get(index);
+                    jList2.setModel(new javax.swing.AbstractListModel() {
+                        @Override
+                        public int getSize() {
+                            return columns.size();
+                        }
+
+                        @Override
+                        public Object getElementAt(int index) {
+                            return columns.get(index);
+                        }
+                    });
+                    ArrayList<Integer> indicesArrayList = new ArrayList();
+                    for (int i = 0; i < columns.size(); i++) {
+                        if (i != timeIndex) {
+                            indicesArrayList.add(i);
+                        }
                     }
-                });
-                int timeIndex=-1;
-                for(int i=0;i<columns.size();i++)
-                {
-                    if(columns.get(i).toLowerCase().contains("time"))
-                    {
-                        jList1.setSelectedIndex(i);
-                        timeIndex=i;
-                        break;
-                    }
+                    availableMetricIndices = convertIntegers(indicesArrayList);
+                    jList2.setSelectedIndices(availableMetricIndices);
+                } catch (IOException ex) {
+                    Logger.getLogger(CSVDataPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
-                jList2.setModel(new javax.swing.AbstractListModel() {
-                    @Override
-                    public int getSize() {
-                        return columns.size();
-                    }
-
-                    @Override
-                    public Object getElementAt(int index) {
-                        return columns.get(index);
-                    }
-                });
-                ArrayList<Integer> indicesArrayList=new ArrayList();
-                for(int i=0;i<columns.size();i++)
-                {
-                    if(i!=timeIndex)
-                    {
-                        indicesArrayList.add(i);
-                    }
-                }
-                availableMetricIndices=convertIntegers(indicesArrayList);
-                jList2.setSelectedIndices(availableMetricIndices);
-            } catch (IOException ex) {
-                Logger.getLogger(CSVDataPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-        // TODO add your handling code here:
         jLabel5.setText(parent.iOTSimulator.metricManager.data.getRow(1).getField(jList1.getSelectedIndex()));
     }//GEN-LAST:event_jList1ValueChanged
 
-    public void fillPanel(MetricManager metricManager)
-    {
-                columns = metricManager.data.getHeader();
-                jList1.setModel(new javax.swing.AbstractListModel() {
-                    @Override
-                    public int getSize() {
-                        return columns.size();
-                    }
+    private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            jPanel4.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_jTextField1KeyPressed
 
-                    @Override
-                    public Object getElementAt(int index) {
-                        return columns.get(index);
-                    }
-                });
-                jList1.setSelectedIndex(metricManager.timeIndex);
-                
-                jList2.setModel(new javax.swing.AbstractListModel() {
-                    @Override
-                    public int getSize() {
-                        return columns.size();
-                    }
+    public void fillPanel(MetricManager metricManager) {
+        columns = metricManager.data.getHeader();
+        jList1.setModel(new javax.swing.AbstractListModel() {
+            @Override
+            public int getSize() {
+                return columns.size();
+            }
 
-                    @Override
-                    public Object getElementAt(int index) {
-                        return columns.get(index);
-                    }
-                });
-                jList2.setSelectedIndices(metricManager.metricIndices);
+            @Override
+            public Object getElementAt(int index) {
+                return columns.get(index);
+            }
+        });
+        jList1.setSelectedIndex(metricManager.timeIndex);
+
+        jList2.setModel(new javax.swing.AbstractListModel() {
+            @Override
+            public int getSize() {
+                return columns.size();
+            }
+
+            @Override
+            public Object getElementAt(int index) {
+                return columns.get(index);
+            }
+        });
+        jList2.setSelectedIndices(metricManager.metricIndices);
     }
-    
-    public static int[] convertIntegers(List<Integer> integers)
-{
-    int[] ret = new int[integers.size()];
-    for (int i=0; i < ret.length; i++)
-    {
-        ret[i] = integers.get(i).intValue();
+
+    public static int[] convertIntegers(List<Integer> integers) {
+        int[] ret = new int[integers.size()];
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = integers.get(i).intValue();
+        }
+        return ret;
     }
-    return ret;
-}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.ButtonGroup buttonGroup1;
