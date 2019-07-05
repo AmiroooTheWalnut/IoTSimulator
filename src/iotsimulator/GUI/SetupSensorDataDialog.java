@@ -140,10 +140,16 @@ public class SetupSensorDataDialog extends javax.swing.JDialog {
             }
             parent.iOTSimulator.metricManager.timeType=cSVDataPanel.buttonGroup1.getSelection().getActionCommand();
             parent.iOTSimulator.metricManager.smallestTimeScale=cSVDataPanel.buttonGroup2.getSelection().getActionCommand();
+            
+            parent.iOTSimulator.metricManager.customTimeFormat=cSVDataPanel.jTextField1.getText();
+            
+            parent.iOTSimulator.metricManager.setupTimeStamps();
+            
         }
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;

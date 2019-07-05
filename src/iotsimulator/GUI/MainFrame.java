@@ -301,6 +301,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         simulationRunDialog=new SimulationRunDialog(this,true);
+        iOTSimulator.timeController.initDevices(iOTSimulator.topologyDefinition.topology);
         simulationRunDialog.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 

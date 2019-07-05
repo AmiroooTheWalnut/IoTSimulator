@@ -48,7 +48,7 @@ public class SetupSimulatorDialog extends javax.swing.JDialog {
                 {
                     if(jFormattedTextField1.getText().length()>0)
                     {
-                        parent.iOTSimulator.metricManager.selectedMetrics.get(selectedMetric).frequency=Double.valueOf(jFormattedTextField1.getText());
+                        parent.iOTSimulator.metricManager.selectedMetrics.get(selectedMetric).frequency=Long.valueOf(jFormattedTextField1.getText());
                     }
                 }
             }
@@ -58,6 +58,9 @@ public class SetupSimulatorDialog extends javax.swing.JDialog {
     
     public void refreshDialog()
     {
+        jSlider1.setValue(parent.iOTSimulator.timeController.simulationLengthPercentage);
+        jSpinner1.setValue(parent.iOTSimulator.timeController.interpolationBufferSize);
+        jSpinner2.setValue(parent.iOTSimulator.timeController.predictionBufferSize);
         fillPanel();
     }
     
@@ -96,6 +99,7 @@ public class SetupSimulatorDialog extends javax.swing.JDialog {
         jList1 = new javax.swing.JList<>();
         jLabel6 = new javax.swing.JLabel();
         jFormattedTextField1 = new javax.swing.JFormattedTextField();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -133,7 +137,7 @@ public class SetupSimulatorDialog extends javax.swing.JDialog {
 
         jLabel6.setText("Frequency (in seconds):");
 
-        jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         jFormattedTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jFormattedTextField1KeyPressed(evt);
@@ -161,7 +165,7 @@ public class SetupSimulatorDialog extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel6)
@@ -169,6 +173,13 @@ public class SetupSimulatorDialog extends javax.swing.JDialog {
                 .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jButton1.setText("Confirm");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -189,7 +200,8 @@ public class SetupSimulatorDialog extends javax.swing.JDialog {
                             .addComponent(jLabel2)
                             .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))
+                            .addComponent(jLabel3)
+                            .addComponent(jButton1))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -212,6 +224,8 @@ public class SetupSimulatorDialog extends javax.swing.JDialog {
                 .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
                 .addContainerGap())
         );
 
@@ -219,7 +233,10 @@ public class SetupSimulatorDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-        jFormattedTextField1.setText(String.valueOf(parent.iOTSimulator.metricManager.selectedMetrics.get(jList1.getSelectedIndex()).frequency));
+        if(jList1.getSelectedIndex()>-1)
+        {
+            jFormattedTextField1.setText(String.valueOf(parent.iOTSimulator.metricManager.selectedMetrics.get(jList1.getSelectedIndex()).frequency));
+        }
     }//GEN-LAST:event_jList1ValueChanged
 
     private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
@@ -238,8 +255,16 @@ public class SetupSimulatorDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jFormattedTextField1KeyPressed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        parent.iOTSimulator.timeController.simulationLengthPercentage=(int)jSlider1.getValue();
+        parent.iOTSimulator.timeController.predictionBufferSize=(int)jSpinner1.getValue();
+        parent.iOTSimulator.timeController.interpolationBufferSize=(int)jSpinner2.getValue();
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

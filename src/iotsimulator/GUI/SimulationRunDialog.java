@@ -5,18 +5,36 @@
  */
 package iotsimulator.GUI;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  *
  * @author user
  */
 public class SimulationRunDialog extends javax.swing.JDialog {
 
+    MainFrame parent;
+
     /**
      * Creates new form SimulationRunDialog
      */
-    public SimulationRunDialog(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public SimulationRunDialog(java.awt.Frame passed_parent, boolean modal) {
+        super(passed_parent, modal);
         initComponents();
+        parent = (MainFrame) passed_parent;
+
+        jList1.setModel(new javax.swing.AbstractListModel() {
+            @Override
+            public int getSize() {
+                return parent.iOTSimulator.timeController.allDevices.size();
+            }
+
+            @Override
+            public Object getElementAt(int index) {
+                return parent.iOTSimulator.timeController.allDevices.get(index).name;
+            }
+        });
     }
 
     /**
@@ -56,13 +74,25 @@ public class SimulationRunDialog extends javax.swing.JDialog {
         jLabel5 = new javax.swing.JLabel();
         simulationTimeLabel = new javax.swing.JLabel();
         jToggleButton1 = new javax.swing.JToggleButton();
+        jToggleButton2 = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel1.setText("Devices:");
 
+        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList1ValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(jList1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -92,6 +122,7 @@ public class SimulationRunDialog extends javax.swing.JDialog {
 
         jLabel2.setText("Metrics:");
 
+        jList2.setEnabled(false);
         jScrollPane2.setViewportView(jList2);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -237,6 +268,18 @@ public class SimulationRunDialog extends javax.swing.JDialog {
         simulationTimeLabel.setText("Val");
 
         jToggleButton1.setText("Start");
+        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton1ActionPerformed(evt);
+            }
+        });
+
+        jToggleButton2.setText("Reset");
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -248,6 +291,8 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(simulationTimeLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jToggleButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jToggleButton1)
                 .addContainerGap())
         );
@@ -259,7 +304,9 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel5)
                         .addComponent(simulationTimeLabel))
-                    .addComponent(jToggleButton1, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jToggleButton1)
+                        .addComponent(jToggleButton2)))
                 .addContainerGap())
         );
 
@@ -295,6 +342,64 @@ public class SimulationRunDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        if (jToggleButton1.getText().equals("Start")) {
+            Timer timer=new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if(parent.iOTSimulator.timeController.isActive==false)
+                    {
+                        timer.cancel();
+                    }else{
+                        simulationTimeLabel.setText(String.valueOf(parent.iOTSimulator.timeController.currentTime));
+                        int selectedDeviceIndex = jList1.getSelectedIndex();
+                        if (selectedDeviceIndex > -1) {
+                            bandwidthLabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedBandWidth));
+                            cPULabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedCPU));
+                            memoryLabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedMemory));
+                            storageLabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedStorage));
+                        }
+                    }
+                }
+            }, 2000, 1000);
+            parent.iOTSimulator.timeController.start(parent.iOTSimulator.topologyDefinition.topology, parent.iOTSimulator.metricManager);
+            jToggleButton1.setText("Pause");
+        } else if (jToggleButton1.getText().equals("Resume")) {
+            parent.iOTSimulator.timeController.resume(parent.iOTSimulator.metricManager);
+            jToggleButton1.setText("Pause");
+        } else if (jToggleButton1.getText().equals("Pasue")) {
+            parent.iOTSimulator.timeController.pause();
+            jToggleButton1.setText("Resume");
+        }
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
+
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        jToggleButton1.setSelected(false);
+        jToggleButton1.setText("Start");
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        this.dispose();
+    }//GEN-LAST:event_formWindowClosed
+
+    private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
+        int selectedDeviceIndex = jList1.getSelectedIndex();
+        if (selectedDeviceIndex > -1) {
+            jTextArea1.setText(parent.iOTSimulator.timeController.allDeviceConsoles.get(selectedDeviceIndex).toString());
+            jList2.setModel(new javax.swing.AbstractListModel() {
+                @Override
+                public int getSize() {
+                    return parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).metrics.size();
+                }
+                @Override
+                public Object getElementAt(int index) {
+                    return parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).metrics.get(index).name;
+                }
+            });
+        }
+    }//GEN-LAST:event_jList1ValueChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel bandwidthLabel;
@@ -322,6 +427,7 @@ public class SimulationRunDialog extends javax.swing.JDialog {
     private javax.swing.JSlider jSlider4;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JLabel memoryLabel;
     private javax.swing.JLabel simulationTimeLabel;
     private javax.swing.JLabel storageLabel;

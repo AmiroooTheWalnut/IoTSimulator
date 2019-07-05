@@ -44,11 +44,9 @@ public class CSVDataPanel extends javax.swing.JPanel {
         jRadioButton2.setActionCommand(jRadioButton2.getText());
         jRadioButton3.setActionCommand(jRadioButton3.getText());
         jRadioButton4.setActionCommand(jRadioButton4.getText());
-        jRadioButton5.setActionCommand(jRadioButton5.getText());
         jRadioButton6.setActionCommand(jRadioButton6.getText());
         jRadioButton7.setActionCommand(jRadioButton7.getText());
         jRadioButton8.setActionCommand(jRadioButton8.getText());
-        jRadioButton9.setActionCommand(jRadioButton9.getText());
     }
 
     /**
@@ -72,11 +70,9 @@ public class CSVDataPanel extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jRadioButton8 = new javax.swing.JRadioButton();
-        jRadioButton9 = new javax.swing.JRadioButton();
         jRadioButton7 = new javax.swing.JRadioButton();
         jTextField1 = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
-        jRadioButton5 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton3 = new javax.swing.JRadioButton();
@@ -146,9 +142,6 @@ public class CSVDataPanel extends javax.swing.JPanel {
         jRadioButton8.setSelected(true);
         jRadioButton8.setText("Raw number");
 
-        buttonGroup1.add(jRadioButton9);
-        jRadioButton9.setText("Raw number since 1970");
-
         buttonGroup1.add(jRadioButton7);
         jRadioButton7.setText("Custom date format");
 
@@ -169,17 +162,14 @@ public class CSVDataPanel extends javax.swing.JPanel {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jRadioButton8)
-                            .addComponent(jRadioButton9)
                             .addComponent(jRadioButton7))
-                        .addGap(0, 45, Short.MAX_VALUE)))
+                        .addGap(0, 63, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jRadioButton8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButton9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jRadioButton7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -188,9 +178,6 @@ public class CSVDataPanel extends javax.swing.JPanel {
         );
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Smallest scale"));
-
-        buttonGroup2.add(jRadioButton5);
-        jRadioButton5.setText("Nanoseconds");
 
         buttonGroup2.add(jRadioButton2);
         jRadioButton2.setText("Miliseconds");
@@ -214,19 +201,17 @@ public class CSVDataPanel extends javax.swing.JPanel {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jRadioButton5)
                     .addComponent(jRadioButton2)
                     .addComponent(jRadioButton1)
                     .addComponent(jRadioButton3)
                     .addComponent(jRadioButton4)
                     .addComponent(jRadioButton6))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 125, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jRadioButton5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap()
                 .addComponent(jRadioButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jRadioButton1)
@@ -235,7 +220,8 @@ public class CSVDataPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jRadioButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButton6))
+                .addComponent(jRadioButton6)
+                .addContainerGap())
         );
 
         jLabel4.setText("Sample:");
@@ -267,7 +253,7 @@ public class CSVDataPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -277,7 +263,7 @@ public class CSVDataPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         add(jPanel2);
@@ -449,13 +435,11 @@ public class CSVDataPanel extends javax.swing.JPanel {
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;
-    private javax.swing.JRadioButton jRadioButton5;
     private javax.swing.JRadioButton jRadioButton6;
     private javax.swing.JRadioButton jRadioButton7;
     private javax.swing.JRadioButton jRadioButton8;
-    private javax.swing.JRadioButton jRadioButton9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField1;
+    public javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }
