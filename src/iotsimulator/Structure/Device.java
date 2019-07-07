@@ -18,7 +18,7 @@ public class Device implements Serializable{
     
     static final long serialVersionUID = 1L;
     
-    public long latency=20;//EACH DEVICE SHOULD HAVE UNIQUE LATENCY***REVISE LATER
+    public long latency=20;//Miliseconds //EACH DEVICE SHOULD HAVE UNIQUE LATENCY***REVISE LATER
     
     public String name="UnnamedDevice";
     public Device parent;
@@ -35,6 +35,16 @@ public class Device implements Serializable{
     public double usedMemory=0;
     public double usedStorage=0;
     public double usedCPU=0;
+    
+    public void sendMassage()
+    {
+        
+    }
+    
+    public void sendMeticMassage()
+    {
+        
+    }
     
     public void clearAllResources()
     {

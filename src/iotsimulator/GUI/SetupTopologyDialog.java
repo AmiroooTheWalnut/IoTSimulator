@@ -61,7 +61,10 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                 int topologySelectionLevel=jList1.getSelectedIndex();
                 if(topologySelectionLevel>-1)
                 {
-                    parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).name=jTextField1.getText();
+                    if(jTextField1.getText().length()>0)
+                    {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).name=jTextField1.getText();
+                    }
                 }
             }
         });
@@ -87,7 +90,155 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                 int deviceSelection=jList2.getSelectedIndex();
                 if(topologySelectionLevel>-1 && deviceSelection>-1)
                 {
-                    parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).name=jTextField2.getText();
+                    if(jTextField2.getText().length()>0)
+                    {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).name=jTextField2.getText();
+                    }
+                }
+            }
+        });
+        
+        jFormattedTextField1.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                warn();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                warn();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                warn();
+            }
+            
+            public void warn() {
+                int topologySelectionLevel=jList1.getSelectedIndex();
+                int deviceSelection=jList2.getSelectedIndex();
+                if(topologySelectionLevel>-1 && deviceSelection>-1)
+                {
+                    if(jFormattedTextField1.getText().length()>0)
+                    {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).bandWidthCapacity=Double.valueOf(jFormattedTextField1.getText());
+                    }
+                }
+            }
+        });
+        
+        jFormattedTextField2.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                warn();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                warn();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                warn();
+            }
+            
+            public void warn() {
+                int topologySelectionLevel=jList1.getSelectedIndex();
+                int deviceSelection=jList2.getSelectedIndex();
+                if(topologySelectionLevel>-1 && deviceSelection>-1)
+                {
+                    if(jFormattedTextField2.getText().length()>0)
+                    {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).memoryCapacity=Double.valueOf(jFormattedTextField2.getText());
+                    }
+                }
+            }
+        });
+        
+        jFormattedTextField3.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                warn();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                warn();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                warn();
+            }
+            
+            public void warn() {
+                int topologySelectionLevel=jList1.getSelectedIndex();
+                int deviceSelection=jList2.getSelectedIndex();
+                if(topologySelectionLevel>-1 && deviceSelection>-1)
+                {
+                    if(jFormattedTextField3.getText().length()>0)
+                    {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).storageCapacity=Double.valueOf(jFormattedTextField3.getText());
+                    }
+                }
+            }
+        });
+        
+        jFormattedTextField4.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                warn();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                warn();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                warn();
+            }
+            
+            public void warn() {
+                int topologySelectionLevel=jList1.getSelectedIndex();
+                int deviceSelection=jList2.getSelectedIndex();
+                if(topologySelectionLevel>-1 && deviceSelection>-1)
+                {
+                    if(jFormattedTextField4.getText().length()>0)
+                    {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).CPUCapacity=Double.valueOf(jFormattedTextField4.getText());
+                    }
+                }
+            }
+        });
+        
+        jFormattedTextField5.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                warn();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                warn();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                warn();
+            }
+            
+            public void warn() {
+                int topologySelectionLevel=jList1.getSelectedIndex();
+                int deviceSelection=jList2.getSelectedIndex();
+                if(topologySelectionLevel>-1 && deviceSelection>-1)
+                {
+                    if(jFormattedTextField5.getText().length()>0)
+                    {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).latency=Long.valueOf(jFormattedTextField5.getText());
+                    }
                 }
             }
         });
@@ -134,6 +285,8 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
         jLabel9 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jList3 = new javax.swing.JList<>();
+        jLabel11 = new javax.swing.JLabel();
+        jFormattedTextField5 = new javax.swing.JFormattedTextField();
         jPanel4 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -196,7 +349,7 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                     .addComponent(jLabel1)
                     .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -260,7 +413,7 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                     .addComponent(jLabel3)
                     .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -318,6 +471,15 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
         });
         jScrollPane3.setViewportView(jList3);
 
+        jLabel11.setText("Latency (miliseconds):");
+
+        jFormattedTextField5.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        jFormattedTextField5.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jFormattedTextField5KeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -336,8 +498,10 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                             .addComponent(jLabel6)
                             .addComponent(jLabel7)
                             .addComponent(jLabel8)
-                            .addComponent(jLabel9))
-                        .addGap(0, 101, Short.MAX_VALUE)))
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel11))
+                        .addGap(0, 81, Short.MAX_VALUE))
+                    .addComponent(jFormattedTextField5))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -360,9 +524,13 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jFormattedTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jFormattedTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -398,7 +566,7 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -456,6 +624,7 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
         {
             jTextField1.setText(parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).name);
             refreshDevicesList();
+            jSpinner2.setValue(parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.size());
         }
     }//GEN-LAST:event_jList1ValueChanged
 
@@ -470,6 +639,8 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
             jFormattedTextField2.setText(String.valueOf(targetDevice.memoryCapacity));
             jFormattedTextField3.setText(String.valueOf(targetDevice.storageCapacity));
             jFormattedTextField4.setText(String.valueOf(targetDevice.CPUCapacity));
+            
+            jFormattedTextField5.setText(String.valueOf(targetDevice.latency));
 
             int parentTopologySelectionLevel = topologySelectionLevel - 1;
             if (parentTopologySelectionLevel > -1) {
@@ -592,6 +763,12 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jFormattedTextField4KeyPressed
 
+    private void jFormattedTextField5KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField5KeyPressed
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            jPanel3.requestFocusInWindow();
+        }
+    }//GEN-LAST:event_jFormattedTextField5KeyPressed
+
     public void refreshNotAssignedMetrics()
     {
         jList4.setModel(new javax.swing.AbstractListModel() {
@@ -670,8 +847,10 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
     private javax.swing.JFormattedTextField jFormattedTextField2;
     private javax.swing.JFormattedTextField jFormattedTextField3;
     private javax.swing.JFormattedTextField jFormattedTextField4;
+    private javax.swing.JFormattedTextField jFormattedTextField5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

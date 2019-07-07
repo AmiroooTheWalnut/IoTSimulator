@@ -368,7 +368,10 @@ public class CSVDataPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-        jLabel5.setText(parent.iOTSimulator.metricManager.data.getRow(1).getField(jList1.getSelectedIndex()));
+        if(jList1.getSelectedIndex()>-1)
+        {
+            jLabel5.setText(parent.iOTSimulator.metricManager.data.getRow(1).getField(jList1.getSelectedIndex()));
+        }
     }//GEN-LAST:event_jList1ValueChanged
 
     private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
