@@ -5,6 +5,9 @@
  */
 package iotsimulator.GUI;
 
+import com.hashmap.tempus.processors.GenerateTimeSeriesFlowFile;
+import java.util.TimeZone;
+
 /**
  *
  * @author user
@@ -19,6 +22,14 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
     public GeneratedDataPanel(MainFrame passed_parent) {
         initComponents();
         parent=passed_parent;
+        
+//        GenerateTimeSeriesFlowFile generateTimeSeriesFlowFile=new GenerateTimeSeriesFlowFile();
+//        // create default time zone object
+//        TimeZone timezonedefault = TimeZone.getDefault();
+//        
+//        // get display name
+//        String disname = timezonedefault.getDisplayName(); 
+//        generateTimeSeriesFlowFile.generateData(true, true, disname, "CSV", null, null);
     }
 
     /**

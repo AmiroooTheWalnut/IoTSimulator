@@ -99,7 +99,7 @@ public class TimeController implements Serializable {
                     double generatedMetricValue = metricManager.getMetricValue(allDevices.get(deviceIndex).metrics.get(metricIndex), currentTime);
                     allDevices.get(deviceIndex).metrics.get(metricIndex).interpolationBuffer.add(generatedMetricValue);
                     allDevices.get(deviceIndex).metrics.get(metricIndex).predictionBuffer.add(generatedMetricValue);
-                    allDevices.get(deviceIndex).allocateResourceOfTransmit(allDevices.get(deviceIndex).metrics.get(metricIndex), String.valueOf(generatedMetricValue));
+                    allDevices.get(deviceIndex).transmitToParent(allDevices.get(deviceIndex).metrics.get(metricIndex), String.valueOf(generatedMetricValue));
                     allDeviceConsoles.get(deviceIndex).append("Metric: ");
                     allDeviceConsoles.get(deviceIndex).append(allDevices.get(deviceIndex).metrics.get(metricIndex).name);
                     allDeviceConsoles.get(deviceIndex).append("Time: ");

@@ -22,7 +22,7 @@ public class Device implements Serializable{
     
     public String name="UnnamedDevice";
     public Device parent;
-    public Device child;
+    public ArrayList<Device> children=new ArrayList();
     public int parentDeviceIndex=-1;
     public ArrayList<Metric> metrics=new ArrayList();
     public double bandWidthCapacity=10;
@@ -35,6 +35,11 @@ public class Device implements Serializable{
     public double usedMemory=0;
     public double usedStorage=0;
     public double usedCPU=0;
+    
+    public void predictNextMetric()
+    {
+        
+    }
     
     public void sendMassage()
     {
@@ -68,7 +73,12 @@ public class Device implements Serializable{
         usedStorage=usedStorage+metric.storageUsageForActivity;
     }
     
-    public void allocateResourceOfTransmit(Metric metric,String message)
+    public void transmitToParent(Metric metric,String message)
+    {
+        allocateResourceOfTransmit(metric,message);
+    }
+    
+    private void allocateResourceOfTransmit(Metric metric,String message)
     {
         final double usedBandWidthAddition=message.getBytes().length/Math.pow(2, 10);
         

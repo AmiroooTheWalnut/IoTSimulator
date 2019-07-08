@@ -722,7 +722,7 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
         {
             parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel+1).devices.get(deviceSelection).parent=parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(selectedParentIndex);
             parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel+1).devices.get(deviceSelection).parentDeviceIndex=selectedParentIndex;
-            parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(selectedParentIndex).child=parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel+1).devices.get(deviceSelection);
+            parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(selectedParentIndex).children.add(parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel+1).devices.get(deviceSelection));
         }
         
     }//GEN-LAST:event_jList3ValueChanged

@@ -5,7 +5,9 @@
  */
 package iotsimulator.GUI;
 
+import com.hashmap.tempus.processors.GenerateTimeSeriesFlowFile;
 import iotsimulator.IOTSimulator;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -30,6 +32,9 @@ public class MainFrame extends javax.swing.JFrame {
         iOTSimulator.newProject();
         initComponents();
         setupAllDialogs();
+        
+
+        
     }
     
     private void setupAllDialogs()
