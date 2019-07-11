@@ -145,6 +145,15 @@ public class SetupSensorDataDialog extends javax.swing.JDialog {
             
             parent.iOTSimulator.metricManager.setupTimeStamps();
             
+        }else if(jRadioButton1.isSelected()){
+            parent.iOTSimulator.metricManager.timeIndex=0;
+//            parent.iOTSimulator.metricManager.metricIndices=
+            parent.iOTSimulator.metricManager.availableMetrics.clear();
+            parent.iOTSimulator.metricManager.selectedMetrics.clear();
+            parent.iOTSimulator.metricManager.timeType="Raw number";
+            parent.iOTSimulator.metricManager.smallestTimeScale="Miliseconds";
+            parent.iOTSimulator.metricManager.setupTimeStamps();
+            
         }
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed

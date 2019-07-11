@@ -12,6 +12,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 
+import be.cetic.tsimulus.generators.Generator;
+import be.cetic.tsimulus.generators.composite.AggregateGenerator;
+import be.cetic.tsimulus.timeseries.TimeSeries;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import scala.Function1;
+import spray.json.JsValue;
+
 /**
  *
  * @author user
@@ -33,7 +42,57 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         setupAllDialogs();
         
-
+//        ProcessBuilder processBuilder = new ProcessBuilder();
+//
+//        // Run this on Windows, cmd, /c = terminate after this run
+//        processBuilder.command("bash", "-c", "ping -c 3 google.com");
+//
+//        try {
+//
+//            Process process = processBuilder.start();
+//
+//			// blocked :(
+//            BufferedReader reader =
+//                    new BufferedReader(new InputStreamReader(process.getInputStream()));
+//
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                System.out.println(line);
+//            }
+//
+//            int exitCode = process.waitFor();
+//            System.out.println("\nExited with error code : " + exitCode);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        
+//        GenerateTimeSeriesFlowFile generateTimeSeriesFlowFile=new GenerateTimeSeriesFlowFile();
+//        
+//        generateTimeSeriesFlowFile.loadConfiguration("./lib/configs/basicConfig.json");
+//        
+//        String test=generateTimeSeriesFlowFile.generateData(true, true, "America/Phoenix", "CSV", "Gateway" ,"test");
+//        System.out.println(test);
+        
+//        AggregateGenerator aggregateGenerator=new AggregateGenerator();
+//        aggregateGenerator.
+        
+//        Generator generator;
+//        generator = new Generator() {
+//            @Override
+//            public TimeSeries timeseries(Function1 fnctn) {
+//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//            }
+//
+//            @Override
+//            public JsValue toJson() {
+//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//            }
+//        };
+        
+        
         
     }
     
@@ -183,7 +242,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton8)
                     .addComponent(jButton9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jCheckBox1))
@@ -199,7 +258,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton4)
                     .addComponent(jCheckBox4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jButton7)
                 .addContainerGap())
         );

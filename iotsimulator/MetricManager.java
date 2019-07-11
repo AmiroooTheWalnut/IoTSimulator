@@ -41,6 +41,10 @@ public class MetricManager implements Serializable {
     public long startingTime;
     
     public long endingTime;
+    
+    public String generators;
+    public String exported;
+    public String dataGenerationConfig;
 
     public void setupTimeStamps() {
         for (int i = 0; i < data.getRowCount(); i++) {
