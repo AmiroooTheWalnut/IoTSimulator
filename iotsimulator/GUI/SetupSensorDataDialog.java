@@ -115,12 +115,14 @@ public class SetupSensorDataDialog extends javax.swing.JDialog {
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
         jPanel2.removeAll();
         jPanel2.add(cSVDataPanel);
+        jPanel2.revalidate();
         jPanel2.repaint();
     }//GEN-LAST:event_jRadioButton2ActionPerformed
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
         jPanel2.removeAll();
         jPanel2.add(generatedDataPanel);
+        jPanel2.revalidate();
         jPanel2.repaint();
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
@@ -147,9 +149,14 @@ public class SetupSensorDataDialog extends javax.swing.JDialog {
             
         }else if(jRadioButton1.isSelected()){
             parent.iOTSimulator.metricManager.timeIndex=0;
-//            parent.iOTSimulator.metricManager.metricIndices=
+            parent.iOTSimulator.metricManager.metricIndices=generatedDataPanel.generatedMetricesIndices;
             parent.iOTSimulator.metricManager.availableMetrics.clear();
             parent.iOTSimulator.metricManager.selectedMetrics.clear();
+            for(int i=0;i<generatedDataPanel.generatedMetricesIndices.length;i++)
+            {
+                parent.iOTSimulator.metricManager.availableMetrics.add(new Metric(generatedDataPanel.generatedMetricesIndices[i],generatedDataPanel.columns.get(generatedDataPanel.generatedMetricesIndices[i])));
+                parent.iOTSimulator.metricManager.selectedMetrics.add(parent.iOTSimulator.metricManager.availableMetrics.get(parent.iOTSimulator.metricManager.availableMetrics.size()-1));
+            }
             parent.iOTSimulator.metricManager.timeType="Raw number";
             parent.iOTSimulator.metricManager.smallestTimeScale="Miliseconds";
             parent.iOTSimulator.metricManager.setupTimeStamps();

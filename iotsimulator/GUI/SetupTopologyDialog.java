@@ -337,7 +337,7 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel2))
-                        .addGap(0, 30, Short.MAX_VALUE))
+                        .addGap(0, 15, Short.MAX_VALUE))
                     .addComponent(jTextField1))
                 .addContainerGap())
         );
@@ -401,7 +401,7 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 19, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jTextField2))
                 .addContainerGap())
         );
@@ -500,7 +500,7 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                             .addComponent(jLabel8)
                             .addComponent(jLabel9)
                             .addComponent(jLabel11))
-                        .addGap(0, 81, Short.MAX_VALUE))
+                        .addGap(0, 64, Short.MAX_VALUE))
                     .addComponent(jFormattedTextField5))
                 .addContainerGap())
         );
@@ -556,7 +556,7 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel10)
-                        .addGap(0, 120, Short.MAX_VALUE))
+                        .addGap(0, 118, Short.MAX_VALUE))
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );

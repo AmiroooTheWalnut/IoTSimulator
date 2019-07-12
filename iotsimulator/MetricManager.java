@@ -97,7 +97,7 @@ public class MetricManager implements Serializable {
     public double getMetricValue(Metric metric, long requestedTime) {
         for(int i=metric.lastRecordIndex;i<timeStamps.size();i++)
         {
-            if(timeStamps.get(i)>requestedTime)
+            if(timeStamps.get(i)>requestedTime && data.getRow(i).getField(metric.name).equals("NULL"))
             {
                 metric.lastRecordIndex=i;
                 return Double.parseDouble(data.getRow(i).getField(metric.name));

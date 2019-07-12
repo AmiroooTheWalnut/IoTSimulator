@@ -8,6 +8,7 @@ package iotsimulator.GUI;
 import com.hashmap.tempus.processors.GenerateTimeSeriesFlowFile;
 import de.siegmar.fastcsv.reader.CsvReader;
 import static iotsimulator.GUI.CSVDataPanel.convertIntegers;
+import iotsimulator.Structure.CustomTuple3;
 import iotsimulator.Structure.Metric;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -17,17 +18,25 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.StringReader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import org.json.*;
+import scala.Tuple3;
 
 /**
  *
@@ -36,20 +45,24 @@ import org.json.*;
 public class GeneratedDataPanel extends javax.swing.JPanel {
 
     MainFrame parent;
-    
+
     public int generatedMetricesIndices[];
-    
+
     CsvReader cSVReader = new CsvReader();
-    
+
     JSONObject finalObj;
+
+    ArrayList<String> metricNames;
     
+    List<String> columns;
+
     /**
      * Creates new form GeneratedDataPanel
      */
     public GeneratedDataPanel(MainFrame passed_parent) {
         initComponents();
-        parent=passed_parent;
-        
+        parent = passed_parent;
+
 //        GenerateTimeSeriesFlowFile generateTimeSeriesFlowFile=new GenerateTimeSeriesFlowFile();
 //        // create default time zone object
 //        TimeZone timezonedefault = TimeZone.getDefault();
@@ -304,141 +317,170 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
             try {
                 content = new String(Files.readAllBytes(Paths.get(jFileChooser1.getSelectedFile().getAbsolutePath())));
                 JSONObject obj = new JSONObject(content);
-                Object generators=obj.get("generators");
-                Object exported=obj.get("exported");
-                
-                
-                
-                finalObj=new JSONObject();
-                
+                JSONArray generators = obj.getJSONArray("generators");
+                JSONArray exported = obj.getJSONArray("exported");
+
+                metricNames = new ArrayList();
+                for (int i = 0; i < exported.length(); i++) {
+                    metricNames.add(exported.getJSONObject(i).getString("name"));
+                }
+
+                finalObj = new JSONObject();
+
                 finalObj.put("generators", generators);
                 finalObj.put("exported", exported);
-                
+
                 finalObj.put("from", jTextField2.getText());
                 finalObj.put("to", jTextField3.getText());
-                
+
 //                finalObj.append("generators", generators);
 //                finalObj.append("exported", exported);
 //                
 //                finalObj.append("from", jTextField2.getText());
 //                finalObj.append("to", jTextField3.getText());
-                
-                parent.iOTSimulator.metricManager.generators=String.valueOf(generators);
-                parent.iOTSimulator.metricManager.exported=String.valueOf(exported);
-                parent.iOTSimulator.metricManager.dataGenerationConfig=String.valueOf(finalObj);
-                
+                parent.iOTSimulator.metricManager.generators = String.valueOf(generators);
+                parent.iOTSimulator.metricManager.exported = String.valueOf(exported);
+                parent.iOTSimulator.metricManager.dataGenerationConfig = String.valueOf(finalObj);
+
                 jTextArea1.setText(parent.iOTSimulator.metricManager.generators);
                 jTextArea3.setText(parent.iOTSimulator.metricManager.exported);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
 //            finalObj.write(new FileWriter("./temporaryConfig.json"));
-            
+
             Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./temporaryConfig.json"), "utf-8"));
             System.out.println(finalObj.toString());
             writer.write(finalObj.toString());
             writer.flush();
             writer.close();
-            
-            String currentFolder="";
-            File pwd=new File("./");
-            
-            currentFolder=pwd.getAbsolutePath();
-            
+
+            String currentFolder = "";
+            File pwd = new File("./");
+
+            currentFolder = pwd.getAbsolutePath();
+
             ProcessBuilder processBuilder = new ProcessBuilder();
 
-        // Run this on Windows, cmd, /c = terminate after this run
-        processBuilder.command("bash", "-c", "java -jar "+currentFolder+"/lib/tsimulus-cli.jar ./temporaryConfig.json");
+            // Run this on Windows, cmd, /c = terminate after this run
+            processBuilder.command("bash", "-c", "java -jar " + currentFolder + "/lib/tsimulus-cli.jar ./temporaryConfig.json");
 
-        try {
+            try {
 
-            Process process = processBuilder.start();
+                Process process = processBuilder.start();
 
-            BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(process.getInputStream()));
+                BufferedReader reader
+                        = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-            String line;
-            StringBuilder output=new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-                output.append(line);
-                output.append(System.lineSeparator());
+                String line;
+                ArrayList<CustomTuple3> generatedValues = new ArrayList();
+                while ((line = reader.readLine()) != null) {
+                    String speratedLine[] = line.split(";");
+                    generatedValues.add(new CustomTuple3(speratedLine[0], speratedLine[1], speratedLine[2]));
+                }
+
+                int exitCode = process.waitFor();
+                System.out.println("\nExited with error code : " + exitCode);
+
+                if (exitCode == 0) {
+                    String resultString = createCsv(true, true, "America/Phoenix", generatedValues, metricNames);
+                    jTextArea4.setText(resultString);
+                    cSVReader.setContainsHeader(true);
+                    try {
+                        parent.iOTSimulator.metricManager.data = cSVReader.read(new StringReader(resultString));
+
+                        int timeIndex = 0;
+                        columns = parent.iOTSimulator.metricManager.data.getHeader();
+
+                        ArrayList<Integer> indicesArrayList = new ArrayList();
+                        for (int i = 0; i < columns.size(); i++) {
+                            if (i != timeIndex) {
+                                indicesArrayList.add(i);
+                            }
+                        }
+                        generatedMetricesIndices = convertIntegers(indicesArrayList);
+                    } catch (IOException ex) {
+                        Logger.getLogger(CSVDataPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 
-            int exitCode = process.waitFor();
-            System.out.println("\nExited with error code : " + exitCode);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-            
         } catch (IOException ex) {
             Logger.getLogger(GeneratedDataPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
-        
-//        File file = new File(selectedFile.getAbsolutePath());
-//
-//                cSVReader.setContainsHeader(true);
-//
-//                try {
-//                    parent.iOTSimulator.metricManager.data = cSVReader.read(file, StandardCharsets.UTF_8);
-//
-//                    columns = parent.iOTSimulator.metricManager.data.getHeader();
-//                    jList1.setModel(new javax.swing.AbstractListModel() {
-//                        @Override
-//                        public int getSize() {
-//                            return columns.size();
-//                        }
-//
-//                        @Override
-//                        public Object getElementAt(int index) {
-//                            return columns.get(index);
-//                        }
-//                    });
-//                    int timeIndex = -1;
-//                    for (int i = 0; i < columns.size(); i++) {
-//                        if (columns.get(i).toLowerCase().contains("time")) {
-//                            jList1.setSelectedIndex(i);
-//                            timeIndex = i;
-//                            break;
-//                        }
-//                    }
-//
-//                    jList2.setModel(new javax.swing.AbstractListModel() {
-//                        @Override
-//                        public int getSize() {
-//                            return columns.size();
-//                        }
-//
-//                        @Override
-//                        public Object getElementAt(int index) {
-//                            return columns.get(index);
-//                        }
-//                    });
-//                    ArrayList<Integer> indicesArrayList = new ArrayList();
-//                    for (int i = 0; i < columns.size(); i++) {
-//                        if (i != timeIndex) {
-//                            indicesArrayList.add(i);
-//                        }
-//                    }
-//                    availableMetricIndices = convertIntegers(indicesArrayList);
-//                    jList2.setSelectedIndices(availableMetricIndices);
-//                } catch (IOException ex) {
-//                    Logger.getLogger(CSVDataPanel.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-            
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private String createCsv(boolean printHeader, boolean longTimestamp, String Timezone, ArrayList<CustomTuple3> generatedValues, ArrayList<String> metricNames) {
+        StringBuilder dataValueString = new StringBuilder();
+
+        if (printHeader) {
+            dataValueString.append("time");
+            dataValueString.append(",");
+            for (int i = 0; i < metricNames.size(); i++) {
+                dataValueString.append(metricNames.get(i));
+                if (i != metricNames.size() - 1) {
+                    dataValueString.append(",");
+                }
+            }
+            dataValueString.append(System.lineSeparator());
+        }
+
+        String lastTimeStamp = generatedValues.get(1).time;//SET THE LAST TIME TO THE FIRST RECORD
+        ArrayList<String> row = new ArrayList();
+        for (int i = 0; i < metricNames.size(); i++) {
+            row.add("NULL");
+        }
+        for (int i = 1; i < generatedValues.size(); i++)//SKIPPING THE FIRST ROW
+        {
+            if (generatedValues.get(i) != null) {
+                String temporary_time = generatedValues.get(i).time;
+                DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
+                DateTime datetime = formatter.parseDateTime(temporary_time);
+                String time;
+                if (longTimestamp) {
+                    time = String.valueOf(datetime.getMillis());
+                } else {
+                    time = datetime.toString();
+                }
+
+                for (int m = 0; m < metricNames.size(); m++) {
+                    if (generatedValues.get(i).name.equals(metricNames.get(m))) {
+                        row.add(m, generatedValues.get(i).value);
+                    }
+                }
+
+                if (!lastTimeStamp.equals(temporary_time)) {
+                    dataValueString.append(time).append(",");
+                    for (int c = 0; c < row.size(); c++) {
+                        dataValueString.append(row.get(c));
+                        if (c != row.size() - 1) {
+                            dataValueString.append(",");
+                        }
+                    }
+                    dataValueString.append(System.lineSeparator());
+                    row.clear();
+                    for (int c = 0; c < metricNames.size(); c++) {
+                        row.add("NULL");
+                    }
+                }
+
+                lastTimeStamp = temporary_time;
+            }
+        }
+
+        return dataValueString.toString().trim();
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

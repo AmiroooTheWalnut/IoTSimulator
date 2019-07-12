@@ -138,7 +138,7 @@ public class IOTSimulator implements Serializable {
         Input input;
         try {
 
-            input = new Input(new FileInputStream(file_path + "\\" + file_name + "." + "bin"));
+            input = new Input(new FileInputStream(file_path + "/" + file_name + "." + "bin"));
             IOTSimulator tempRead = kryo.readObject(input, IOTSimulator.class);
             unpackProject(tempRead);
             input.close();
