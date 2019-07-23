@@ -7,12 +7,15 @@ package iotsimulator.GUI;
 
 import com.hashmap.tempus.processors.GenerateTimeSeriesFlowFile;
 import de.siegmar.fastcsv.reader.CsvReader;
+import de.siegmar.fastcsv.writer.CsvWriter;
 import static iotsimulator.GUI.CSVDataPanel.convertIntegers;
+import iotsimulator.IOTSimulator;
 import iotsimulator.Structure.CustomTuple3;
 import iotsimulator.Structure.Metric;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -53,7 +57,7 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
     JSONObject finalObj;
 
     ArrayList<String> metricNames;
-    
+
     List<String> columns;
 
     /**
@@ -105,6 +109,7 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
         jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea4 = new javax.swing.JTextArea();
+        jButton3 = new javax.swing.JButton();
 
         setLayout(new java.awt.GridLayout(1, 0));
 
@@ -129,7 +134,7 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
                     .addComponent(jTextField2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,7 +142,7 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
                             .addComponent(jLabel4)
                             .addComponent(jLabel7)
                             .addComponent(jLabel6))
-                        .addGap(0, 167, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -151,7 +156,7 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 353, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 387, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
@@ -275,6 +280,13 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
         jTextArea4.setRows(5);
         jScrollPane1.setViewportView(jTextArea4);
 
+        jButton3.setText("Save as CSV");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -284,7 +296,9 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jButton2)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton3)
+                        .addGap(0, 124, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -292,7 +306,9 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton2)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
                 .addContainerGap())
@@ -324,26 +340,8 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
                 for (int i = 0; i < exported.length(); i++) {
                     metricNames.add(exported.getJSONObject(i).getString("name"));
                 }
-
-                finalObj = new JSONObject();
-
-                finalObj.put("generators", generators);
-                finalObj.put("exported", exported);
-
-                finalObj.put("from", jTextField2.getText());
-                finalObj.put("to", jTextField3.getText());
-
-//                finalObj.append("generators", generators);
-//                finalObj.append("exported", exported);
-//                
-//                finalObj.append("from", jTextField2.getText());
-//                finalObj.append("to", jTextField3.getText());
-                parent.iOTSimulator.metricManager.generators = String.valueOf(generators);
-                parent.iOTSimulator.metricManager.exported = String.valueOf(exported);
-                parent.iOTSimulator.metricManager.dataGenerationConfig = String.valueOf(finalObj);
-
-                jTextArea1.setText(parent.iOTSimulator.metricManager.generators);
-                jTextArea3.setText(parent.iOTSimulator.metricManager.exported);
+                jTextArea1.setText(generators.toString());
+                jTextArea3.setText(exported.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -356,23 +354,46 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
 //            finalObj.write(new FileWriter("./temporaryConfig.json"));
 
             Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./temporaryConfig.json"), "utf-8"));
-            System.out.println(finalObj.toString());
-            writer.write(finalObj.toString());
+
+            finalObj = new JSONObject();
+
+            JSONArray generators = new JSONArray(jTextArea1.getText());
+            JSONArray exported = new JSONArray(jTextArea3.getText());
+
+            finalObj.put("generators", generators);
+            finalObj.put("exported", exported);
+
+            finalObj.put("from", jTextField2.getText());
+            finalObj.put("to", jTextField3.getText());
+
+            parent.iOTSimulator.metricManager.generators = jTextArea1.getText();
+            parent.iOTSimulator.metricManager.exported = jTextArea3.getText();
+            parent.iOTSimulator.metricManager.dataGenerationConfig = String.valueOf(finalObj);
+
+            String str = finalObj.toString().replace("\\", "");
+            System.out.println(str);
+            writer.write(str);
             writer.flush();
             writer.close();
 
             String currentFolder = "";
             File pwd = new File("./");
+//            for(String fileNames : pwd.list()) System.out.println(fileNames);
 
             currentFolder = pwd.getAbsolutePath();
 
             ProcessBuilder processBuilder = new ProcessBuilder();
 
-            // Run this on Windows, cmd, /c = terminate after this run
-            processBuilder.command("bash", "-c", "java -jar " + currentFolder + "/lib/tsimulus-cli.jar ./temporaryConfig.json");
+            if (IOTSimulator.isUnix()) {
+                processBuilder.command("bash ", "-c ", "java -jar " + currentFolder + "/lib/tsimulus-cli.jar ./temporaryConfig.json");
+            } else if (IOTSimulator.isWindows()) {
+                processBuilder.command("cmd", "/c", "java -jar " + ".\\lib\\tsimulus-cli.jar .\\temporaryConfig.json");
+            } else {
+                System.out.println("NOT IMPLREMENTED FOR YOUR OS! EXITING");
+                return;
+            }
 
             try {
-
                 Process process = processBuilder.start();
 
                 BufferedReader reader
@@ -381,8 +402,13 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
                 String line;
                 ArrayList<CustomTuple3> generatedValues = new ArrayList();
                 while ((line = reader.readLine()) != null) {
-                    String speratedLine[] = line.split(";");
-                    generatedValues.add(new CustomTuple3(speratedLine[0], speratedLine[1], speratedLine[2]));
+                    try {
+//                        System.out.println(line);
+                        String speratedLine[] = line.split(";");
+                        generatedValues.add(new CustomTuple3(speratedLine[0], speratedLine[1], speratedLine[2]));
+                    } catch (Exception ex) {
+                        System.out.println(line);
+                    }
                 }
 
                 int exitCode = process.waitFor();
@@ -420,6 +446,48 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
             Logger.getLogger(GeneratedDataPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fc_save = new JFileChooser();
+        fc_save.setAcceptAllFileFilterUsed(false);
+        fc_save.setFileFilter(new FileFilter() {
+            public String getDescription() {
+                return "PDF Documents (*.pdf)";
+            }
+
+            public boolean accept(File f) {
+                if (f.isDirectory()) {
+                    return true;
+                } else {
+                    return f.getName().toLowerCase().endsWith(".pdf");
+                }
+            }
+        });
+        int returnVal = fc_save.showSaveDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                CsvWriter writer = new CsvWriter();
+                ArrayList<String[]> outputData = new ArrayList();
+
+                String item[] = new String[parent.iOTSimulator.metricManager.data.getHeader().size()];
+                for (int j = 0; j < parent.iOTSimulator.metricManager.data.getHeader().size(); j++) {
+                    item[j] = parent.iOTSimulator.metricManager.data.getHeader().get(j);
+                }
+                outputData.add(item);
+
+                for (int i = 0; i < parent.iOTSimulator.metricManager.data.getRowCount(); i++) {
+                    item = new String[parent.iOTSimulator.metricManager.data.getHeader().size()];
+                    for (int j = 0; j < parent.iOTSimulator.metricManager.data.getHeader().size(); j++) {
+                        item[j] = parent.iOTSimulator.metricManager.data.getRow(i).getField(j);
+                    }
+                    outputData.add(item);
+                }
+                writer.write(fc_save.getSelectedFile().toPath(), Charset.forName("UTF-8"), outputData);
+            } catch (Exception ex) {
+            }
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     private String createCsv(boolean printHeader, boolean longTimestamp, String Timezone, ArrayList<CustomTuple3> generatedValues, ArrayList<String> metricNames) {
         StringBuilder dataValueString = new StringBuilder();
@@ -486,6 +554,7 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
