@@ -26,19 +26,19 @@
     }
   ],
   "exported":[
-    {"name": "temperature", "generator": "generator1", "frequency": 6000},
-    {"name": "pressure", "generator": "monthly-basis", "frequency": 3000},
-    {"name": "torque", "generator": "generator2", "frequency": 6000},
-    {"name": "rpm", "generator": "daily-basis", "frequency": 3000},
-    {"name": "density", "generator": "generator1", "frequency": 6000},
-    {"name": "porosity", "generator": "daily-basis", "frequency": 3000},
-    {"name": "resistivity", "generator": "generator2", "frequency": 6000},
-    {"name": "crpm", "generator": "monthly-basis", "frequency": 3000},
-    {"name": "aprs", "generator": "daily-basis", "frequency": 6000},
-    {"name": "stor", "generator": "monthly-basis", "frequency": 3000},
-    {"name": "rpm", "generator": "generator1", "frequency": 6000},
-    {"name": "gamma", "generator": "generator2", "frequency": 1000},
-    {"name": "Attn", "generator": "generator1", "frequency": 2000}
+    {"name": "temperature", "generator": "generator1", "frequency": 6000000},
+    {"name": "pressure", "generator": "monthly-basis", "frequency": 3000000},
+    {"name": "torque", "generator": "generator2", "frequency": 6000000},
+    {"name": "rpmooo", "generator": "daily-basis", "frequency": 3000000},
+    {"name": "density", "generator": "generator1", "frequency": 6000000},
+    {"name": "porosity", "generator": "daily-basis", "frequency": 3000000},
+    {"name": "resistivity", "generator": "generator2", "frequency": 6000000},
+    {"name": "crpm", "generator": "monthly-basis", "frequency": 3000000},
+    {"name": "aprs", "generator": "daily-basis", "frequency": 6000000},
+    {"name": "stor", "generator": "monthly-basis", "frequency": 3000000},
+    {"name": "rpm", "generator": "generator1", "frequency": 6000000},
+    {"name": "gamma", "generator": "generator2", "frequency": 1000000},
+    {"name": "Attn", "generator": "generator1", "frequency": 2000000}
   ],
   "from": "2016-01-01 00:00:00.000",
   "to": "2017-12-31 23:59:59.999"
