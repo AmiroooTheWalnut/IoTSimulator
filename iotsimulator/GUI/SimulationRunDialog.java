@@ -350,6 +350,7 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                 public void run() {
                     if(parent.iOTSimulator.timeController.isActive==false)
                     {
+                        jToggleButton1.setText("Start");
                         timer.cancel();
                     }else{
                         simulationTimeLabel.setText(String.valueOf(parent.iOTSimulator.timeController.currentTime));

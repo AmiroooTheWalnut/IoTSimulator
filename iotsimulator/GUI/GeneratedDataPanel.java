@@ -15,7 +15,6 @@ import iotsimulator.Structure.Metric;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -33,6 +32,7 @@ import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
@@ -125,7 +125,7 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
 
         jLabel7.setText("To:");
 
-        jTextField3.setText("2016-02-01 00:00:00.000");
+        jTextField3.setText("2016-01-02 00:00:00.000");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -340,8 +340,8 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
                 for (int i = 0; i < exported.length(); i++) {
                     metricNames.add(exported.getJSONObject(i).getString("name"));
                 }
-                jTextArea1.setText(generators.toString());
-                jTextArea3.setText(exported.toString());
+                jTextArea1.setText(generators.toString(4));
+                jTextArea3.setText(exported.toString(4));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -353,8 +353,7 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
         try {
 //            finalObj.write(new FileWriter("./temporaryConfig.json"));
 
-            Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./temporaryConfig.json"), "utf-8"));
-
+//            Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./temporaryConfig.json"), "utf-8"));
             finalObj = new JSONObject();
 
             JSONArray generators = new JSONArray(jTextArea1.getText());
@@ -370,11 +369,12 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
             parent.iOTSimulator.metricManager.exported = jTextArea3.getText();
             parent.iOTSimulator.metricManager.dataGenerationConfig = String.valueOf(finalObj);
 
-            String str = finalObj.toString().replace("\\", "");
+            String str = finalObj.toString(4).replace("\\", "");
             System.out.println(str);
-            writer.write(str);
-            writer.flush();
-            writer.close();
+            Files.write(Paths.get("./temporaryConfig.json"), str.getBytes());
+//            writer.write(str);
+//            writer.flush();
+//            writer.close();
 
             String currentFolder = "";
             File pwd = new File("./");
@@ -452,15 +452,17 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
         JFileChooser fc_save = new JFileChooser();
         fc_save.setAcceptAllFileFilterUsed(false);
         fc_save.setFileFilter(new FileFilter() {
+            @Override
             public String getDescription() {
-                return "PDF Documents (*.pdf)";
+                return "Comma separated values (*.csv)";
             }
 
+            @Override
             public boolean accept(File f) {
                 if (f.isDirectory()) {
                     return true;
                 } else {
-                    return f.getName().toLowerCase().endsWith(".pdf");
+                    return f.getName().toLowerCase().endsWith(".csv");
                 }
             }
         });
@@ -505,6 +507,14 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
         }
 
         String lastTimeStamp = generatedValues.get(1).time;//SET THE LAST TIME TO THE FIRST RECORD
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
+        DateTime datetime = formatter.parseDateTime(lastTimeStamp);
+        String lastTime;
+        if (longTimestamp) {
+            lastTime = String.valueOf(datetime.getMillis());
+        } else {
+            lastTime = datetime.toString();
+        }
         ArrayList<String> row = new ArrayList();
         for (int i = 0; i < metricNames.size(); i++) {
             row.add("NULL");
@@ -513,8 +523,7 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
         {
             if (generatedValues.get(i) != null) {
                 String temporary_time = generatedValues.get(i).time;
-                DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS");
-                DateTime datetime = formatter.parseDateTime(temporary_time);
+                datetime = formatter.parseDateTime(temporary_time);
                 String time;
                 if (longTimestamp) {
                     time = String.valueOf(datetime.getMillis());
@@ -522,14 +531,8 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
                     time = datetime.toString();
                 }
 
-                for (int m = 0; m < metricNames.size(); m++) {
-                    if (generatedValues.get(i).name.equals(metricNames.get(m))) {
-                        row.add(m, generatedValues.get(i).value);
-                    }
-                }
-
                 if (!lastTimeStamp.equals(temporary_time)) {
-                    dataValueString.append(time).append(",");
+                    dataValueString.append(lastTime).append(",");
                     for (int c = 0; c < row.size(); c++) {
                         dataValueString.append(row.get(c));
                         if (c != row.size() - 1) {
@@ -537,13 +540,19 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
                         }
                     }
                     dataValueString.append(System.lineSeparator());
-                    row.clear();
+                    row = new ArrayList();
                     for (int c = 0; c < metricNames.size(); c++) {
                         row.add("NULL");
                     }
                 }
-
+                for (int m = 0; m < metricNames.size(); m++) {
+                    if (generatedValues.get(i).name.equals(metricNames.get(m))) {
+                        row.set(m, generatedValues.get(i).value);
+                        break;
+                    }
+                }
                 lastTimeStamp = temporary_time;
+                lastTime = time;
             }
         }
 
