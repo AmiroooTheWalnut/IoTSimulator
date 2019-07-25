@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.json.JSONArray;
 
 /**
  *
@@ -35,6 +36,8 @@ public class Device implements Serializable{
     public double usedMemory=0;
     public double usedStorage=0;
     public double usedCPU=0;
+    
+    public JSONArray readyJson;
     
     public void predictNextMetric()
     {

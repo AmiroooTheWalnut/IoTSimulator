@@ -5,11 +5,17 @@
  */
 package iotsimulator.GUI;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -41,35 +47,33 @@ public class SetupSimulatorDialog extends javax.swing.JDialog {
             public void changedUpdate(DocumentEvent e) {
                 warn();
             }
-            
+
             public void warn() {
-                int selectedMetric=jList1.getSelectedIndex();
-                if(selectedMetric>-1)
-                {
-                    if(jFormattedTextField1.getText().length()>0)
-                    {
-                        parent.iOTSimulator.metricManager.selectedMetrics.get(selectedMetric).frequency=Long.valueOf(jFormattedTextField1.getText());
+                int selectedMetric = jList1.getSelectedIndex();
+                if (selectedMetric > -1) {
+                    if (jFormattedTextField1.getText().length() > 0) {
+                        parent.iOTSimulator.metricManager.selectedMetrics.get(selectedMetric).frequency = Long.valueOf(jFormattedTextField1.getText());
                     }
                 }
             }
         });
         refreshDialog();
     }
-    
-    public void refreshDialog()
-    {
+
+    public void refreshDialog() {
         jSlider1.setValue(parent.iOTSimulator.timeController.simulationLengthPercentage);
         jSpinner1.setValue(parent.iOTSimulator.timeController.interpolationBufferSize);
         jSpinner2.setValue(parent.iOTSimulator.timeController.predictionBufferSize);
         fillPanel();
     }
-    
+
     private void fillPanel() {
         jList1.setModel(new javax.swing.AbstractListModel() {
             @Override
             public int getSize() {
                 return parent.iOTSimulator.metricManager.selectedMetrics.size();
             }
+
             @Override
             public Object getElementAt(int index) {
                 return parent.iOTSimulator.metricManager.selectedMetrics.get(index).name;
@@ -251,8 +255,7 @@ public class SetupSimulatorDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-        if(jList1.getSelectedIndex()>-1)
-        {
+        if (jList1.getSelectedIndex() > -1) {
             jFormattedTextField1.setText(String.valueOf(parent.iOTSimulator.metricManager.selectedMetrics.get(jList1.getSelectedIndex()).frequency));
         }
     }//GEN-LAST:event_jList1ValueChanged
@@ -263,8 +266,7 @@ public class SetupSimulatorDialog extends javax.swing.JDialog {
 
     private void jFormattedTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField1KeyPressed
         try {
-            if(evt.getKeyCode()==java.awt.event.KeyEvent.VK_ENTER)
-            {
+            if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
                 jFormattedTextField1.commitEdit();
                 jPanel1.requestFocusInWindow();
             }
@@ -274,14 +276,181 @@ public class SetupSimulatorDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jFormattedTextField1KeyPressed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        parent.iOTSimulator.timeController.simulationLengthPercentage=(int)jSlider1.getValue();
-        parent.iOTSimulator.timeController.predictionBufferSize=(int)jSpinner1.getValue();
-        parent.iOTSimulator.timeController.interpolationBufferSize=(int)jSpinner2.getValue();
+        parent.iOTSimulator.timeController.simulationLengthPercentage = (int) jSlider1.getValue();
+        parent.iOTSimulator.timeController.predictionBufferSize = (int) jSpinner1.getValue();
+        parent.iOTSimulator.timeController.interpolationBufferSize = (int) jSpinner2.getValue();
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
+        JSONArray finalFlow = new JSONArray();
+
+        String rootDeviceRawString = new String();
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader br = Files.newBufferedReader(Paths.get("NodeRedGeneratedFlows/RootDevice.json"))) {
+
+            // read line by line
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            rootDeviceRawString = sb.toString();
+        } catch (IOException e) {
+            System.out.println("CAN'T READ ROOT DEVICE TEMPLATE JSON FILE");
+        }
+
+        String middleDeviceRawString = new String();
+        sb = new StringBuilder();
+        try (BufferedReader br = Files.newBufferedReader(Paths.get("NodeRedGeneratedFlows/MiddleDevice.json"))) {
+
+            // read line by line
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            middleDeviceRawString = sb.toString();
+        } catch (IOException e) {
+            System.out.println("CAN'T READ MIDDLE DEVICE TEMPLATE JSON FILE");
+        }
+
+        String endDeviceRawString = new String();
+        sb = new StringBuilder();
+        try (BufferedReader br = Files.newBufferedReader(Paths.get("NodeRedGeneratedFlows/EndDevice.json"))) {
+
+            // read line by line
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            endDeviceRawString = sb.toString();
+        } catch (IOException e) {
+            System.out.println("CAN'T READ END DEVICE TEMPLATE JSON FILE");
+        }
+        JSONArray rootJson = new JSONArray(rootDeviceRawString);
+        JSONArray middleJson = new JSONArray(middleDeviceRawString);
+        JSONArray endJson = new JSONArray(endDeviceRawString);
+
+        for (int i = 0; i < parent.iOTSimulator.topologyDefinition.topology.topologyLevels.size(); i++) {
+            if (i == 0) {
+                for (int j = 0; j < parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(i).devices.size(); j++) {
+                    JSONArray readySection = new JSONArray(rootJson.toString());
+                    readySection.getJSONObject(0).put("label", parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(i).devices.get(j).name + j);
+                    readySection.getJSONObject(0).put("id", parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(i).devices.get(j).name + j);
+                    int outputLinkCounter = 0;
+                    for (int k = 1; k < readySection.length(); k++) {
+                        readySection.getJSONObject(k).put("z", readySection.getJSONObject(0).get("label"));
+                        if (readySection.getJSONObject(k).getString("type").equals("link out")) {
+                            String temporaryLinkName = readySection.getJSONObject(k).getString("id");
+                            readySection.getJSONObject(k).put("id", readySection.getJSONObject(0).get("label") + "Output" + outputLinkCounter);
+                            for (int m = 1; m < readySection.length(); m++) {
+                                if (readySection.getJSONObject(m).has("wires")) {
+                                    if (readySection.getJSONObject(m).getJSONArray("wires").length() > 0) {
+                                        for (int h = 0; h < readySection.getJSONObject(m).getJSONArray("wires").getJSONArray(0).length(); h++) {
+                                            if (readySection.getJSONObject(m).getJSONArray("wires").getJSONArray(0).getString(h).equals(temporaryLinkName)) {
+                                                readySection.getJSONObject(m).getJSONArray("wires").getJSONArray(0).put(h, readySection.getJSONObject(0).get("label") + "Output" + outputLinkCounter);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            outputLinkCounter = outputLinkCounter + 1;
+                        }
+                    }
+                    parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(i).devices.get(j).readyJson = readySection;
+                    for(int g=0;g<readySection.length();g++)
+                    {
+                       finalFlow.put(readySection.get(g)); 
+                    }
+                }
+            } else if (i == parent.iOTSimulator.topologyDefinition.topology.topologyLevels.size() - 1) {
+                for (int j = 0; j < parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(i).devices.size(); j++) {
+                    JSONArray readySection = new JSONArray(middleJson.toString());
+                    readySection.getJSONObject(0).put("label", parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(i).devices.get(j).name + j);
+                    readySection.getJSONObject(0).put("id", parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(i).devices.get(j).name + j);
+                    int inputLinkCounter = 0;
+                    int outputLinkCounter = 0;
+                    for (int k = 1; k < readySection.length(); k++) {
+                        readySection.getJSONObject(k).put("z", readySection.getJSONObject(0).get("label"));
+                        if (readySection.getJSONObject(k).getString("type").equals("link in")) {
+                            String temporaryLinkName = readySection.getJSONObject(k).getString("id");
+                            readySection.getJSONObject(k).put("id", readySection.getJSONObject(0).get("label") + "Input" + inputLinkCounter);
+                            for (int m = 1; m < readySection.length(); m++) {
+                                if (readySection.getJSONObject(m).has("wires")) {
+                                    if (readySection.getJSONObject(m).getJSONArray("wires").length() > 0) {
+                                        for (int h = 0; h < readySection.getJSONObject(m).getJSONArray("wires").getJSONArray(0).length(); h++) {
+                                            if (readySection.getJSONObject(m).getJSONArray("wires").getJSONArray(0).getString(h).equals(temporaryLinkName)) {
+                                                readySection.getJSONObject(m).getJSONArray("wires").getJSONArray(0).put(h, readySection.getJSONObject(0).get("label") + "Input" + inputLinkCounter);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            inputLinkCounter = inputLinkCounter + 1;
+                        }
+                        if (readySection.getJSONObject(k).getString("type").equals("link out")) {
+                            String temporaryLinkName = readySection.getJSONObject(k).getString("id");
+                            readySection.getJSONObject(k).put("id", readySection.getJSONObject(0).get("label") + "Output" + outputLinkCounter);
+                            for (int m = 1; m < readySection.length(); m++) {
+                                if (readySection.getJSONObject(m).has("wires")) {
+                                    if (readySection.getJSONObject(m).getJSONArray("wires").length() > 0) {
+                                        for (int h = 0; h < readySection.getJSONObject(m).getJSONArray("wires").getJSONArray(0).length(); h++) {
+                                            if (readySection.getJSONObject(m).getJSONArray("wires").getJSONArray(0).getString(h).equals(temporaryLinkName)) {
+                                                readySection.getJSONObject(m).getJSONArray("wires").getJSONArray(0).put(h, readySection.getJSONObject(0).get("label") + "Output" + outputLinkCounter);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            outputLinkCounter = outputLinkCounter + 1;
+                        }
+                    }
+                    parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(i).devices.get(j).readyJson = readySection;
+                    for(int g=0;g<readySection.length();g++)
+                    {
+                       finalFlow.put(readySection.get(g)); 
+                    }
+                }
+            } else {
+                for (int j = 0; j < parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(i).devices.size(); j++) {
+                    JSONArray readySection = new JSONArray(endJson.toString());
+                    readySection.getJSONObject(0).put("label", parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(i).devices.get(j).name + j);
+                    readySection.getJSONObject(0).put("id", parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(i).devices.get(j).name + j);
+                    int inputLinkCounter = 0;
+                    for (int k = 1; k < readySection.length(); k++) {
+                        readySection.getJSONObject(k).put("z", readySection.getJSONObject(0).get("label"));
+                        if (readySection.getJSONObject(k).getString("type").equals("link in")) {
+                            String temporaryLinkName = readySection.getJSONObject(k).getString("id");
+                            readySection.getJSONObject(k).put("id", readySection.getJSONObject(0).get("label") + "Input" + inputLinkCounter);
+                            for (int m = 1; m < readySection.length(); m++) {
+                                if (readySection.getJSONObject(m).has("wires")) {
+                                    if (readySection.getJSONObject(m).getJSONArray("wires").length() > 0) {
+                                        for (int h = 0; h < readySection.getJSONObject(m).getJSONArray("wires").getJSONArray(0).length(); h++) {
+                                            if (readySection.getJSONObject(m).getJSONArray("wires").getJSONArray(0).getString(h).equals(temporaryLinkName)) {
+                                                readySection.getJSONObject(m).getJSONArray("wires").getJSONArray(0).put(h, readySection.getJSONObject(0).get("label") + "Input" + inputLinkCounter);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            inputLinkCounter = inputLinkCounter + 1;
+                        }
+                    }
+                    parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(i).devices.get(j).readyJson = readySection;
+                    for(int g=0;g<readySection.length();g++)
+                    {
+                       finalFlow.put(readySection.get(g)); 
+                    }
+                }
+            }
+        }
+        String str = finalFlow.toString(4).replace("\\", "");
+        System.out.println(str);
+        try {
+            Files.write(Paths.get("./NodeRedGeneratedFlows/generatedModel.json"), str.getBytes());
+        } catch (IOException ex) {
+            Logger.getLogger(SetupSimulatorDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
 
