@@ -27,18 +27,23 @@ public class TimeController implements Serializable {
     public int numTimeSteps;
 
     transient public long currentTime;
+    
+    transient public long simulationVirtualStartTime;
+
+    transient private int refreshRate = 1000;
 
     transient public long actualEndingTime;
 
     transient private long simulationRealStartTime;
 
     transient ArrayList<Timer> watches;
+    transient Timer trunkTimer;
 
     transient Topology model;
     transient public ArrayList<Device> allDevices = new ArrayList();
     transient public ArrayList<StringBuilder> allDeviceConsoles = new ArrayList();
-    
-    transient public boolean isActive=false;
+
+    transient public boolean isActive = false;
 
     public void initDevices(Topology passed_model) {
         allDevices.clear();
@@ -53,8 +58,8 @@ public class TimeController implements Serializable {
     }
 
     public void start(Topology passed_model, MetricManager metricManager) {
-        isActive=true;
-        currentTime = metricManager.startingTime;
+        isActive = true;
+        simulationVirtualStartTime = metricManager.startingTime;
         actualEndingTime = (long) (metricManager.endingTime * (simulationLengthPercentage / 100f));
         model = passed_model;
         initDevices(model);
@@ -70,53 +75,61 @@ public class TimeController implements Serializable {
     }
 
     public void pause() {
+        trunkTimer.cancel();
         for (int i = 0; i < watches.size(); i++) {
             watches.get(i).cancel();
+            watches.set(i, new Timer());
         }
     }
 
     public void resume(MetricManager metricManager) {
         int watchCounter = 0;
-        simulationRealStartTime = System.currentTimeMillis();
         for (int i = 0; i < allDevices.size(); i++) {
             for (int j = 0; j < allDevices.get(i).metrics.size(); j++) {
                 setupTimer(watchCounter, i, j, metricManager);
                 watchCounter = watchCounter + 1;
             }
         }
+        trunkTimer = new Timer();
+        simulationRealStartTime = System.currentTimeMillis();
+        trunkTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                long passedTimeFromStart = System.currentTimeMillis() - simulationRealStartTime;
+                currentTime = simulationVirtualStartTime + passedTimeFromStart;
+                if (currentTime > actualEndingTime) {
+                    finishSimulatiom();
+                    System.out.println("Simulation finished");
+                }
+            }
+        }, 0, refreshRate);
     }
 
     private void setupTimer(int watchCounter, int deviceIndex, int metricIndex, MetricManager metricManager) {
         watches.get(watchCounter).scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                long passedTimeFromStart = System.currentTimeMillis() - simulationRealStartTime;
-                currentTime = currentTime + passedTimeFromStart;
-                if (currentTime > actualEndingTime) {
-                    finishSimulatiom();
-                    System.out.println("Simulation finished");
-                } else {
-                    double generatedMetricValue = metricManager.getMetricValue(allDevices.get(deviceIndex).metrics.get(metricIndex), currentTime);
-                    allDevices.get(deviceIndex).metrics.get(metricIndex).interpolationBuffer.add(generatedMetricValue);
-                    allDevices.get(deviceIndex).metrics.get(metricIndex).predictionBuffer.add(generatedMetricValue);
-                    allDevices.get(deviceIndex).transmitToParent(allDevices.get(deviceIndex).metrics.get(metricIndex), String.valueOf(generatedMetricValue));
-                    allDeviceConsoles.get(deviceIndex).append("Metric: ");
-                    allDeviceConsoles.get(deviceIndex).append(allDevices.get(deviceIndex).metrics.get(metricIndex).name);
-                    allDeviceConsoles.get(deviceIndex).append("Time: ");
-                    allDeviceConsoles.get(deviceIndex).append(currentTime);
-                    allDeviceConsoles.get(deviceIndex).append(": ");
-                    allDeviceConsoles.get(deviceIndex).append(generatedMetricValue);
-                    allDeviceConsoles.get(deviceIndex).append(System.lineSeparator());
-                }
+                double generatedMetricValue = metricManager.getMetricValue(allDevices.get(deviceIndex).metrics.get(metricIndex), currentTime);
+                allDevices.get(deviceIndex).metrics.get(metricIndex).interpolationBuffer.add(generatedMetricValue);
+                allDevices.get(deviceIndex).metrics.get(metricIndex).predictionBuffer.add(generatedMetricValue);
+                allDevices.get(deviceIndex).transmitToParent(allDevices.get(deviceIndex).metrics.get(metricIndex), String.valueOf(generatedMetricValue));
+                allDeviceConsoles.get(deviceIndex).append("Metric: ");
+                allDeviceConsoles.get(deviceIndex).append(allDevices.get(deviceIndex).metrics.get(metricIndex).name);
+                allDeviceConsoles.get(deviceIndex).append("Time: ");
+                allDeviceConsoles.get(deviceIndex).append(currentTime);
+                allDeviceConsoles.get(deviceIndex).append(": ");
+                allDeviceConsoles.get(deviceIndex).append(generatedMetricValue);
+                allDeviceConsoles.get(deviceIndex).append(System.lineSeparator());
             }
         }, 0, allDevices.get(deviceIndex).metrics.get(metricIndex).frequency);
     }
 
     private void finishSimulatiom() {
+        trunkTimer.cancel();
         for (int i = 0; i < watches.size(); i++) {
             watches.get(i).cancel();
         }
-        isActive=false;
+        isActive = false;
     }
 
 }

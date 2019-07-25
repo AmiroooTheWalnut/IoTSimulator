@@ -5,7 +5,9 @@
  */
 package iotsimulator;
 
+import iotsimulator.Structure.Trigger;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  *
@@ -14,5 +16,7 @@ import java.io.Serializable;
 public class TriggerMonitor implements Serializable{
     
     static final long serialVersionUID = 1L;
+    
+    public ArrayList<Trigger> triggers=new ArrayList();
     
 }

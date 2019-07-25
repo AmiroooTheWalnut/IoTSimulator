@@ -18,6 +18,8 @@ import be.cetic.tsimulus.timeseries.TimeSeries;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Timer;
+import java.util.TimerTask;
 import scala.Function1;
 import spray.json.JsValue;
 
@@ -28,10 +30,13 @@ import spray.json.JsValue;
 public class MainFrame extends javax.swing.JFrame {
 
     SetupSensorDataDialog setupSensorDataDialog;
+    SetupTriggerDialog setupTriggerDialog;
     SetupTopologyDialog setupTopologyDialog;
     SetupSimulatorDialog simulatorSetupDialog;
     SimulationRunDialog simulationRunDialog;
     IOTSimulator iOTSimulator;
+    
+    long currentTime=1450000000000l;
     
     /**
      * Creates new form MainFrame
@@ -42,63 +47,12 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         setupAllDialogs();
         
-//        ProcessBuilder processBuilder = new ProcessBuilder();
-//
-//        // Run this on Windows, cmd, /c = terminate after this run
-//        processBuilder.command("bash", "-c", "ping -c 3 google.com");
-//
-//        try {
-//
-//            Process process = processBuilder.start();
-//
-//			// blocked :(
-//            BufferedReader reader =
-//                    new BufferedReader(new InputStreamReader(process.getInputStream()));
-//
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                System.out.println(line);
-//            }
-//
-//            int exitCode = process.waitFor();
-//            System.out.println("\nExited with error code : " + exitCode);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-        
-//        GenerateTimeSeriesFlowFile generateTimeSeriesFlowFile=new GenerateTimeSeriesFlowFile();
-//        
-//        generateTimeSeriesFlowFile.loadConfiguration("./lib/configs/basicConfig.json");
-//        
-//        String test=generateTimeSeriesFlowFile.generateData(true, true, "America/Phoenix", "CSV", "Gateway" ,"test");
-//        System.out.println(test);
-        
-//        AggregateGenerator aggregateGenerator=new AggregateGenerator();
-//        aggregateGenerator.
-        
-//        Generator generator;
-//        generator = new Generator() {
-//            @Override
-//            public TimeSeries timeseries(Function1 fnctn) {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//            }
-//
-//            @Override
-//            public JsValue toJson() {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//            }
-//        };
-        
-        
-        
     }
     
     private void setupAllDialogs()
     {
         setupSensorDataDialog=new SetupSensorDataDialog(this,true);
+        setupTriggerDialog=new SetupTriggerDialog(this,true);
         setupTopologyDialog=new SetupTopologyDialog(this,true);
         simulatorSetupDialog=new SetupSimulatorDialog(this,true);
         /**UNDER CONSTRUCTION
@@ -128,6 +82,8 @@ public class MainFrame extends javax.swing.JFrame {
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
+        jButton10 = new javax.swing.JButton();
+        jCheckBox5 = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -197,6 +153,15 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        jButton10.setText("Setup triggers");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
+
+        jCheckBox5.setEnabled(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -204,10 +169,6 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBox1))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -228,7 +189,15 @@ public class MainFrame extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton9)))
+                        .addComponent(jButton9))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBox5))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBox1)))
                 .addContainerGap(84, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -242,10 +211,14 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton8)
                     .addComponent(jButton9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
                     .addComponent(jCheckBox1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton10)
+                    .addComponent(jCheckBox5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton2)
@@ -369,6 +342,11 @@ public class MainFrame extends javax.swing.JFrame {
         simulationRunDialog.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        setupTriggerDialog.refreshDialog();
+        setupTriggerDialog.setVisible(true);
+    }//GEN-LAST:event_jButton10ActionPerformed
+
     
     /**
      * @param args the command line arguments
@@ -407,6 +385,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -419,5 +398,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JCheckBox jCheckBox4;
+    private javax.swing.JCheckBox jCheckBox5;
     // End of variables declaration//GEN-END:variables
 }

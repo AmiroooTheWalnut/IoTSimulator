@@ -344,15 +344,14 @@ public class SimulationRunDialog extends javax.swing.JDialog {
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         if (jToggleButton1.getText().equals("Start")) {
-            Timer timer=new Timer();
+            Timer timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    if(parent.iOTSimulator.timeController.isActive==false)
-                    {
+                    if (parent.iOTSimulator.timeController.isActive == false) {
                         jToggleButton1.setText("Start");
                         timer.cancel();
-                    }else{
+                    } else {
                         simulationTimeLabel.setText(String.valueOf(parent.iOTSimulator.timeController.currentTime));
                         int selectedDeviceIndex = jList1.getSelectedIndex();
                         if (selectedDeviceIndex > -1) {
@@ -360,6 +359,7 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                             cPULabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedCPU));
                             memoryLabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedMemory));
                             storageLabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedStorage));
+                            jTextArea1.setText(parent.iOTSimulator.timeController.allDeviceConsoles.get(selectedDeviceIndex).toString());
                         }
                     }
                 }
@@ -369,7 +369,7 @@ public class SimulationRunDialog extends javax.swing.JDialog {
         } else if (jToggleButton1.getText().equals("Resume")) {
             parent.iOTSimulator.timeController.resume(parent.iOTSimulator.metricManager);
             jToggleButton1.setText("Pause");
-        } else if (jToggleButton1.getText().equals("Pasue")) {
+        } else if (jToggleButton1.getText().equals("Pause")) {
             parent.iOTSimulator.timeController.pause();
             jToggleButton1.setText("Resume");
         }
@@ -387,12 +387,17 @@ public class SimulationRunDialog extends javax.swing.JDialog {
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
         int selectedDeviceIndex = jList1.getSelectedIndex();
         if (selectedDeviceIndex > -1) {
+            bandwidthLabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedBandWidth));
+            cPULabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedCPU));
+            memoryLabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedMemory));
+            storageLabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedStorage));
             jTextArea1.setText(parent.iOTSimulator.timeController.allDeviceConsoles.get(selectedDeviceIndex).toString());
             jList2.setModel(new javax.swing.AbstractListModel() {
                 @Override
                 public int getSize() {
                     return parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).metrics.size();
                 }
+
                 @Override
                 public Object getElementAt(int index) {
                     return parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).metrics.get(index).name;

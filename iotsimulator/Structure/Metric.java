@@ -34,6 +34,8 @@ public class Metric implements Serializable{
     public ArrayList<Double> predictionBuffer=new ArrayList();
     public ArrayList<Double> interpolationBuffer=new ArrayList();
     
+    public ArrayList<Trigger> triggersInvolved=new ArrayList();
+    
     public int lastRecordIndex=0;
     
     public Metric(int passed_columnIndex,String passed_columnName)
