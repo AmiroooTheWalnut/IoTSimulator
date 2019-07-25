@@ -1,0 +1,60 @@
+[
+    {
+        "id": "3de9309c.d26f98",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "f22e6198.53aa3",
+        "type": "link in",
+        "z": "3de9309c.d26f98",
+        "name": "",
+        "links": [],
+        "x": 192,
+        "y": 296,
+        "wires": [
+            [
+                "dacd3ef7.03a648"
+            ]
+        ]
+    },
+    {
+        "id": "dacd3ef7.03a648",
+        "type": "change",
+        "z": "3de9309c.d26f98",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "1",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 342,
+        "y": 296,
+        "wires": [
+            [
+                "b728bd58.1f7678"
+            ]
+        ]
+    },
+    {
+        "id": "b728bd58.1f7678",
+        "type": "link out",
+        "z": "3de9309c.d26f98",
+        "name": "",
+        "links": [],
+        "x": 507,
+        "y": 296,
+        "wires": []
+    }
+]

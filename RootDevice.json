@@ -1,0 +1,120 @@
+[
+    {
+        "id": "f5398764.45a048",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "2d69418d.906026",
+        "type": "inject",
+        "z": "f5398764.45a048",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "1",
+        "x": 225,
+        "y": 237,
+        "wires": [
+            [
+                "4c16600c.4725f"
+            ]
+        ]
+    },
+    {
+        "id": "a1509c7f.a88fa8",
+        "type": "link out",
+        "z": "f5398764.45a048",
+        "name": "",
+        "links": [],
+        "x": 1147,
+        "y": 236,
+        "wires": []
+    },
+    {
+        "id": "f41ddbe0.1ee8d8",
+        "type": "file in",
+        "z": "f5398764.45a048",
+        "name": "",
+        "filename": "Test.csv",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 628,
+        "y": 234,
+        "wires": [
+            [
+                "a2c5f6ed.5ee26"
+            ]
+        ]
+    },
+    {
+        "id": "a2c5f6ed.5ee26",
+        "type": "csv",
+        "z": "f5398764.45a048",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "",
+        "multi": "mult",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "x": 788,
+        "y": 234,
+        "wires": [
+            [
+                "b86d83e5.89bb6"
+            ]
+        ]
+    },
+    {
+        "id": "4c16600c.4725f",
+        "type": "function",
+        "z": "f5398764.45a048",
+        "name": "Initialize device",
+        "func": "flow.set('myname','CHANGE MY NAME')\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 430,
+        "y": 234,
+        "wires": [
+            [
+                "f41ddbe0.1ee8d8"
+            ]
+        ]
+    },
+    {
+        "id": "b86d83e5.89bb6",
+        "type": "change",
+        "z": "f5398764.45a048",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "dataset",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 979,
+        "y": 236,
+        "wires": [
+            [
+                "a1509c7f.a88fa8"
+            ]
+        ]
+    }
+]

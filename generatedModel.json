@@ -1,0 +1,146 @@
+[
+    {
+        "disabled": false,
+        "id": "RTYU0",
+        "label": "RTYU0",
+        "type": "tab",
+        "info": ""
+    },
+    {
+        "crontab": "",
+        "type": "inject",
+        "wires": [["4c16600c.4725f"]],
+        "payloadType": "date",
+        "payload": "",
+        "once": false,
+        "repeat": "",
+        "name": "",
+        "x": 225,
+        "topic": "",
+        "y": 237,
+        "z": "RTYU0",
+        "id": "2d69418d.906026",
+        "onceDelay": "1"
+    },
+    {
+        "wires": [],
+        "name": "",
+        "x": 1154,
+        "y": 235,
+        "z": "RTYU0",
+        "links": [],
+        "id": "RTYU0Output0",
+        "type": "link out"
+    },
+    {
+        "wires": [["a2c5f6ed.5ee26"]],
+        "filename": "Test.csv",
+        "name": "",
+        "format": "utf8",
+        "sendError": false,
+        "x": 628,
+        "chunk": false,
+        "y": 234,
+        "z": "RTYU0",
+        "id": "f41ddbe0.1ee8d8",
+        "type": "file in",
+        "encoding": "none"
+    },
+    {
+        "ret": "n",
+        "temp": "",
+        "skip": "0",
+        "type": "csv",
+        "multi": "mult",
+        "wires": [["b86d83e5.89bb6"]],
+        "hdrin": "",
+        "hdrout": "",
+        "name": "",
+        "x": 788,
+        "y": 234,
+        "z": "RTYU0",
+        "id": "a2c5f6ed.5ee26",
+        "sep": ","
+    },
+    {
+        "outputs": 1,
+        "wires": [["f41ddbe0.1ee8d8"]],
+        "func": "flow.set('myname','CHANGE MY NAME')nreturn msg;",
+        "noerr": 0,
+        "name": "Initialize device",
+        "x": 434,
+        "y": 236,
+        "z": "RTYU0",
+        "id": "4c16600c.4725f",
+        "type": "function"
+    },
+    {
+        "rules": [{
+            "p": "dataset",
+            "t": "set",
+            "pt": "global",
+            "tot": "msg",
+            "to": "payload"
+        }],
+        "type": "change",
+        "wires": [["RTYU0Output0"]],
+        "reg": false,
+        "name": "",
+        "property": "",
+        "x": 979,
+        "action": "",
+        "y": 236,
+        "z": "RTYU0",
+        "from": "",
+        "id": "b86d83e5.89bb6",
+        "to": ""
+    },
+    {
+        "disabled": false,
+        "id": "CXVN0",
+        "label": "CXVN0",
+        "type": "tab",
+        "info": ""
+    },
+    {
+        "wires": [["dacd3ef7.03a648"]],
+        "name": "",
+        "x": 192,
+        "y": 296,
+        "z": "CXVN0",
+        "links": [],
+        "id": "CXVN0Input0",
+        "type": "link in"
+    },
+    {
+        "rules": [{
+            "p": "payload",
+            "t": "set",
+            "pt": "msg",
+            "tot": "str",
+            "to": "1"
+        }],
+        "type": "change",
+        "wires": [["CXVN0Output0"]],
+        "reg": false,
+        "name": "",
+        "property": "",
+        "x": 342,
+        "action": "",
+        "y": 296,
+        "z": "CXVN0",
+        "from": "",
+        "id": "dacd3ef7.03a648",
+        "to": ""
+    },
+    {
+        "wires": [],
+        "name": "",
+        "x": 507,
+        "y": 296,
+        "z": "CXVN0",
+        "links": [],
+        "id": "CXVN0Output0",
+        "type": "link out"
+    }
+]

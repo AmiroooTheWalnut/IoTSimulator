@@ -1,0 +1,1 @@
+node-red --userDir F:\My_software_develops\IOTSimulationIBM\IoTSimulator\NodeRedGeneratedFlows F:\My_software_develops\IOTSimulationIBM\IoTSimulator\NodeRedGeneratedFlows\MiddleDevice.json

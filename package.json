@@ -1,0 +1,13 @@
+{
+    "name": "node-red-project",
+    "description": "A Node-RED Project",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "node-red-contrib-actionflows": "~2.0.3",
+        "node-red-contrib-random-event-generator": "0.0.3",
+        "node-red-contrib-uibuilder": "~1.2.5",
+        "node-red-dashboard": "~2.15.4",
+        "node-red-node-random": "~0.1.3"
+    }
+}

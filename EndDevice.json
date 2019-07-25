@@ -1,0 +1,37 @@
+[
+    {
+        "id": "e687b78a.962ae8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "bb584611.14afe8",
+        "type": "link in",
+        "z": "e687b78a.962ae8",
+        "name": "",
+        "links": [],
+        "x": 251,
+        "y": 271,
+        "wires": [
+            [
+                "c5dfc74a.62fde"
+            ]
+        ]
+    },
+    {
+        "id": "c5dfc74a.62fde",
+        "type": "debug",
+        "z": "e687b78a.962ae8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 404,
+        "y": 270,
+        "wires": []
+    }
+]
