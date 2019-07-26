@@ -5,13 +5,18 @@
  */
 package iotsimulator.Structure;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author user
  */
-public class Trigger {
+public class Trigger implements Serializable{
+    
+    static final long serialVersionUID = 1L;
+    
+    
     public String type;//HIGHER_THAN,LOWER_THAN,BETWEEN,MODEL
     public double threshold;
     public double thresholdHigh;

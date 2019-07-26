@@ -5,11 +5,16 @@
  */
 package iotsimulator.Structure;
 
+import java.io.Serializable;
+
 /**
  *
  * @author myname
  */
-public class CustomTuple3 {
+public class CustomTuple3  implements Serializable{
+    
+    static final long serialVersionUID = 1L;
+    
     public String time;
     public String name;
     public String value;
