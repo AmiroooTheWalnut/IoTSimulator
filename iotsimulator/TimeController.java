@@ -5,6 +5,7 @@
  */
 package iotsimulator;
 
+import iotsimulator.Structure.DataExchange;
 import iotsimulator.Structure.Device;
 import iotsimulator.Structure.Topology;
 import java.io.Serializable;
@@ -19,6 +20,10 @@ import java.util.TimerTask;
 public class TimeController implements Serializable {
 
     static final long serialVersionUID = 1L;
+    
+    transient IOTSimulator parent;
+    
+    transient TimeController thisTimeController=this;
 
     public int predictionBufferSize = 50;
     public int interpolationBufferSize = 40;
@@ -30,7 +35,7 @@ public class TimeController implements Serializable {
     
     transient public long simulationVirtualStartTime;
 
-    transient private int refreshRate = 1000;
+    private int refreshRate = 1000;
 
     transient public long actualEndingTime;
 
@@ -41,18 +46,21 @@ public class TimeController implements Serializable {
 
     transient Topology model;
     transient public ArrayList<Device> allDevices = new ArrayList();
-    transient public ArrayList<StringBuilder> allDeviceConsoles = new ArrayList();
 
     transient public boolean isActive = false;
+    
+    TimeController(IOTSimulator iOTSimulator)
+    {
+        parent=iOTSimulator;
+    }
 
     public void initDevices(Topology passed_model) {
-        allDevices.clear();
-        allDeviceConsoles.clear();
+        allDevices = new ArrayList();
         for (int i = 0; i < passed_model.topologyLevels.size(); i++) {
             for (int j = 0; j < passed_model.topologyLevels.get(i).devices.size(); j++) {
                 passed_model.topologyLevels.get(i).devices.get(j).clearAllResources();
+                passed_model.topologyLevels.get(i).devices.get(j).clearConsole();
                 allDevices.add(passed_model.topologyLevels.get(i).devices.get(j));
-                allDeviceConsoles.add(new StringBuilder());
             }
         }
     }
@@ -110,16 +118,9 @@ public class TimeController implements Serializable {
             @Override
             public void run() {
                 double generatedMetricValue = metricManager.getMetricValue(allDevices.get(deviceIndex).metrics.get(metricIndex), currentTime);
-                allDevices.get(deviceIndex).metrics.get(metricIndex).interpolationBuffer.add(generatedMetricValue);
-                allDevices.get(deviceIndex).metrics.get(metricIndex).predictionBuffer.add(generatedMetricValue);
-                allDevices.get(deviceIndex).transmitToParent(allDevices.get(deviceIndex).metrics.get(metricIndex), String.valueOf(generatedMetricValue));
-                allDeviceConsoles.get(deviceIndex).append("Metric: ");
-                allDeviceConsoles.get(deviceIndex).append(allDevices.get(deviceIndex).metrics.get(metricIndex).name);
-                allDeviceConsoles.get(deviceIndex).append("Time: ");
-                allDeviceConsoles.get(deviceIndex).append(currentTime);
-                allDeviceConsoles.get(deviceIndex).append(": ");
-                allDeviceConsoles.get(deviceIndex).append(generatedMetricValue);
-                allDeviceConsoles.get(deviceIndex).append(System.lineSeparator());
+                DataExchange message=new DataExchange(allDevices.get(deviceIndex),allDevices.get(deviceIndex).parent,currentTime,String.valueOf(generatedMetricValue),allDevices.get(deviceIndex).metrics.get(metricIndex));
+                allDevices.get(deviceIndex).sendToParent(message,thisTimeController);
+                message.toDevice.checkTriggers(parent.triggerMonitor,currentTime);
             }
         }, 0, allDevices.get(deviceIndex).metrics.get(metricIndex).frequency);
     }

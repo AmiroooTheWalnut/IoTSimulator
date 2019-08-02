@@ -64,7 +64,7 @@ public class IOTSimulator implements Serializable {
         topologyDefinition = new TopologyDefinition();
         optimizer = new Optimizer();
         solutionStorageManager = new SolutionStorageManager();
-        timeController = new TimeController();
+        timeController = new TimeController(this);
         triggerMonitor = new TriggerMonitor();
         triggerPredictor = new TriggerPredictor();
     }

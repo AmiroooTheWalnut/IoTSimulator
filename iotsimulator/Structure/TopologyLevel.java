@@ -18,4 +18,7 @@ public class TopologyLevel implements Serializable{
     
     public String name="Unnamed";
     public ArrayList<Device> devices=new ArrayList();
+    
+    public ArrayList<String> roles=new ArrayList();
+    
 }

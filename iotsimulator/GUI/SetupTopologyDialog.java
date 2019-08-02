@@ -18,18 +18,17 @@ import javax.swing.event.DocumentListener;
 public class SetupTopologyDialog extends javax.swing.JDialog {
 
     MainFrame parent;
-    
-    
+
     /**
      * Creates new form SetupTopologyDialog
      */
     public SetupTopologyDialog(java.awt.Frame passed_parent, boolean modal) {
         super(passed_parent, modal);
         initComponents();
-        parent=(MainFrame)passed_parent;
-        
+        parent = (MainFrame) passed_parent;
+
         refreshDialog();
-        
+
         jList4.setSelectionModel(new DefaultListSelectionModel() {
             @Override
             public void setSelectionInterval(int index0, int index1) {
@@ -40,7 +39,7 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                 }
             }
         });
-        
+
         jTextField1.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -56,19 +55,17 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
             public void changedUpdate(DocumentEvent e) {
                 warn();
             }
-            
+
             public void warn() {
-                int topologySelectionLevel=jList1.getSelectedIndex();
-                if(topologySelectionLevel>-1)
-                {
-                    if(jTextField1.getText().length()>0)
-                    {
-                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).name=jTextField1.getText();
+                int topologySelectionLevel = jList1.getSelectedIndex();
+                if (topologySelectionLevel > -1) {
+                    if (jTextField1.getText().length() > 0) {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).name = jTextField1.getText();
                     }
                 }
             }
         });
-        
+
         jTextField2.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -84,20 +81,18 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
             public void changedUpdate(DocumentEvent e) {
                 warn();
             }
-            
+
             public void warn() {
-                int topologySelectionLevel=jList1.getSelectedIndex();
-                int deviceSelection=jList2.getSelectedIndex();
-                if(topologySelectionLevel>-1 && deviceSelection>-1)
-                {
-                    if(jTextField2.getText().length()>0)
-                    {
-                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).name=jTextField2.getText();
+                int topologySelectionLevel = jList1.getSelectedIndex();
+                int deviceSelection = jList2.getSelectedIndex();
+                if (topologySelectionLevel > -1 && deviceSelection > -1) {
+                    if (jTextField2.getText().length() > 0) {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).name = jTextField2.getText();
                     }
                 }
             }
         });
-        
+
         jFormattedTextField1.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -113,20 +108,18 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
             public void changedUpdate(DocumentEvent e) {
                 warn();
             }
-            
+
             public void warn() {
-                int topologySelectionLevel=jList1.getSelectedIndex();
-                int deviceSelection=jList2.getSelectedIndex();
-                if(topologySelectionLevel>-1 && deviceSelection>-1)
-                {
-                    if(jFormattedTextField1.getText().length()>0)
-                    {
-                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).bandWidthCapacity=Double.valueOf(jFormattedTextField1.getText());
+                int topologySelectionLevel = jList1.getSelectedIndex();
+                int deviceSelection = jList2.getSelectedIndex();
+                if (topologySelectionLevel > -1 && deviceSelection > -1) {
+                    if (jFormattedTextField1.getText().length() > 0) {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).bandWidthCapacity = Double.valueOf(jFormattedTextField1.getText());
                     }
                 }
             }
         });
-        
+
         jFormattedTextField2.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -142,20 +135,18 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
             public void changedUpdate(DocumentEvent e) {
                 warn();
             }
-            
+
             public void warn() {
-                int topologySelectionLevel=jList1.getSelectedIndex();
-                int deviceSelection=jList2.getSelectedIndex();
-                if(topologySelectionLevel>-1 && deviceSelection>-1)
-                {
-                    if(jFormattedTextField2.getText().length()>0)
-                    {
-                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).memoryCapacity=Double.valueOf(jFormattedTextField2.getText());
+                int topologySelectionLevel = jList1.getSelectedIndex();
+                int deviceSelection = jList2.getSelectedIndex();
+                if (topologySelectionLevel > -1 && deviceSelection > -1) {
+                    if (jFormattedTextField2.getText().length() > 0) {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).memoryCapacity = Double.valueOf(jFormattedTextField2.getText());
                     }
                 }
             }
         });
-        
+
         jFormattedTextField3.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -171,20 +162,18 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
             public void changedUpdate(DocumentEvent e) {
                 warn();
             }
-            
+
             public void warn() {
-                int topologySelectionLevel=jList1.getSelectedIndex();
-                int deviceSelection=jList2.getSelectedIndex();
-                if(topologySelectionLevel>-1 && deviceSelection>-1)
-                {
-                    if(jFormattedTextField3.getText().length()>0)
-                    {
-                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).storageCapacity=Double.valueOf(jFormattedTextField3.getText());
+                int topologySelectionLevel = jList1.getSelectedIndex();
+                int deviceSelection = jList2.getSelectedIndex();
+                if (topologySelectionLevel > -1 && deviceSelection > -1) {
+                    if (jFormattedTextField3.getText().length() > 0) {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).storageCapacity = Double.valueOf(jFormattedTextField3.getText());
                     }
                 }
             }
         });
-        
+
         jFormattedTextField4.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -200,20 +189,18 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
             public void changedUpdate(DocumentEvent e) {
                 warn();
             }
-            
+
             public void warn() {
-                int topologySelectionLevel=jList1.getSelectedIndex();
-                int deviceSelection=jList2.getSelectedIndex();
-                if(topologySelectionLevel>-1 && deviceSelection>-1)
-                {
-                    if(jFormattedTextField4.getText().length()>0)
-                    {
-                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).CPUCapacity=Double.valueOf(jFormattedTextField4.getText());
+                int topologySelectionLevel = jList1.getSelectedIndex();
+                int deviceSelection = jList2.getSelectedIndex();
+                if (topologySelectionLevel > -1 && deviceSelection > -1) {
+                    if (jFormattedTextField4.getText().length() > 0) {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).CPUCapacity = Double.valueOf(jFormattedTextField4.getText());
                     }
                 }
             }
         });
-        
+
         jFormattedTextField5.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -229,23 +216,20 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
             public void changedUpdate(DocumentEvent e) {
                 warn();
             }
-            
+
             public void warn() {
-                int topologySelectionLevel=jList1.getSelectedIndex();
-                int deviceSelection=jList2.getSelectedIndex();
-                if(topologySelectionLevel>-1 && deviceSelection>-1)
-                {
-                    if(jFormattedTextField5.getText().length()>0)
-                    {
-                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).latency=Long.valueOf(jFormattedTextField5.getText());
+                int topologySelectionLevel = jList1.getSelectedIndex();
+                int deviceSelection = jList2.getSelectedIndex();
+                if (topologySelectionLevel > -1 && deviceSelection > -1) {
+                    if (jFormattedTextField5.getText().length() > 0) {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).latency = Long.valueOf(jFormattedTextField5.getText());
                     }
                 }
             }
         });
     }
-    
-    public void refreshDialog()
-    {
+
+    public void refreshDialog() {
         refreshTopologyLayerList();
         refreshDevicesList();
     }
@@ -266,6 +250,9 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
         jList1 = new javax.swing.JList<>();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        jCheckBox2 = new javax.swing.JCheckBox();
+        jCheckBox3 = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jSpinner2 = new javax.swing.JSpinner();
@@ -295,7 +282,7 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Step1"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Topology level"));
 
         jLabel1.setText("Number of layers:");
 
@@ -322,6 +309,27 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
             }
         });
 
+        jCheckBox1.setText("Sensing");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+
+        jCheckBox2.setText("Trigger monitoring");
+        jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox2ActionPerformed(evt);
+            }
+        });
+
+        jCheckBox3.setText("Rearrangment");
+        jCheckBox3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -329,16 +337,19 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField1)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBox1)
+                            .addComponent(jLabel2)
+                            .addComponent(jCheckBox3)
+                            .addComponent(jCheckBox2)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel2))
-                        .addGap(0, 15, Short.MAX_VALUE))
-                    .addComponent(jTextField1))
+                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 73, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -349,7 +360,13 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                     .addComponent(jLabel1)
                     .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -359,7 +376,7 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
 
         getContentPane().add(jPanel1);
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Step2"));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Devices"));
 
         jLabel3.setText("Number of devices:");
 
@@ -423,7 +440,7 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
 
         getContentPane().add(jPanel2);
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Step3"));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Device info"));
 
         jLabel5.setText("Bandwidth (KB/s):");
 
@@ -536,7 +553,7 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
 
         getContentPane().add(jPanel3);
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Step4"));
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Metrics"));
 
         jLabel10.setText("Initial metrics:");
 
@@ -576,31 +593,26 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jSpinner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner1StateChanged
-        int numCurrentTopologyLevels=parent.iOTSimulator.topologyDefinition.topology.topologyLevels.size();
-        int targetTopologyLevels=(int)jSpinner1.getValue();
-        if(targetTopologyLevels>numCurrentTopologyLevels)
-        {
-            for(int i=numCurrentTopologyLevels;i<targetTopologyLevels;i++)
-            {
-                TopologyLevel addedTopology=new TopologyLevel();
+        int numCurrentTopologyLevels = parent.iOTSimulator.topologyDefinition.topology.topologyLevels.size();
+        int targetTopologyLevels = (int) jSpinner1.getValue();
+        if (targetTopologyLevels > numCurrentTopologyLevels) {
+            for (int i = numCurrentTopologyLevels; i < targetTopologyLevels; i++) {
+                TopologyLevel addedTopology = new TopologyLevel();
                 addedTopology.devices.add(new Device());
                 parent.iOTSimulator.topologyDefinition.topology.topologyLevels.add(new TopologyLevel());
             }
         }
-        if(targetTopologyLevels<numCurrentTopologyLevels)
-        {
-            for(int i=numCurrentTopologyLevels;i>targetTopologyLevels;i--)
-            {
-                parent.iOTSimulator.topologyDefinition.topology.topologyLevels.remove(i-1);
+        if (targetTopologyLevels < numCurrentTopologyLevels) {
+            for (int i = numCurrentTopologyLevels; i > targetTopologyLevels; i--) {
+                parent.iOTSimulator.topologyDefinition.topology.topologyLevels.remove(i - 1);
             }
         }
         refreshTopologyLayerList();
     }//GEN-LAST:event_jSpinner1StateChanged
 
     private void jSpinner2StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner2StateChanged
-        int topologySelectionLevel=jList1.getSelectedIndex();
-        if(topologySelectionLevel>-1)
-        {
+        int topologySelectionLevel = jList1.getSelectedIndex();
+        if (topologySelectionLevel > -1) {
             int numCurrentDevices = parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.size();
             int targetDevices = (int) jSpinner2.getValue();
             if (targetDevices > numCurrentDevices) {
@@ -615,22 +627,43 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
             }
             refreshDevicesList();
         }
-        
+
     }//GEN-LAST:event_jSpinner2StateChanged
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-        int topologySelectionLevel=jList1.getSelectedIndex();
-        if(topologySelectionLevel>-1)
-        {
+        int topologySelectionLevel = jList1.getSelectedIndex();
+        if (topologySelectionLevel > -1) {
             jTextField1.setText(parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).name);
             refreshDevicesList();
             jSpinner2.setValue(parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.size());
+            for (int i = 0; i < parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.size(); i++) {
+                if (parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.get(i).equals(jCheckBox1.getText())) {
+                    jCheckBox1.setSelected(true);
+                }
+                if (parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.get(i).equals(jCheckBox2.getText())) {
+                    jCheckBox2.setSelected(true);
+                }
+                if (parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.get(i).equals(jCheckBox3.getText())) {
+                    jCheckBox3.setSelected(true);
+                }
+            }
         }
     }//GEN-LAST:event_jList1ValueChanged
 
     private void jList2ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList2ValueChanged
-        int topologySelectionLevel=jList1.getSelectedIndex();
-        int deviceSelection=jList2.getSelectedIndex();
+        int topologySelectionLevel = jList1.getSelectedIndex();
+        int deviceSelection = jList2.getSelectedIndex();
+        jList4.setModel(new javax.swing.AbstractListModel() {
+            @Override
+            public int getSize() {
+                return 0;
+            }
+
+            @Override
+            public Object getElementAt(int index) {
+                return null;
+            }
+        });
         if (deviceSelection > -1) {
             Device targetDevice = parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection);
             jTextField2.setText(targetDevice.name);
@@ -639,7 +672,7 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
             jFormattedTextField2.setText(String.valueOf(targetDevice.memoryCapacity));
             jFormattedTextField3.setText(String.valueOf(targetDevice.storageCapacity));
             jFormattedTextField4.setText(String.valueOf(targetDevice.CPUCapacity));
-            
+
             jFormattedTextField5.setText(String.valueOf(targetDevice.latency));
 
             int parentTopologySelectionLevel = topologySelectionLevel - 1;
@@ -655,30 +688,25 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                         return parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(parentTopologySelectionLevel).devices.get(index).name;
                     }
                 });
-                if(parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).parentDeviceIndex>-1)
-                {
+                if (parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).parentDeviceIndex > -1) {
                     jList3.setSelectedIndex(parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).parentDeviceIndex);
                 }
             }
-            refreshNotAssignedMetrics();
-        }else{
+            for (int i = 0; i < parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.size(); i++) {
+                if (parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.get(i).equals(jCheckBox1.getText()))//IF IT HAS SENSING ROLE
+                {
+                    refreshNotAssignedMetrics();
+                    break;
+                }
+            }
+
+        } else {
             jTextField2.setText("");
             jFormattedTextField1.setText("");
             jFormattedTextField2.setText("");
             jFormattedTextField3.setText("");
             jFormattedTextField4.setText("");
             jList3.setModel(new javax.swing.AbstractListModel() {
-                @Override
-                public int getSize() {
-                    return 0;
-                }
-
-                @Override
-                public Object getElementAt(int index) {
-                    return null;
-                }
-            });
-            jList4.setModel(new javax.swing.AbstractListModel() {
                 @Override
                 public int getSize() {
                     return 0;
@@ -711,20 +739,19 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                 }
             }
         }
-        
+
     }//GEN-LAST:event_jList4ValueChanged
 
     private void jList3ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList3ValueChanged
-        int topologySelectionLevel=jList1.getSelectedIndex()-1;
+        int topologySelectionLevel = jList1.getSelectedIndex() - 1;
         int deviceSelection = jList2.getSelectedIndex();
-        int selectedParentIndex=jList3.getSelectedIndex();
-        if(topologySelectionLevel>-1 && selectedParentIndex>-1)
-        {
-            parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel+1).devices.get(deviceSelection).parent=parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(selectedParentIndex);
-            parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel+1).devices.get(deviceSelection).parentDeviceIndex=selectedParentIndex;
-            parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(selectedParentIndex).children.add(parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel+1).devices.get(deviceSelection));
+        int selectedParentIndex = jList3.getSelectedIndex();
+        if (topologySelectionLevel > -1 && selectedParentIndex > -1) {
+            parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel + 1).devices.get(deviceSelection).parent = parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(selectedParentIndex);
+            parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel + 1).devices.get(deviceSelection).parentDeviceIndex = selectedParentIndex;
+            parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(selectedParentIndex).children.add(parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel + 1).devices.get(deviceSelection));
         }
-        
+
     }//GEN-LAST:event_jList3ValueChanged
 
     private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
@@ -769,31 +796,76 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jFormattedTextField5KeyPressed
 
-    public void refreshNotAssignedMetrics()
-    {
-        jList4.setModel(new javax.swing.AbstractListModel() {
-                @Override
-                public int getSize() {
-                    return parent.iOTSimulator.metricManager.selectedMetrics.size();
-                }
-
-                @Override
-                public Object getElementAt(int index) {
-                    if(parent.iOTSimulator.metricManager.selectedMetrics.get(index).isAssigned==false)
-                    {
-                        return parent.iOTSimulator.metricManager.selectedMetrics.get(index).name;
-                    }else{
-                        return "SELECTED"+parent.iOTSimulator.metricManager.selectedMetrics.get(index).name;
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        int topologySelectionLevel = jList1.getSelectedIndex();
+        if (topologySelectionLevel > -1) {
+            if (jCheckBox1.isSelected()) {
+                parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.add(jCheckBox1.getText());
+            } else {
+                for (int i = 0; i < parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.size(); i++) {
+                    if (parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.get(i).equals(jCheckBox1.getText())) {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.remove(i);
+                        break;
                     }
                 }
-            });
-        int topologySelectionLevel=jList1.getSelectedIndex();
-        int deviceSelection=jList2.getSelectedIndex();
-        if(parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).metricIndices!=null)
-        {
+            }
+        }
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
+        int topologySelectionLevel = jList1.getSelectedIndex();
+        if (topologySelectionLevel > -1) {
+            if (jCheckBox2.isSelected()) {
+                parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.add(jCheckBox2.getText());
+            } else {
+                for (int i = 0; i < parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.size(); i++) {
+                    if (parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.get(i).equals(jCheckBox2.getText())) {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.remove(i);
+                        break;
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_jCheckBox2ActionPerformed
+
+    private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
+        int topologySelectionLevel = jList1.getSelectedIndex();
+        if (topologySelectionLevel > -1) {
+            if (jCheckBox3.isSelected()) {
+                parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.add(jCheckBox3.getText());
+            } else {
+                for (int i = 0; i < parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.size(); i++) {
+                    if (parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.get(i).equals(jCheckBox3.getText())) {
+                        parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).roles.remove(i);
+                        break;
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_jCheckBox3ActionPerformed
+
+    public void refreshNotAssignedMetrics() {
+        jList4.setModel(new javax.swing.AbstractListModel() {
+            @Override
+            public int getSize() {
+                return parent.iOTSimulator.metricManager.selectedMetrics.size();
+            }
+
+            @Override
+            public Object getElementAt(int index) {
+                if (parent.iOTSimulator.metricManager.selectedMetrics.get(index).isAssigned == false) {
+                    return parent.iOTSimulator.metricManager.selectedMetrics.get(index).name;
+                } else {
+                    return "SELECTED" + parent.iOTSimulator.metricManager.selectedMetrics.get(index).name;
+                }
+            }
+        });
+        int topologySelectionLevel = jList1.getSelectedIndex();
+        int deviceSelection = jList2.getSelectedIndex();
+        if (parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).metricIndices != null) {
             jList4.setSelectedIndices(parent.iOTSimulator.topologyDefinition.topology.topologyLevels.get(topologySelectionLevel).devices.get(deviceSelection).metricIndices);
         }
-        
+
 //        parent.iOTSimulator.metricManager.selectedMetrics.size()
 //        for(int i=0;i<parent.iOTSimulator.topologyDefinition.topology.topologyLevels.size();i++)
 //        {
@@ -804,11 +876,9 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
 //            }
 //            
 //        }
-        
     }
-    
-    public void refreshTopologyLayerList()
-    {
+
+    public void refreshTopologyLayerList() {
         jList1.setModel(new javax.swing.AbstractListModel() {
             @Override
             public int getSize() {
@@ -821,10 +891,9 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
             }
         });
     }
-    
-    public void refreshDevicesList()
-    {
-        int topologySelectionLevel=jList1.getSelectedIndex();
+
+    public void refreshDevicesList() {
+        int topologySelectionLevel = jList1.getSelectedIndex();
         if (topologySelectionLevel > -1) {
             jList2.setModel(new javax.swing.AbstractListModel() {
                 @Override
@@ -838,11 +907,14 @@ public class SetupTopologyDialog extends javax.swing.JDialog {
                 }
             });
         }
-        
+
     }
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox jCheckBox2;
+    private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JFormattedTextField jFormattedTextField2;
     private javax.swing.JFormattedTextField jFormattedTextField3;
