@@ -20,5 +20,17 @@ public class TopologyLevel implements Serializable{
     public ArrayList<Device> devices=new ArrayList();
     
     public ArrayList<String> roles=new ArrayList();
+    public String signalType=SignalTransmitType.dataTransmit;
+    
+    static public class TopologyRole{
+        public static String Sensing="Sensing";
+        public static String Trigger_monitoring="Trigger monitoring";
+        public static String Rearrangment="Rearrangment";
+    }
+    
+    static public class SignalTransmitType{
+        public static String dataTransmit="Data";
+        public static String triggerSignal="Trigger";
+    }
     
 }

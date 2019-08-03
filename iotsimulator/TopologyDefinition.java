@@ -8,6 +8,7 @@ package iotsimulator;
 import iotsimulator.Structure.Device;
 import iotsimulator.Structure.Topology;
 import iotsimulator.Structure.TopologyLevel;
+import iotsimulator.Structure.TopologyLevel.TopologyRole;
 import java.io.Serializable;
 
 /**
@@ -24,10 +25,19 @@ public class TopologyDefinition implements Serializable{
     {
         topology=new Topology();
         TopologyLevel initTopologyLevel1 = new TopologyLevel();
-        initTopologyLevel1.devices.add(new Device());
+        Device device=new Device();
+        device.name="CloudDevice";
+        initTopologyLevel1.devices.add(device);
+        initTopologyLevel1.name="Cloud";
+        initTopologyLevel1.roles.add(TopologyRole.Trigger_monitoring);
+        initTopologyLevel1.roles.add(TopologyRole.Rearrangment);
         
         TopologyLevel initTopologyLevel2 = new TopologyLevel();
-        initTopologyLevel2.devices.add(new Device());
+        device=new Device();
+        device.name="Sensor1";
+        initTopologyLevel2.devices.add(device);
+        initTopologyLevel2.name="Sensors";
+        initTopologyLevel2.roles.add(TopologyRole.Sensing);
         
         initTopologyLevel1.devices.get(0).children.add(initTopologyLevel2.devices.get(0));
         initTopologyLevel2.devices.get(0).parent=initTopologyLevel1.devices.get(0);
