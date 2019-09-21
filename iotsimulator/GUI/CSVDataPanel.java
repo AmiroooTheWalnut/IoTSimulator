@@ -62,7 +62,7 @@ public class CSVDataPanel extends javax.swing.JPanel {
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        loadDataButton = new javax.swing.JButton();
         jCheckBox1 = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -90,10 +90,10 @@ public class CSVDataPanel extends javax.swing.JPanel {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Step1"));
 
-        jButton1.setText("Load data");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        loadDataButton.setText("Load data");
+        loadDataButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                loadDataButtonActionPerformed(evt);
             }
         });
 
@@ -108,14 +108,14 @@ public class CSVDataPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jCheckBox1)
-                    .addComponent(jButton1))
+                    .addComponent(loadDataButton))
                 .addContainerGap(121, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addComponent(loadDataButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBox1)
                 .addContainerGap(466, Short.MAX_VALUE))
@@ -301,7 +301,7 @@ public class CSVDataPanel extends javax.swing.JPanel {
         add(jPanel3);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void loadDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDataButtonActionPerformed
             JFileChooser jfc = new JFileChooser();
             jfc.setCurrentDirectory(new java.io.File("."));
             FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV file", "csv");
@@ -366,7 +366,7 @@ public class CSVDataPanel extends javax.swing.JPanel {
                     Logger.getLogger(CSVDataPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_loadDataButtonActionPerformed
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
         if(jList1.getSelectedIndex()>-1)
@@ -421,7 +421,6 @@ public class CSVDataPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.ButtonGroup buttonGroup1;
     public javax.swing.ButtonGroup buttonGroup2;
-    private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -445,5 +444,6 @@ public class CSVDataPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     public javax.swing.JTextField jTextField1;
+    private javax.swing.JButton loadDataButton;
     // End of variables declaration//GEN-END:variables
 }

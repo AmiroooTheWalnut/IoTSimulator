@@ -58,21 +58,23 @@ public class MainFrame extends javax.swing.JFrame {
 
         jButton7 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        setupSensorDataButton = new javax.swing.JButton();
         jCheckBox1 = new javax.swing.JCheckBox();
-        jButton10 = new javax.swing.JButton();
+        setupTriggersButton = new javax.swing.JButton();
         jCheckBox5 = new javax.swing.JCheckBox();
-        jButton2 = new javax.swing.JButton();
+        setupTopologyButton = new javax.swing.JButton();
         jCheckBox2 = new javax.swing.JCheckBox();
-        jButton3 = new javax.swing.JButton();
+        setupSimulationButton = new javax.swing.JButton();
         jCheckBox3 = new javax.swing.JCheckBox();
         jButton4 = new javax.swing.JButton();
         jCheckBox4 = new javax.swing.JCheckBox();
+        jButton1 = new javax.swing.JButton();
+        jCheckBox6 = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
+        loadKryoButton = new javax.swing.JButton();
+        saveKryoButton = new javax.swing.JButton();
+        loadSerializableButton = new javax.swing.JButton();
+        saveSerializableButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -80,37 +82,37 @@ public class MainFrame extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Steps"));
 
-        jButton1.setText("Setup sensor data");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        setupSensorDataButton.setText("Setup sensor data");
+        setupSensorDataButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                setupSensorDataButtonActionPerformed(evt);
             }
         });
 
         jCheckBox1.setEnabled(false);
 
-        jButton10.setText("Setup triggers");
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
+        setupTriggersButton.setText("Setup triggers");
+        setupTriggersButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
+                setupTriggersButtonActionPerformed(evt);
             }
         });
 
         jCheckBox5.setEnabled(false);
 
-        jButton2.setText("Setup topology");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        setupTopologyButton.setText("Setup topology");
+        setupTopologyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                setupTopologyButtonActionPerformed(evt);
             }
         });
 
         jCheckBox2.setEnabled(false);
 
-        jButton3.setText("Setup simulation");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        setupSimulationButton.setText("Setup simulation");
+        setupSimulationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                setupSimulationButtonActionPerformed(evt);
             }
         });
 
@@ -125,6 +127,10 @@ public class MainFrame extends javax.swing.JFrame {
 
         jCheckBox4.setEnabled(false);
 
+        jButton1.setText("Setup prediction model");
+
+        jCheckBox6.setEnabled(false);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -133,25 +139,29 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(setupSensorDataButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jCheckBox1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton10)
+                        .addComponent(setupTriggersButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jCheckBox5))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(setupTopologyButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jCheckBox2))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBox3))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jButton4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBox4)))
+                        .addComponent(jCheckBox4))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBox6))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(setupSimulationButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBox3)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -159,54 +169,59 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jCheckBox1)
-                    .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton10)
-                    .addComponent(jCheckBox5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton2)
-                    .addComponent(jCheckBox2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton3)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jCheckBox1)
+                            .addComponent(setupSensorDataButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(setupTriggersButton)
+                            .addComponent(jCheckBox5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(setupTopologyButton)
+                            .addComponent(jCheckBox2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton1)
+                            .addComponent(jCheckBox6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(setupSimulationButton))
                     .addComponent(jCheckBox3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton4)
                     .addComponent(jCheckBox4))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(16, 16, 16))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Save/Load project"));
 
-        jButton5.setText("Load kryo");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        loadKryoButton.setText("Load kryo");
+        loadKryoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                loadKryoButtonActionPerformed(evt);
             }
         });
 
-        jButton6.setText("Save kryo");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        saveKryoButton.setText("Save kryo");
+        saveKryoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                saveKryoButtonActionPerformed(evt);
             }
         });
 
-        jButton8.setText("Load serializable");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        loadSerializableButton.setText("Load serializable");
+        loadSerializableButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                loadSerializableButtonActionPerformed(evt);
             }
         });
 
-        jButton9.setText("Save serializable");
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        saveSerializableButton.setText("Save serializable");
+        saveSerializableButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                saveSerializableButtonActionPerformed(evt);
             }
         });
 
@@ -218,13 +233,13 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton5)
+                        .addComponent(loadKryoButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton6))
+                        .addComponent(saveKryoButton))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton8)
+                        .addComponent(loadSerializableButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton9)))
+                        .addComponent(saveSerializableButton)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -232,12 +247,12 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5)
-                    .addComponent(jButton6))
+                    .addComponent(loadKryoButton)
+                    .addComponent(saveKryoButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton8)
-                    .addComponent(jButton9))
+                    .addComponent(loadSerializableButton)
+                    .addComponent(saveSerializableButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -270,16 +285,16 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void setupSensorDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setupSensorDataButtonActionPerformed
         setupSensorDataDialog.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_setupSensorDataButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void setupTopologyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setupTopologyButtonActionPerformed
         setupTopologyDialog.refreshDialog();
         setupTopologyDialog.setVisible(true);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_setupTopologyButtonActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void saveKryoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveKryoButtonActionPerformed
         JFileChooser fc_save = new JFileChooser();
         fc_save.setAcceptAllFileFilterUsed(false);
         int returnVal = fc_save.showSaveDialog(this);
@@ -291,9 +306,9 @@ public class MainFrame extends javax.swing.JFrame {
             } catch (Exception ex) {
             }
         }
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_saveKryoButtonActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void loadKryoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadKryoButtonActionPerformed
         JFileChooser jFileChooser1 = new javax.swing.JFileChooser();
         jFileChooser1.setAcceptAllFileFilterUsed(false);
         int returnVal = jFileChooser1.showOpenDialog(this);
@@ -318,9 +333,9 @@ public class MainFrame extends javax.swing.JFrame {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_loadKryoButtonActionPerformed
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+    private void saveSerializableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSerializableButtonActionPerformed
         JFileChooser fc_save = new JFileChooser();
         fc_save.setAcceptAllFileFilterUsed(false);
         int returnVal = fc_save.showSaveDialog(this);
@@ -332,9 +347,9 @@ public class MainFrame extends javax.swing.JFrame {
                 
             }
         }
-    }//GEN-LAST:event_jButton9ActionPerformed
+    }//GEN-LAST:event_saveSerializableButtonActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    private void loadSerializableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSerializableButtonActionPerformed
         JFileChooser jFileChooser1 = new javax.swing.JFileChooser();
         jFileChooser1.setAcceptAllFileFilterUsed(false);
         int returnVal = jFileChooser1.showOpenDialog(this);
@@ -360,12 +375,12 @@ public class MainFrame extends javax.swing.JFrame {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_jButton8ActionPerformed
+    }//GEN-LAST:event_loadSerializableButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void setupSimulationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setupSimulationButtonActionPerformed
         simulatorSetupDialog.refreshDialog();
         simulatorSetupDialog.setVisible(true);
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_setupSimulationButtonActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         simulationRunDialog=new SimulationRunDialog(this,true);
@@ -373,10 +388,10 @@ public class MainFrame extends javax.swing.JFrame {
         simulationRunDialog.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+    private void setupTriggersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setupTriggersButtonActionPerformed
         setupTriggerDialog.refreshDialog();
         setupTriggerDialog.setVisible(true);
-    }//GEN-LAST:event_jButton10ActionPerformed
+    }//GEN-LAST:event_setupTriggersButtonActionPerformed
 
     
     /**
@@ -416,21 +431,23 @@ public class MainFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JCheckBox jCheckBox5;
+    private javax.swing.JCheckBox jCheckBox6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JButton loadKryoButton;
+    private javax.swing.JButton loadSerializableButton;
+    private javax.swing.JButton saveKryoButton;
+    private javax.swing.JButton saveSerializableButton;
+    private javax.swing.JButton setupSensorDataButton;
+    private javax.swing.JButton setupSimulationButton;
+    private javax.swing.JButton setupTopologyButton;
+    private javax.swing.JButton setupTriggersButton;
     // End of variables declaration//GEN-END:variables
 }

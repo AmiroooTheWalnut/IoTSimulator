@@ -35,7 +35,7 @@ public class SetupSensorDataDialog extends javax.swing.JDialog {
         /**UNDER CONSTRUCTION
         * IT SHOULD REMEMBER THE PREVIOUS SESSION.
         */
-        jRadioButton2ActionPerformed(null);
+        cSVFileRadioButtonActionPerformed(null);
     }
 
     /**
@@ -49,9 +49,9 @@ public class SetupSensorDataDialog extends javax.swing.JDialog {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jButton1 = new javax.swing.JButton();
+        cSVFileRadioButton = new javax.swing.JRadioButton();
+        generatedDataRadioButton = new javax.swing.JRadioButton();
+        confirmButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -59,32 +59,32 @@ public class SetupSensorDataDialog extends javax.swing.JDialog {
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel1.setLayout(new java.awt.GridLayout(3, 1));
 
-        buttonGroup1.add(jRadioButton2);
-        jRadioButton2.setSelected(true);
-        jRadioButton2.setText("CSV file data");
-        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(cSVFileRadioButton);
+        cSVFileRadioButton.setSelected(true);
+        cSVFileRadioButton.setText("CSV file data");
+        cSVFileRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton2ActionPerformed(evt);
+                cSVFileRadioButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(jRadioButton2);
+        jPanel1.add(cSVFileRadioButton);
 
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setText("Generated data");
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(generatedDataRadioButton);
+        generatedDataRadioButton.setText("Generated data");
+        generatedDataRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
+                generatedDataRadioButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(jRadioButton1);
+        jPanel1.add(generatedDataRadioButton);
 
-        jButton1.setText("Confirm");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        confirmButton.setText("Confirm");
+        confirmButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                confirmButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1);
+        jPanel1.add(confirmButton);
 
         jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
@@ -112,23 +112,23 @@ public class SetupSensorDataDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+    private void cSVFileRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cSVFileRadioButtonActionPerformed
         jPanel2.removeAll();
         jPanel2.add(cSVDataPanel);
         jPanel2.revalidate();
         jPanel2.repaint();
-    }//GEN-LAST:event_jRadioButton2ActionPerformed
+    }//GEN-LAST:event_cSVFileRadioButtonActionPerformed
 
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+    private void generatedDataRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generatedDataRadioButtonActionPerformed
         jPanel2.removeAll();
         jPanel2.add(generatedDataPanel);
         jPanel2.revalidate();
         jPanel2.repaint();
-    }//GEN-LAST:event_jRadioButton1ActionPerformed
+    }//GEN-LAST:event_generatedDataRadioButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
         // TODO add your handling code here:
-        if(jRadioButton2.isSelected())
+        if(cSVFileRadioButton.isSelected())
         {
             parent.iOTSimulator.metricManager.timeIndex=cSVDataPanel.jList1.getSelectedIndex();
             parent.iOTSimulator.metricManager.metricIndices=cSVDataPanel.jList2.getSelectedIndices();
@@ -147,7 +147,7 @@ public class SetupSensorDataDialog extends javax.swing.JDialog {
             
             parent.iOTSimulator.metricManager.setupTimeStamps();
             
-        }else if(jRadioButton1.isSelected()){
+        }else if(generatedDataRadioButton.isSelected()){
             parent.iOTSimulator.metricManager.timeIndex=0;
             parent.iOTSimulator.metricManager.metricIndices=generatedDataPanel.generatedMetricesIndices;
             parent.iOTSimulator.metricManager.availableMetrics.clear();
@@ -163,16 +163,16 @@ public class SetupSensorDataDialog extends javax.swing.JDialog {
             
         }
         this.setVisible(false);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_confirmButtonActionPerformed
 
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JRadioButton cSVFileRadioButton;
+    private javax.swing.JButton confirmButton;
+    private javax.swing.JRadioButton generatedDataRadioButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
     // End of variables declaration//GEN-END:variables
 }

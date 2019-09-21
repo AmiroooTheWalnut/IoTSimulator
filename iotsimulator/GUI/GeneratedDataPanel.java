@@ -89,27 +89,27 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        dateFromTextField = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        dateToTextField = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        loadGeneratorButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        generatorsTextArea = new javax.swing.JTextArea();
         jPanel6 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
+        exportedTextArea = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
+        generateDataButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea4 = new javax.swing.JTextArea();
-        jButton3 = new javax.swing.JButton();
+        generatedDataTextArea = new javax.swing.JTextArea();
+        saveAsCSVButton = new javax.swing.JButton();
 
         setLayout(new java.awt.GridLayout(1, 0));
 
@@ -121,11 +121,11 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
 
         jLabel6.setText("2016-01-01 14:32:15.753");
 
-        jTextField2.setText("2016-01-01 00:00:00.000");
+        dateFromTextField.setText("2016-01-01 00:00:00.000");
 
         jLabel7.setText("To:");
 
-        jTextField3.setText("2016-01-02 00:00:00.000");
+        dateToTextField.setText("2016-01-02 00:00:00.000");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -134,8 +134,8 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
-                    .addComponent(jTextField2)
+                    .addComponent(dateToTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
+                    .addComponent(dateFromTextField)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
@@ -151,11 +151,11 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(dateFromTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(dateToTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 387, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -170,10 +170,10 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Load from file"));
 
-        jButton1.setText("Load");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        loadGeneratorButton.setText("Load");
+        loadGeneratorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                loadGeneratorButtonActionPerformed(evt);
             }
         });
 
@@ -192,7 +192,7 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(loadGeneratorButton)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE))
                 .addContainerGap())
@@ -201,7 +201,7 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addComponent(loadGeneratorButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
                 .addContainerGap())
@@ -213,9 +213,9 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
 
         jLabel8.setText("Generators:");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        generatorsTextArea.setColumns(20);
+        generatorsTextArea.setRows(5);
+        jScrollPane2.setViewportView(generatorsTextArea);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -241,9 +241,9 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
 
         jLabel9.setText("Exported:");
 
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jScrollPane4.setViewportView(jTextArea3);
+        exportedTextArea.setColumns(20);
+        exportedTextArea.setRows(5);
+        jScrollPane4.setViewportView(exportedTextArea);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -269,21 +269,21 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Step3"));
 
-        jButton2.setText("Generate data");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        generateDataButton.setText("Generate data");
+        generateDataButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                generateDataButtonActionPerformed(evt);
             }
         });
 
-        jTextArea4.setColumns(20);
-        jTextArea4.setRows(5);
-        jScrollPane1.setViewportView(jTextArea4);
+        generatedDataTextArea.setColumns(20);
+        generatedDataTextArea.setRows(5);
+        jScrollPane1.setViewportView(generatedDataTextArea);
 
-        jButton3.setText("Save as CSV");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        saveAsCSVButton.setText("Save as CSV");
+        saveAsCSVButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                saveAsCSVButtonActionPerformed(evt);
             }
         });
 
@@ -295,9 +295,9 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(generateDataButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton3)
+                        .addComponent(saveAsCSVButton)
                         .addGap(0, 124, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE))
                 .addContainerGap())
@@ -307,8 +307,8 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(generateDataButton)
+                    .addComponent(saveAsCSVButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
                 .addContainerGap())
@@ -317,7 +317,7 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
         add(jPanel2);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void loadGeneratorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadGeneratorButtonActionPerformed
         // TODO add your handling code here:
         JFileChooser jFileChooser1 = new javax.swing.JFileChooser();
         jFileChooser1.setAcceptAllFileFilterUsed(false);
@@ -340,33 +340,33 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
                 for (int i = 0; i < exported.length(); i++) {
                     metricNames.add(exported.getJSONObject(i).getString("name"));
                 }
-                jTextArea1.setText(generators.toString(4));
-                jTextArea3.setText(exported.toString(4));
+                generatorsTextArea.setText(generators.toString(4));
+                exportedTextArea.setText(exported.toString(4));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_loadGeneratorButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void generateDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateDataButtonActionPerformed
         try {
 //            finalObj.write(new FileWriter("./temporaryConfig.json"));
 
 //            Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./temporaryConfig.json"), "utf-8"));
             finalObj = new JSONObject();
 
-            JSONArray generators = new JSONArray(jTextArea1.getText());
-            JSONArray exported = new JSONArray(jTextArea3.getText());
+            JSONArray generators = new JSONArray(generatorsTextArea.getText());
+            JSONArray exported = new JSONArray(exportedTextArea.getText());
 
             finalObj.put("generators", generators);
             finalObj.put("exported", exported);
 
-            finalObj.put("from", jTextField2.getText());
-            finalObj.put("to", jTextField3.getText());
+            finalObj.put("from", dateFromTextField.getText());
+            finalObj.put("to", dateToTextField.getText());
 
-            parent.iOTSimulator.metricManager.generators = jTextArea1.getText();
-            parent.iOTSimulator.metricManager.exported = jTextArea3.getText();
+            parent.iOTSimulator.metricManager.generators = generatorsTextArea.getText();
+            parent.iOTSimulator.metricManager.exported = exportedTextArea.getText();
             parent.iOTSimulator.metricManager.dataGenerationConfig = String.valueOf(finalObj);
 
             String str = finalObj.toString(4).replace("\\", "");
@@ -416,7 +416,7 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
 
                 if (exitCode == 0) {
                     String resultString = createCsv(true, true, "America/Phoenix", generatedValues, metricNames);
-                    jTextArea4.setText(resultString);
+                    generatedDataTextArea.setText(resultString);
                     cSVReader.setContainsHeader(true);
                     try {
                         parent.iOTSimulator.metricManager.data = cSVReader.read(new StringReader(resultString));
@@ -445,9 +445,9 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
         } catch (IOException ex) {
             Logger.getLogger(GeneratedDataPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_generateDataButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void saveAsCSVButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsCSVButtonActionPerformed
         // TODO add your handling code here:
         JFileChooser fc_save = new JFileChooser();
         fc_save.setAcceptAllFileFilterUsed(false);
@@ -489,7 +489,7 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
             } catch (Exception ex) {
             }
         }
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_saveAsCSVButtonActionPerformed
 
     private String createCsv(boolean printHeader, boolean longTimestamp, String Timezone, ArrayList<CustomTuple3> generatedValues, ArrayList<String> metricNames) {
         StringBuilder dataValueString = new StringBuilder();
@@ -561,9 +561,12 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JTextField dateFromTextField;
+    private javax.swing.JTextField dateToTextField;
+    private javax.swing.JTextArea exportedTextArea;
+    private javax.swing.JButton generateDataButton;
+    private javax.swing.JTextArea generatedDataTextArea;
+    private javax.swing.JTextArea generatorsTextArea;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -580,11 +583,8 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextArea jTextArea3;
-    private javax.swing.JTextArea jTextArea4;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JButton loadGeneratorButton;
+    private javax.swing.JButton saveAsCSVButton;
     // End of variables declaration//GEN-END:variables
 }
