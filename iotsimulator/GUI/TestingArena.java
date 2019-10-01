@@ -11,6 +11,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -28,20 +30,22 @@ import org.jfree.data.xy.XYSeriesCollection;
  */
 public class TestingArena extends javax.swing.JFrame {
 
-    int numSensors=2000;
-    
+    int numSensors = 2000;
+
     ChartPanel chartPanel;
     XYSeries firstSeries;
     JFreeChart chart;
     ArrayList<IncommingDatum> incommingData = new ArrayList();
-    
+
     ArrayList<IncommingDatum> incommingDataArray[] = new ArrayList[numSensors];
-    
+
     Timer genTimer;
     Timer chartTimer;
     int timeValue = 0;
     int timeValueArray[] = new int[numSensors];
     boolean isBlockedRefreshTimer = false;
+    
+    ScheduledThreadPoolExecutor scheduledThreadPoolExecutor[];
 
     /**
      * Creates new form TestingArena
@@ -84,6 +88,8 @@ public class TestingArena extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -106,7 +112,7 @@ public class TestingArena extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 346, Short.MAX_VALUE)
+            .addGap(0, 287, Short.MAX_VALUE)
         );
 
         jButton1.setText("Start");
@@ -123,6 +129,20 @@ public class TestingArena extends javax.swing.JFrame {
             }
         });
 
+        jButton3.setText("New timer");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Stop new timer");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -132,16 +152,24 @@ public class TestingArena extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel2)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 303, Short.MAX_VALUE)
+                        .addGap(61, 421, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)))
+                        .addComponent(jButton2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel2))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton3)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton4)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -152,13 +180,17 @@ public class TestingArena extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1)
-                        .addComponent(jButton2)))
+                .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -213,43 +245,43 @@ public class TestingArena extends javax.swing.JFrame {
         Timer wastingThreads[] = new Timer[1000];
         for (int i = 0; i < 1000; i++) {
             wastingThreads[i] = new Timer();
-            incommingDataArray[i]=new ArrayList();
-            final int passing_i=i;
+            incommingDataArray[i] = new ArrayList();
+            final int passing_i = i;
             wastingThreads[i].schedule(new TimerTask() {
                 @Override
                 public void run() {
-                int bufferSize = 500;
-                if (incommingDataArray[passing_i].size() == bufferSize) {
-                    incommingDataArray[passing_i].remove(0);
-                    incommingDataArray[passing_i].add(new IncommingDatum(timeValueArray[passing_i], Math.random()));
-                    timeValueArray[passing_i] = timeValueArray[passing_i] + 1;
+                    int bufferSize = 500;
+                    if (incommingDataArray[passing_i].size() == bufferSize) {
+                        incommingDataArray[passing_i].remove(0);
+                        incommingDataArray[passing_i].add(new IncommingDatum(timeValueArray[passing_i], Math.random()));
+                        timeValueArray[passing_i] = timeValueArray[passing_i] + 1;
 //                        if (chart.isNotify() == false) {
 //                            chart.fireChartChanged();
 //                        }
-                } else if (incommingDataArray[passing_i].size() < bufferSize) {
-                    incommingDataArray[passing_i].add(new IncommingDatum(timeValueArray[passing_i], Math.random()));
-                    timeValueArray[passing_i] = timeValueArray[passing_i] + 1;
+                    } else if (incommingDataArray[passing_i].size() < bufferSize) {
+                        incommingDataArray[passing_i].add(new IncommingDatum(timeValueArray[passing_i], Math.random()));
+                        timeValueArray[passing_i] = timeValueArray[passing_i] + 1;
 //                        if (chart.isNotify() == false) {
 //                            chart.fireChartChanged();
 //                        }
-                } else if (incommingDataArray[passing_i].size() > bufferSize) {
-                    for (int i = 0; incommingDataArray[passing_i].size() < bufferSize; i++) {
-                        incommingDataArray[passing_i].remove(i);
+                    } else if (incommingDataArray[passing_i].size() > bufferSize) {
+                        for (int i = 0; incommingDataArray[passing_i].size() < bufferSize; i++) {
+                            incommingDataArray[passing_i].remove(i);
+                        }
+                        incommingDataArray[passing_i].remove(0);
+                        incommingDataArray[passing_i].add(new IncommingDatum(timeValueArray[passing_i], Math.random()));
+                        timeValueArray[passing_i] = timeValueArray[passing_i] + 1;
+//                        if (chart.isNotify() == false) {
+//                            chart.fireChartChanged();
+//                        }
                     }
-                    incommingDataArray[passing_i].remove(0);
-                    incommingDataArray[passing_i].add(new IncommingDatum(timeValueArray[passing_i], Math.random()));
-                    timeValueArray[passing_i] = timeValueArray[passing_i] + 1;
-//                        if (chart.isNotify() == false) {
-//                            chart.fireChartChanged();
-//                        }
-                }
 //                double timeWasting=0;
 //                for(int i=0;i<90000000;i++)
 //                {
 //                    timeWasting=timeWasting+Math.sin(Math.random());
 //                }
-            }
-            }, Math.round(Math.random()*1000 + 1000), 5);
+                }
+            }, Math.round(Math.random() * 1000 + 1000), 5);
         }
 
         chartTimer = new Timer();
@@ -358,6 +390,34 @@ public class TestingArena extends javax.swing.JFrame {
         chartTimer.cancel();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        scheduledThreadPoolExecutor=new ScheduledThreadPoolExecutor[100];
+        for (int i = 0; i < 100; i++) {
+            final int passing_i=i;
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    double timeWasting = 0;
+                    for (int i = 0; i < 1; i++) {
+                        timeWasting = timeWasting + Math.sin(Math.random());
+                    }
+                    
+                }
+            };
+            scheduledThreadPoolExecutor[i] = new ScheduledThreadPoolExecutor(1);
+            scheduledThreadPoolExecutor[i].scheduleAtFixedRate(runnable, 0, 1, TimeUnit.MILLISECONDS);
+            
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        for (int i = 0; i < 100; i++) {
+            scheduledThreadPoolExecutor[i].shutdownNow();
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     public class IncommingDatum {
 
         public int time;
@@ -407,6 +467,8 @@ public class TestingArena extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

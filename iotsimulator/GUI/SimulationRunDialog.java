@@ -9,8 +9,9 @@ import iotsimulator.Structure.Metric;
 import java.awt.Color;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
-import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -561,13 +562,13 @@ public class SimulationRunDialog extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (jButton1.getText().equals("Start")) {
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
+            ScheduledThreadPoolExecutor timer = new ScheduledThreadPoolExecutor(1);
+            timer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
                     if (parent.iOTSimulator.timeController.isActive == false) {
                         jButton1.setText("Start");
-                        timer.cancel();
+                        timer.shutdownNow();
                     } else {
                         simulationTimeLabel.setText(String.valueOf(parent.iOTSimulator.timeController.currentTime));
 
@@ -595,7 +596,7 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                         }
                     }
                 }
-            }, 2000, 1000);
+            }, 2000, 1000,TimeUnit.MILLISECONDS);
             parent.iOTSimulator.timeController.start(parent.iOTSimulator.topologyDefinition.topology, parent.iOTSimulator.metricManager);
             jButton1.setText("Pause");
         } else if (jButton1.getText().equals("Resume")) {

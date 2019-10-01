@@ -52,6 +52,18 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
                 return parent.iOTSimulator.metricManager.selectedMetrics.get(index).name;
             }
         });
+        
+        jList2.setModel(new javax.swing.AbstractListModel() {
+            @Override
+            public int getSize() {
+                return parent.iOTSimulator.triggerMonitor.triggers.size();
+            }
+
+            @Override
+            public Object getElementAt(int index) {
+                return parent.iOTSimulator.triggerMonitor.triggers.get(index).name;
+            }
+        });
     }
 
     /**
@@ -83,13 +95,15 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList2 = new javax.swing.JList<>();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        getContentPane().setLayout(new java.awt.GridLayout());
+        getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Metric"));
 
@@ -192,6 +206,8 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
             }
         });
 
+        jLabel6.setText("Name:");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -203,15 +219,17 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
                     .addComponent(jFormattedTextField1)
                     .addComponent(jFormattedTextField3)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4)
-                            .addComponent(jButton1)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel5)
-                            .addComponent(jButton3))
-                        .addGap(0, 126, Short.MAX_VALUE)))
+                            .addComponent(jButton3)
+                            .addComponent(jLabel6)
+                            .addComponent(jTextField1))
+                        .addGap(0, 124, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -235,7 +253,11 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 155, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
                 .addComponent(jButton3)
                 .addContainerGap())
         );
@@ -325,6 +347,13 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
                 tempTrigger.metrics.add(parent.iOTSimulator.metricManager.selectedMetrics.get(metricIndices[i]));
                 parent.iOTSimulator.metricManager.selectedMetrics.get(metricIndices[i]).triggersInvolved.add(tempTrigger);
             }
+            if(jTextField1.getText().length()>0)
+            {
+                tempTrigger.name=jTextField1.getText();
+            }else{
+                tempTrigger.name=String.valueOf("Trigger"+parent.iOTSimulator.triggerMonitor.triggers.size());
+            }
+            
             parent.iOTSimulator.triggerMonitor.triggers.add(tempTrigger);
         }
         jList2.setModel(new javax.swing.AbstractListModel() {
@@ -335,7 +364,7 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
 
             @Override
             public Object getElementAt(int index) {
-                return "Trigger " + index;
+                return parent.iOTSimulator.triggerMonitor.triggers.get(index).name;
             }
         });
         jList1.clearSelection();
@@ -421,6 +450,7 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JList<String> jList1;
     private javax.swing.JList<String> jList2;
     private javax.swing.JPanel jPanel1;
@@ -433,5 +463,6 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
     private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

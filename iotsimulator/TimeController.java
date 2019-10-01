@@ -11,8 +11,9 @@ import iotsimulator.Structure.Metric;
 import iotsimulator.Structure.Topology;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -42,8 +43,8 @@ public class TimeController implements Serializable {
 
     transient private long simulationRealStartTime;
 
-    transient ArrayList<Timer> watches;
-    transient Timer trunkTimer;
+    transient ArrayList<ScheduledThreadPoolExecutor> watches;
+    transient ScheduledThreadPoolExecutor trunkTimer;
 
     transient Topology model;
     transient public ArrayList<Device> allDevices = new ArrayList();
@@ -77,7 +78,7 @@ public class TimeController implements Serializable {
             for (int j = 0; j < allDevices.get(i).metrics.size(); j++) {
                 allDevices.get(i).metrics.get(j).lastRecordIndex = 0;
                 allDevices.get(i).allocateResourcesToMetric(allDevices.get(i).metrics.get(j));
-                watches.add(new Timer());
+                watches.add(new ScheduledThreadPoolExecutor(1));
             }
         }
         resume(metricManager);
@@ -85,10 +86,10 @@ public class TimeController implements Serializable {
 
     public void pause() {
         simulationVirtualStartTime=currentTime;
-        trunkTimer.cancel();
+        trunkTimer.shutdownNow();
         for (int i = 0; i < watches.size(); i++) {
-            watches.get(i).cancel();
-            watches.set(i, new Timer());
+            watches.get(i).shutdownNow();
+            watches.set(i, new ScheduledThreadPoolExecutor(1));
         }
     }
 
@@ -100,9 +101,9 @@ public class TimeController implements Serializable {
                 watchCounter = watchCounter + 1;
             }
         }
-        trunkTimer = new Timer();
+        trunkTimer = new ScheduledThreadPoolExecutor(1);
         simulationRealStartTime = System.currentTimeMillis();
-        trunkTimer.schedule(new TimerTask() {
+        trunkTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 long passedTimeFromStart = System.currentTimeMillis() - simulationRealStartTime;
@@ -112,7 +113,7 @@ public class TimeController implements Serializable {
                     System.out.println("Simulation finished");
                 }
             }
-        }, 0, refreshRate);
+        }, 0, refreshRate,TimeUnit.MILLISECONDS);
     }
 
     private void setupTimer(int watchCounter, int deviceIndex, int metricIndex, MetricManager metricManager) {
@@ -124,13 +125,13 @@ public class TimeController implements Serializable {
                 allDevices.get(deviceIndex).sendToParent(message,thisTimeController);
                 message.toDevice.checkTriggers(parent.triggerMonitor,currentTime);
             }
-        }, 0, allDevices.get(deviceIndex).metrics.get(metricIndex).frequency);
+        }, 0, allDevices.get(deviceIndex).metrics.get(metricIndex).frequency,TimeUnit.MILLISECONDS);
     }
 
     private void finishSimulatiom() {
-        trunkTimer.cancel();
+        trunkTimer.shutdownNow();
         for (int i = 0; i < watches.size(); i++) {
-            watches.get(i).cancel();
+            watches.get(i).shutdownNow();
         }
         isActive = false;
     }

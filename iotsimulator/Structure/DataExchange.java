@@ -5,8 +5,9 @@
  */
 package iotsimulator.Structure;
 
-import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -20,8 +21,8 @@ public class DataExchange {
     public String message;
     public Metric metric;
 
-    Timer realeaseTimer = new Timer();
-    Timer retryTimer = new Timer();
+    ScheduledThreadPoolExecutor realeaseTimer = new ScheduledThreadPoolExecutor(1);
+    ScheduledThreadPoolExecutor retryTimer = new ScheduledThreadPoolExecutor(1);
 
     private DataExchange thisDataExchange = this;
 
@@ -89,13 +90,13 @@ public class DataExchange {
 
     public void setupRetryReceiverResourceConsumption() {
         System.out.println("retryTimer is made!!!");
-        retryTimer.schedule(new TimerTask() {
+        retryTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 boolean success = consumeReceiverResources();
                 if (success == true) {
-                    retryTimer.cancel();
                     retryTimer.purge();
+                    retryTimer.shutdownNow();
                     setupSuccessReleaseResourceTimer();
                     toDevice.receiveMessageFromChild(thisDataExchange);
 
@@ -112,16 +113,16 @@ public class DataExchange {
                     toDevice.signalConsole.append(System.lineSeparator());
                 }
             }
-        }, fromDevice.retrySendToParentInterval);
+        },0,fromDevice.retrySendToParentInterval,TimeUnit.MILLISECONDS);
     }
 
     public void setupTimeoutReleaseResourceTimer() {
         System.out.println("timeout realeaseTimer is made!!!");
-        realeaseTimer.schedule(new TimerTask() {
+        realeaseTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                retryTimer.cancel();
                 retryTimer.purge();
+                retryTimer.shutdownNow();
 
                 fromDevice.usedBandWidth = fromDevice.usedBandWidth - dataExchangeResource.usedBandWidthAddition;
                 fromDevice.usedCPU = fromDevice.usedCPU - dataExchangeResource.usedCPUAddition;
@@ -129,15 +130,15 @@ public class DataExchange {
                 fromDevice.usedStorage = fromDevice.usedStorage - dataExchangeResource.usedStorageAddition;
 
                 fromDevice.removeSendingDataExchange(thisDataExchange);
-                realeaseTimer.cancel();
                 realeaseTimer.purge();
+                realeaseTimer.shutdownNow();
             }
-        }, fromDevice.timeout);
+        },0,fromDevice.timeout,TimeUnit.MILLISECONDS);
     }
 
     public void setupSuccessReleaseResourceTimer() {
         System.out.println("success realeaseTimer is made!!!");
-        realeaseTimer.schedule(new TimerTask() {
+        realeaseTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 fromDevice.usedBandWidth = fromDevice.usedBandWidth - dataExchangeResource.usedBandWidthAddition;
@@ -152,11 +153,11 @@ public class DataExchange {
 
                 fromDevice.removeSendingDataExchange(thisDataExchange);
                 toDevice.removeReceivingDataExchange(thisDataExchange);
-                realeaseTimer.cancel();
                 realeaseTimer.purge();
+                realeaseTimer.shutdownNow();
                 realeaseTimer=null;
                 System.out.println("success Timer died!!!");
             }
-        }, fromDevice.latency);
+        },0,fromDevice.latency,TimeUnit.MILLISECONDS);
     }
 }

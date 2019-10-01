@@ -17,6 +17,7 @@ public class Trigger implements Serializable {
     static final long serialVersionUID = 1L;
 
     public String type;//HIGHER_THAN,LOWER_THAN,BETWEEN,MODEL
+    public String name;
     public double threshold;
     public double thresholdHigh;
     public double thresholdLow;
