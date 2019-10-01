@@ -36,9 +36,15 @@ public class Trigger implements Serializable {
                 boolean isTriggered = true;
                 for (int i = 0; i < metrics.size(); i++) {
                     if (metrics.get(i).interpolationBuffer.size() > 1) {
-                        if (!(metrics.get(i).interpolationBuffer.get(metrics.get(i).interpolationBuffer.size() - 1) > threshold)) {
-                            isTriggered = false;
+                        try {
+                            double value = Double.valueOf(metrics.get(i).interpolationBuffer.get(metrics.get(i).interpolationBuffer.size() - 1).message);
+                            if (!(value > threshold)) {
+                                isTriggered = false;
+                            }
+                        } catch (Exception e) {
+                            System.out.println("A trigger has a value that can't be converted to double.");
                         }
+
                     }
                 }
                 return isTriggered;
@@ -46,9 +52,15 @@ public class Trigger implements Serializable {
                 isTriggered = true;
                 for (int i = 0; i < metrics.size(); i++) {
                     if (metrics.get(i).interpolationBuffer.size() > 1) {
-                        if (!(metrics.get(i).interpolationBuffer.get(metrics.get(i).interpolationBuffer.size() - 1) < threshold)) {
-                            isTriggered = false;
+                        try {
+                            double value = Double.valueOf(metrics.get(i).interpolationBuffer.get(metrics.get(i).interpolationBuffer.size() - 1).message);
+                            if (!(value < threshold)) {
+                                isTriggered = false;
+                            }
+                        } catch (Exception e) {
+                            System.out.println("A trigger has a value that can't be converted to double.");
                         }
+
                     }
 
                 }
@@ -57,11 +69,15 @@ public class Trigger implements Serializable {
                 isTriggered = true;
                 for (int i = 0; i < metrics.size(); i++) {
                     if (metrics.get(i).interpolationBuffer.size() > 1) {
-                        if (!(metrics.get(i).interpolationBuffer.get(metrics.get(i).interpolationBuffer.size() - 1) < thresholdHigh && metrics.get(i).interpolationBuffer.get(metrics.get(i).interpolationBuffer.size() - 1) > thresholdLow)) {
-                            isTriggered = false;
+                        try {
+                            double value = Double.valueOf(metrics.get(i).interpolationBuffer.get(metrics.get(i).interpolationBuffer.size() - 1).message);
+                            if (!(value < thresholdHigh && value > thresholdLow)) {
+                                isTriggered = false;
+                            }
+                        } catch (Exception e) {
+                            System.out.println("A trigger has a value that can't be converted to double.");
                         }
                     }
-
                 }
                 return isTriggered;
             case "MODEL":

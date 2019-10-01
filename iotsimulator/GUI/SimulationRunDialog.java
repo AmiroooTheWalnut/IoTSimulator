@@ -5,8 +5,24 @@
  */
 package iotsimulator.GUI;
 
+import iotsimulator.Structure.Metric;
+import java.awt.Color;
+import java.lang.reflect.InvocationTargetException;
+import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.ValueAxis;
+
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.DefaultXYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 /**
  *
@@ -16,6 +32,14 @@ public class SimulationRunDialog extends javax.swing.JDialog {
 
     MainFrame parent;
 
+    ChartPanel chartPanel;
+    DefaultCategoryDataset resourceDataset;
+    XYSeries metricDataset;
+    JFreeChart deviceChart;
+    JFreeChart metricChart;
+
+    boolean isBlockedRefreshTimer;
+
     /**
      * Creates new form SimulationRunDialog
      */
@@ -23,18 +47,9 @@ public class SimulationRunDialog extends javax.swing.JDialog {
         super(passed_parent, modal);
         initComponents();
         parent = (MainFrame) passed_parent;
-
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            @Override
-            public int getSize() {
-                return parent.iOTSimulator.timeController.allDevices.size();
-            }
-
-            @Override
-            public Object getElementAt(int index) {
-                return parent.iOTSimulator.timeController.allDevices.get(index).name;
-            }
-        });
+        initOverviewPanel();
+        initDeviceMonitorPanel();
+        initMetricMonitorPanel();
     }
 
     /**
@@ -81,6 +96,20 @@ public class SimulationRunDialog extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextPane2 = new javax.swing.JTextPane();
+        jPanel11 = new javax.swing.JPanel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jList4 = new javax.swing.JList<>();
+        jLabel10 = new javax.swing.JLabel();
+        jPanel13 = new javax.swing.JPanel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        jList5 = new javax.swing.JList<>();
+        jLabel11 = new javax.swing.JLabel();
+        jPanel9 = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jList3 = new javax.swing.JList<>();
+        jLabel8 = new javax.swing.JLabel();
+        jPanel10 = new javax.swing.JPanel();
+        jPanel12 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -139,6 +168,15 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+        jTabbedPane1.setName(""); // NOI18N
+        jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jTabbedPane1StateChanged(evt);
+            }
+        });
+
+        jPanel7.setLayout(new java.awt.GridLayout(1, 0));
+
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel1.setText("Devices:");
@@ -160,7 +198,7 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(0, 85, Short.MAX_VALUE))
+                        .addGap(0, 169, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -173,6 +211,8 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                 .addComponent(jScrollPane1)
                 .addContainerGap())
         );
+
+        jPanel7.add(jPanel1);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -190,7 +230,7 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addGap(0, 88, Short.MAX_VALUE))
+                        .addGap(0, 171, Short.MAX_VALUE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -203,6 +243,8 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                 .addComponent(jScrollPane2)
                 .addContainerGap())
         );
+
+        jPanel7.add(jPanel2);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -257,7 +299,7 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                         .addComponent(cPULabel)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSlider1, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                    .addComponent(jSlider1, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
                     .addComponent(jSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jSlider3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jSlider4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
@@ -311,9 +353,11 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
                 .addContainerGap())
         );
+
+        jPanel7.add(jPanel3);
 
         jPanel6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -344,34 +388,117 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
+        jPanel7.add(jPanel6);
+
+        jTabbedPane1.addTab("Overview", jPanel7);
+
+        jList4.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList4ValueChanged(evt);
+            }
+        });
+        jScrollPane6.setViewportView(jList4);
+
+        jLabel10.setText("Metric:");
+
+        jPanel13.setLayout(new java.awt.GridLayout());
+
+        jList5.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList5ValueChanged(evt);
+            }
+        });
+        jScrollPane7.setViewportView(jList5);
+
+        jLabel11.setText("Device:");
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel11Layout.createSequentialGroup()
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel10))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
+                            .addComponent(jScrollPane7))))
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("Signals", jPanel7);
+        jTabbedPane1.addTab("Metric monitor", jPanel11);
+
+        jList3.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList3ValueChanged(evt);
+            }
+        });
+        jScrollPane5.setViewportView(jList3);
+
+        jLabel8.setText("Device:");
+
+        jPanel10.setLayout(new java.awt.GridLayout(1, 0));
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, 804, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane5)))
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Device monitor", jPanel9);
+
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 936, Short.MAX_VALUE)
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 487, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Prediction monitor", jPanel12);
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -381,10 +508,10 @@ public class SimulationRunDialog extends javax.swing.JDialog {
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 483, Short.MAX_VALUE)
+            .addGap(0, 487, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Predictioned triggers", jPanel8);
+        jTabbedPane1.addTab("Predictioned triggers monitor", jPanel8);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -393,8 +520,8 @@ public class SimulationRunDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane1))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -417,12 +544,7 @@ public class SimulationRunDialog extends javax.swing.JDialog {
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
         int selectedDeviceIndex = jList1.getSelectedIndex();
         if (selectedDeviceIndex > -1) {
-            bandwidthLabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedBandWidth));
-            cPULabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedCPU));
-            memoryLabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedMemory));
-            storageLabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedStorage));
-            jTextPane1.setText(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).signalConsole.toString());
-            jTextPane2.setText(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).triggerConsole.toString());
+            refreshOverviewPanel(selectedDeviceIndex);
             jList2.setModel(new javax.swing.AbstractListModel() {
                 @Override
                 public int getSize() {
@@ -448,14 +570,28 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                         timer.cancel();
                     } else {
                         simulationTimeLabel.setText(String.valueOf(parent.iOTSimulator.timeController.currentTime));
-                        int selectedDeviceIndex = jList1.getSelectedIndex();
-                        if (selectedDeviceIndex > -1) {
-                            bandwidthLabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedBandWidth));
-                            cPULabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedCPU));
-                            memoryLabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedMemory));
-                            storageLabel.setText(String.valueOf(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedStorage));
-                            jTextPane1.setText(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).signalConsole.toString());
-                            jTextPane2.setText(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).triggerConsole.toString());
+
+                        if (jPanel7.isVisible() == true) {
+                            int selectedDeviceIndex = jList1.getSelectedIndex();
+                            if (selectedDeviceIndex > -1) {
+                                refreshOverviewPanel(selectedDeviceIndex);
+                            }
+                        }
+                        if (jPanel9.isVisible() == true) {
+                            int selectedDeviceIndex = jList3.getSelectedIndex();
+                            if (selectedDeviceIndex > -1) {
+                                refreshDeviceMonitorPanel(selectedDeviceIndex);
+                            }
+                        }
+                        if (jPanel11.isVisible() == true) {
+                            int selectedDeviceIndex = jList5.getSelectedIndex();
+                            if (selectedDeviceIndex > -1) {
+                                int selectedMetricIndex = jList4.getSelectedIndex();
+                                if (selectedMetricIndex > -1) {
+                                    Metric metric = parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).metrics.get(selectedMetricIndex);
+                                    refreshMetricMonitorPanel(metric);
+                                }
+                            }
                         }
                     }
                 }
@@ -471,9 +607,232 @@ public class SimulationRunDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    public void initOverviewPanel() {
+        jList1.setModel(new javax.swing.AbstractListModel() {
+            @Override
+            public int getSize() {
+                return parent.iOTSimulator.timeController.allDevices.size();
+            }
+
+            @Override
+            public Object getElementAt(int index) {
+                return parent.iOTSimulator.timeController.allDevices.get(index).name;
+            }
+        });
+    }
+
+    public void initDeviceMonitorPanel() {
+        jList3.setModel(new javax.swing.AbstractListModel() {
+            @Override
+            public int getSize() {
+                return parent.iOTSimulator.timeController.allDevices.size();
+            }
+
+            @Override
+            public Object getElementAt(int index) {
+                return parent.iOTSimulator.timeController.allDevices.get(index).name;
+            }
+        });
+
+        resourceDataset = new DefaultCategoryDataset();
+        deviceChart = ChartFactory.createBarChart3D("Resource usage", "Device name", "Usage", resourceDataset);
+//        ValueAxis a = ((org.jfree.chart.plot.CategoryPlot)chart.getPlot()).getRangeAxis();
+//        a.setAutoRange(false);
+//        a.setUpperBound(WIDTH);
+        ((org.jfree.chart.plot.CategoryPlot) deviceChart.getPlot()).getRangeAxis().setUpperBound(100);//IMPORTANT TO CHANGE.
+//        ((org.jfree.chart.plot.CategoryPlot)chart.getPlot()).setRangeAxis();
+        ChartPanel panel = new ChartPanel(deviceChart);
+        jPanel10.add(panel);
+    }
+
+    public void initMetricMonitorPanel() {
+        jList5.setModel(new javax.swing.AbstractListModel() {
+            @Override
+            public int getSize() {
+                return parent.iOTSimulator.timeController.allDevices.size();
+            }
+
+            @Override
+            public Object getElementAt(int index) {
+                return parent.iOTSimulator.timeController.allDevices.get(index).name;
+            }
+        });
+
+        metricDataset = new XYSeries("Metric value");
+        XYSeriesCollection xYDataset = new XYSeriesCollection();
+        xYDataset.addSeries(metricDataset);
+        metricChart = ChartFactory.createXYLineChart("Metric value", "Time", "Value", xYDataset);
+        ChartPanel panel = new ChartPanel(metricChart);
+        jPanel13.add(panel);
+    }
+
+    public void refreshDeviceMonitorPanel(int selectedDeviceIndex) {
+        if (isBlockedRefreshTimer == false) {
+            isBlockedRefreshTimer = true;
+
+            resourceDataset.clear();
+            resourceDataset.addValue(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedBandWidth, "Bandwidth usage", parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).name);
+            resourceDataset.addValue(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedCPU, "CPU usage", parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).name);
+            resourceDataset.addValue(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedMemory, "Memory usage", parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).name);
+            resourceDataset.addValue(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedStorage, "Storage usage", parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).name);
+            Runnable refresh = new Runnable() {
+                @Override
+                public void run() {
+                    ((org.jfree.chart.plot.CategoryPlot) deviceChart.getPlot()).getRangeAxis().setUpperBound(100);//IMPORTANT TO CHANGE.
+                    deviceChart.setNotify(true);
+                    deviceChart.fireChartChanged();
+                    deviceChart.setNotify(false);
+                }
+            };
+            try {
+                if (SwingUtilities.isEventDispatchThread() == true) {
+                    refresh.run();
+                } else {
+                    SwingUtilities.invokeAndWait(refresh);
+                }
+
+            } catch (InterruptedException ex) {
+                Logger.getLogger(TestingArena.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvocationTargetException ex) {
+                Logger.getLogger(TestingArena.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            isBlockedRefreshTimer = false;
+        }
+    }
+
+    public void refreshMetricMonitorPanel(Metric metric) {
+        if (isBlockedRefreshTimer == false) {
+            isBlockedRefreshTimer = true;
+
+            metricDataset.clear();
+            try {
+                for (int i = 0; i < metric.predictionBuffer.size() - 1; i++) {
+                    metricDataset.add(metric.predictionBuffer.get(i).time, Double.valueOf(metric.predictionBuffer.get(i).message));
+                }
+            } catch (Exception e) {
+                System.out.println("Problem in generating xy data. Potentially, the message is not number.");
+            }
+            Runnable refresh = new Runnable() {
+                @Override
+                public void run() {
+                    metricChart.setNotify(true);
+                    metricChart.fireChartChanged();
+                    metricChart.setNotify(false);
+                }
+            };
+            try {
+                if (SwingUtilities.isEventDispatchThread() == true) {
+                    refresh.run();
+                } else {
+                    SwingUtilities.invokeAndWait(refresh);
+                }
+
+            } catch (InterruptedException ex) {
+                Logger.getLogger(TestingArena.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvocationTargetException ex) {
+                Logger.getLogger(TestingArena.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            isBlockedRefreshTimer = false;
+        }
+    }
+
+    public void refreshOverviewPanel(int selectedDeviceIndex) {
+        if (isBlockedRefreshTimer == false) {
+            isBlockedRefreshTimer = true;
+
+            DecimalFormat decimalFormat = new DecimalFormat("##.00");
+            bandwidthLabel.setText(String.valueOf(decimalFormat.format(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedBandWidth)));
+            cPULabel.setText(String.valueOf(decimalFormat.format(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedCPU)));
+            memoryLabel.setText(String.valueOf(decimalFormat.format(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedMemory)));
+            storageLabel.setText(String.valueOf(decimalFormat.format(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedStorage)));
+//            jTextPane1.setText(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).signalConsole.toString());
+            jTextPane2.setText(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).triggerConsole.toString());
+
+            int bandwidth = (int) ((parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedBandWidth / parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).CPUCapacity) * 100);
+            jSlider1.setValue(bandwidth);
+            if (bandwidth > 90) {
+                jSlider1.setBackground(Color.red);
+            } else {
+                jSlider1.setBackground(Color.gray);
+            }
+
+            int memory = (int) ((parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedMemory / parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).memoryCapacity) * 100);
+            jSlider2.setValue(memory);
+            if (memory > 90) {
+                jSlider2.setBackground(Color.red);
+            } else {
+                jSlider2.setBackground(Color.gray);
+            }
+
+            int storage = (int) ((parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedStorage / parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).storageCapacity) * 100);
+            jSlider3.setValue(storage);
+            if (storage > 90) {
+                jSlider3.setBackground(Color.red);
+            } else {
+                jSlider3.setBackground(Color.gray);
+            }
+
+            int cpu = (int) ((parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedCPU / parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).CPUCapacity) * 100);
+            jSlider4.setValue(cpu);
+            if (cpu > 90) {
+                jSlider4.setBackground(Color.red);
+            } else {
+                jSlider4.setBackground(Color.gray);
+            }
+
+            isBlockedRefreshTimer = false;
+        }
+    }
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         jButton1.setText("Start");
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jList3ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList3ValueChanged
+        // TODO add your handling code here:
+        int selectedDeviceIndex = jList3.getSelectedIndex();
+        if (selectedDeviceIndex > -1) {
+            refreshDeviceMonitorPanel(selectedDeviceIndex);
+        }
+    }//GEN-LAST:event_jList3ValueChanged
+
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+        // TODO add your handling code here:
+        for (int i = 0; i < jTabbedPane1.getComponents().length; i++) {
+            jTabbedPane1.getComponents()[0].setVisible(false);
+        }
+        jTabbedPane1.getComponents()[jTabbedPane1.getSelectedIndex()].setVisible(true);
+    }//GEN-LAST:event_jTabbedPane1StateChanged
+
+    private void jList5ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList5ValueChanged
+        // TODO add your handling code here:
+        int selectedDeviceIndex = jList5.getSelectedIndex();
+        if (selectedDeviceIndex > -1) {
+            jList4.setModel(new javax.swing.AbstractListModel() {
+                @Override
+                public int getSize() {
+                    return parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).metrics.size();
+                }
+
+                @Override
+                public Object getElementAt(int index) {
+                    return parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).metrics.get(index).name;
+                }
+            });
+        }
+    }//GEN-LAST:event_jList5ValueChanged
+
+    private void jList4ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList4ValueChanged
+        // TODO add your handling code here:
+        int selectedDeviceIndex = jList5.getSelectedIndex();
+        if (selectedDeviceIndex > -1) {
+            int selectedMetricIndex = jList4.getSelectedIndex();
+            if (selectedMetricIndex > -1) {
+                Metric metric = parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).metrics.get(selectedMetricIndex);
+                refreshMetricMonitorPanel(metric);
+            }
+        }
+    }//GEN-LAST:event_jList4ValueChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -482,16 +841,26 @@ public class SimulationRunDialog extends javax.swing.JDialog {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JList<String> jList1;
     private javax.swing.JList<String> jList2;
+    private javax.swing.JList<String> jList3;
+    private javax.swing.JList<String> jList4;
+    private javax.swing.JList<String> jList5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -499,10 +868,14 @@ public class SimulationRunDialog extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JSlider jSlider1;
     private javax.swing.JSlider jSlider2;
     private javax.swing.JSlider jSlider3;

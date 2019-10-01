@@ -7,6 +7,7 @@ package iotsimulator;
 
 import iotsimulator.Structure.DataExchange;
 import iotsimulator.Structure.Device;
+import iotsimulator.Structure.Metric;
 import iotsimulator.Structure.Topology;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class TimeController implements Serializable {
             }
         }
     }
-
+    
     public void start(Topology passed_model, MetricManager metricManager) {
         isActive = true;
         simulationVirtualStartTime = metricManager.startingTime;
@@ -83,6 +84,7 @@ public class TimeController implements Serializable {
     }
 
     public void pause() {
+        simulationVirtualStartTime=currentTime;
         trunkTimer.cancel();
         for (int i = 0; i < watches.size(); i++) {
             watches.get(i).cancel();

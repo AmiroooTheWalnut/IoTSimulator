@@ -22,16 +22,20 @@ public class Device implements Serializable {
     static final long serialVersionUID = 1L;
 
     public long latency = 20;//Miliseconds //EACH DEVICE SHOULD HAVE UNIQUE LATENCY***REVISE LATER
+    public long timeout = 1000;//Miliseconds trying to send to parent.
+
+    public boolean isWaitForParentResponse = true;
+    public long retrySendToParentInterval = 10;
 
     public String name = "UnnamedDevice";
     public Device parent;
     public ArrayList<Device> children = new ArrayList();
     public int parentDeviceIndex = -1;
     public ArrayList<Metric> metrics = new ArrayList();
-    public double bandWidthCapacity = 10;
-    public double memoryCapacity = 10;
-    public double storageCapacity = 10;
-    public double CPUCapacity = 10;
+    public double bandWidthCapacity = 100;
+    public double memoryCapacity = 100;
+    public double storageCapacity = 100;
+    public double CPUCapacity = 100;
     public int metricIndices[];
 
     public double usedBandWidth = 0;
@@ -44,11 +48,16 @@ public class Device implements Serializable {
 
     transient public JSONArray readyJson;
 
-    public void checkTriggers(TriggerMonitor triggerMonitor,long time) {
+    public ArrayList<DataExchange> sendingQueue = new ArrayList();
+    public ArrayList<DataExchange> receivingQueue = new ArrayList();
+
+    transient public int maxConsoleSize = 1000;
+
+    public void checkTriggers(TriggerMonitor triggerMonitor, long time) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                //for (int i = 0; i < triggerMonitor.triggers.size(); i++) {
+                for (int i = 0; i < triggerMonitor.triggers.size(); i++) {
                     if (triggerMonitor.triggers.get(0).isTriggered() == true) {
                         triggerConsole.append("Trigger: ");
                         triggerConsole.append("Time: ").append(time).append(" ");
@@ -57,10 +66,14 @@ public class Device implements Serializable {
                             triggerConsole.append(triggerMonitor.triggers.get(0).metrics.get(j).name).append(" ");
                         }
                         triggerConsole.append("Type: ").append(triggerMonitor.triggers.get(0).type);
-                        
+
                         triggerConsole.append(System.lineSeparator());
+
+                        if (triggerConsole.length() > maxConsoleSize) {
+                            triggerConsole.delete(0, 100);
+                        }
                     }
-                //}
+                }
             }
         });
         thread.start();
@@ -71,7 +84,7 @@ public class Device implements Serializable {
     }
 
     public void receiveMessageFromChild(DataExchange message) {
-        allocateResourceOfTransmit(message.metric, message.message);
+        receivingQueue.add(message);
 
         signalConsole.append("Received from: ");
         signalConsole.append(message.fromDevice.name).append(" ");
@@ -84,6 +97,11 @@ public class Device implements Serializable {
         signalConsole.append("Message: ");
         signalConsole.append(message.message);
         signalConsole.append(System.lineSeparator());
+
+        if (signalConsole.length() > maxConsoleSize) {
+            signalConsole.delete(0, 100);
+        }
+
     }
 
     public void clearAllResources() {
@@ -91,6 +109,8 @@ public class Device implements Serializable {
         usedMemory = 0;
         usedStorage = 0;
         usedCPU = 0;
+        sendingQueue.clear();
+        receivingQueue.clear();
     }
 
     public void clearResourcesOfMetric(Metric metric) {
@@ -106,53 +126,58 @@ public class Device implements Serializable {
     }
 
     public void sendToParent(DataExchange message, TimeController timeController) {
+        sendingQueue.add(message);
         Double messageValue = Double.valueOf(message.message);
-        message.metric.interpolationBuffer.add(messageValue);
+        message.metric.interpolationBuffer.add(message);
         if (message.metric.interpolationBuffer.size() > timeController.interpolationBufferSize) {
             message.metric.interpolationBuffer.remove(0);
         }
-        message.metric.predictionBuffer.add(messageValue);
+        message.metric.predictionBuffer.add(message);
         if (message.metric.predictionBuffer.size() > timeController.predictionBufferSize) {
             message.metric.predictionBuffer.remove(0);
         }
-        allocateResourceOfTransmit(message.metric, message.message);
-        message.toDevice.receiveMessageFromChild(message);
+        boolean successSenderResourceConsumption = message.consumeSenderResources();
+        if (successSenderResourceConsumption == true) {
+            boolean successReceiverResourceConsumption = message.consumeReceiverResources();
+            if (successReceiverResourceConsumption == true) {
+                message.setupSuccessReleaseResourceTimer();
+                message.toDevice.receiveMessageFromChild(message);
 
-        signalConsole.append("Sending from: ");
-        signalConsole.append(message.fromDevice.name).append(" ");
-        signalConsole.append("Sending to: ");
-        signalConsole.append(message.toDevice.name).append(" ");
-        signalConsole.append("Metric: ");
-        signalConsole.append(message.metric.name).append(" ");
-        signalConsole.append("Time: ");
-        signalConsole.append(message.time).append(" ");
-        signalConsole.append("Message: ");
-        signalConsole.append(message.message);
-        signalConsole.append(System.lineSeparator());
+                signalConsole.append("Sending from: ");
+                signalConsole.append(message.fromDevice.name).append(" ");
+                signalConsole.append("Sending to: ");
+                signalConsole.append(message.toDevice.name).append(" ");
+                signalConsole.append("Metric: ");
+                signalConsole.append(message.metric.name).append(" ");
+                signalConsole.append("Time: ");
+                signalConsole.append(message.time).append(" ");
+                signalConsole.append("Message: ");
+                signalConsole.append(message.message);
+                signalConsole.append(System.lineSeparator());
+
+                if (signalConsole.length() > maxConsoleSize) {
+                    signalConsole.delete(0, 100);
+                }
+
+            } else {
+                message.setupRetryReceiverResourceConsumption();
+                message.setupTimeoutReleaseResourceTimer();
+            }
+        } else {
+            return;
+        }
     }
 
-    private void allocateResourceOfTransmit(Metric metric, String message) {
-        final double usedBandWidthAddition = message.getBytes().length / Math.pow(2, 10);
+    public void removeSendingDataExchange(DataExchange dataExchange) {
+        sendingQueue.remove(dataExchange);
+    }
 
-        final double usedCPUAddition = metric.cPUUsageForEachTransmit;
-        final double usedMemoryAddition = metric.memoryUsageForEachTransmit + message.getBytes().length / Math.pow(2, 20);
-        final double usedStorageAddition = metric.storageUsageForTransmit;
-        usedBandWidth = usedBandWidth + usedBandWidthAddition;
+    public void removeReceivingDataExchange(DataExchange dataExchange) {
+        receivingQueue.remove(dataExchange);
+    }
 
-        usedCPU = usedCPU + usedCPUAddition;
-        usedMemory = usedMemory + usedMemoryAddition;
-        usedStorage = usedStorage + usedStorageAddition;
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                usedBandWidth = usedBandWidth - usedBandWidthAddition;
+    private void allocateResourceOfTransmit(DataExchange message) {
 
-                usedCPU = usedCPU - usedCPUAddition;
-                usedMemory = usedMemory - usedMemoryAddition;
-                usedStorage = usedStorage - usedStorageAddition;
-            }
-        }, latency);
     }
 
     public void clearConsole() {

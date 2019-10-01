@@ -31,8 +31,8 @@ public class Metric implements Serializable{
     public double cPUUsageForEachTransmit=1;
     public double storageUsageForTransmit=1;
     
-    public ArrayList<Double> predictionBuffer=new ArrayList();
-    public ArrayList<Double> interpolationBuffer=new ArrayList();
+    public ArrayList<DataExchange> predictionBuffer=new ArrayList();
+    public ArrayList<DataExchange> interpolationBuffer=new ArrayList();
     
     public ArrayList<Trigger> triggersInvolved=new ArrayList();
     
