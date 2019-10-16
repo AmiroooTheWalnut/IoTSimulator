@@ -19,6 +19,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.XYPlot;
 
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.DefaultXYDataset;
@@ -35,9 +36,11 @@ public class SimulationRunDialog extends javax.swing.JDialog {
 
     ChartPanel chartPanel;
     DefaultCategoryDataset resourceDataset;
+//    XYSeries triggerDataset;
     XYSeries metricDataset;
     JFreeChart deviceChart;
     JFreeChart metricChart;
+    XYSeriesCollection xYDataset;
 
     boolean isBlockedRefreshTimer;
 
@@ -47,10 +50,12 @@ public class SimulationRunDialog extends javax.swing.JDialog {
     public SimulationRunDialog(java.awt.Frame passed_parent, boolean modal) {
         super(passed_parent, modal);
         initComponents();
+        
         parent = (MainFrame) passed_parent;
         initOverviewPanel();
         initDeviceMonitorPanel();
         initMetricMonitorPanel();
+        
     }
 
     /**
@@ -660,11 +665,19 @@ public class SimulationRunDialog extends javax.swing.JDialog {
         });
 
         metricDataset = new XYSeries("Metric value");
-        XYSeriesCollection xYDataset = new XYSeriesCollection();
+        xYDataset = new XYSeriesCollection();
         xYDataset.addSeries(metricDataset);
+        
+//        triggerDataset = new XYSeries("Trigger value");
+//        xYDataset.addSeries(triggerDataset);
+        
         metricChart = ChartFactory.createXYLineChart("Metric value", "Time", "Value", xYDataset);
+        
+        ((XYPlot)metricChart.getPlot()).setRenderer(new ChartRenderer(this));
+        
         ChartPanel panel = new ChartPanel(metricChart);
         jPanel13.add(panel);
+        
     }
 
     public void refreshDeviceMonitorPanel(int selectedDeviceIndex) {
@@ -705,11 +718,16 @@ public class SimulationRunDialog extends javax.swing.JDialog {
         if (isBlockedRefreshTimer == false) {
             isBlockedRefreshTimer = true;
 
+//            triggerDataset.clear();
             metricDataset.clear();
             try {
                 for (int i = 0; i < metric.predictionBuffer.size() - 1; i++) {
                     metricDataset.add(metric.predictionBuffer.get(i).time, Double.valueOf(metric.predictionBuffer.get(i).message));
                 }
+//                for (int i = 0; i < metric.triggerBuffer.size() - 1;i++) {
+//                    double value = metric.triggerBuffer.get(i) ? 1.0 : 0.0;
+//                    triggerDataset.add(metric.predictionBuffer.get(i).time, value);
+//                }
             } catch (Exception e) {
                 System.out.println("Problem in generating xy data. Potentially, the message is not number.");
             }

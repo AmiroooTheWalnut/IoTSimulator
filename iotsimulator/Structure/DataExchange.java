@@ -20,6 +20,7 @@ public class DataExchange {
     public long time;//MILI SECONDS
     public String message;
     public Metric metric;
+    public boolean isTriggered;
 
     ScheduledThreadPoolExecutor realeaseTimer = new ScheduledThreadPoolExecutor(1);
     ScheduledThreadPoolExecutor retryTimer = new ScheduledThreadPoolExecutor(1);
@@ -89,7 +90,7 @@ public class DataExchange {
     }
 
     public void setupRetryReceiverResourceConsumption() {
-        System.out.println("retryTimer is made!!!");
+//        System.out.println("retryTimer is made!!!");
         retryTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -117,7 +118,7 @@ public class DataExchange {
     }
 
     public void setupTimeoutReleaseResourceTimer() {
-        System.out.println("timeout realeaseTimer is made!!!");
+//        System.out.println("timeout realeaseTimer is made!!!");
         realeaseTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -137,7 +138,7 @@ public class DataExchange {
     }
 
     public void setupSuccessReleaseResourceTimer() {
-        System.out.println("success realeaseTimer is made!!!");
+//        System.out.println("success realeaseTimer is made!!!");
         realeaseTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -156,7 +157,7 @@ public class DataExchange {
                 realeaseTimer.purge();
                 realeaseTimer.shutdownNow();
                 realeaseTimer=null;
-                System.out.println("success Timer died!!!");
+//                System.out.println("success Timer died!!!");
             }
         },0,fromDevice.latency,TimeUnit.MILLISECONDS);
     }

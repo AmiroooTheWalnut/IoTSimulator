@@ -54,25 +54,28 @@ public class Device implements Serializable {
 
     transient public int maxConsoleSize = 1000;
 
-    public void checkTriggers(TriggerMonitor triggerMonitor, long time) {
+    public void checkTriggers(DataExchange message,TriggerMonitor triggerMonitor, long time) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 for (int i = 0; i < triggerMonitor.triggers.size(); i++) {
-                    if (triggerMonitor.triggers.get(0).isTriggered() == true) {
+                    if (triggerMonitor.triggers.get(i).isTriggered() == true) {
+                        message.metric.triggerBuffer.add(true);
                         triggerConsole.append("Trigger: ");
                         triggerConsole.append("Time: ").append(time).append(" ");
                         triggerConsole.append("Metrices: ");
-                        for (int j = 0; j < triggerMonitor.triggers.get(0).metrics.size(); j++) {
-                            triggerConsole.append(triggerMonitor.triggers.get(0).metrics.get(j).name).append(" ");
+                        for (int j = 0; j < triggerMonitor.triggers.get(i).metrics.size(); j++) {
+                            triggerConsole.append(triggerMonitor.triggers.get(i).metrics.get(j).name).append(" ");
                         }
-                        triggerConsole.append("Type: ").append(triggerMonitor.triggers.get(0).type);
+                        triggerConsole.append("Type: ").append(triggerMonitor.triggers.get(i).type);
 
                         triggerConsole.append(System.lineSeparator());
 
                         if (triggerConsole.length() > maxConsoleSize) {
                             triggerConsole.delete(0, 100);
                         }
+                    }else{
+                        message.metric.triggerBuffer.add(false);
                     }
                 }
             }
@@ -136,6 +139,7 @@ public class Device implements Serializable {
         message.metric.predictionBuffer.add(message);
         if (message.metric.predictionBuffer.size() > timeController.predictionBufferSize) {
             message.metric.predictionBuffer.remove(0);
+            message.metric.triggerBuffer.remove(0);
         }
         boolean successSenderResourceConsumption = message.consumeSenderResources();
         if (successSenderResourceConsumption == true) {

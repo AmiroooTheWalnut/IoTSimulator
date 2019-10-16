@@ -122,8 +122,8 @@ public class TimeController implements Serializable {
             public void run() {
                 double generatedMetricValue = metricManager.getMetricValue(allDevices.get(deviceIndex).metrics.get(metricIndex), currentTime);
                 DataExchange message=new DataExchange(allDevices.get(deviceIndex),allDevices.get(deviceIndex).parentDevice,currentTime,String.valueOf(generatedMetricValue),allDevices.get(deviceIndex).metrics.get(metricIndex));
+                message.toDevice.checkTriggers(message,parent.triggerMonitor,currentTime);
                 allDevices.get(deviceIndex).sendToParent(message,thisTimeController);
-                message.toDevice.checkTriggers(parent.triggerMonitor,currentTime);
             }
         }, 0, allDevices.get(deviceIndex).metrics.get(metricIndex).frequency,TimeUnit.MILLISECONDS);
     }

@@ -32,7 +32,8 @@ public class Metric implements Serializable{
     public double storageUsageForTransmit=1;
     
     public ArrayList<DataExchange> predictionBuffer=new ArrayList();
-    public ArrayList<DataExchange> interpolationBuffer=new ArrayList();
+    public ArrayList<DataExchange> interpolationBuffer=new ArrayList();// No memory usage in device
+    public ArrayList<Boolean> triggerBuffer=new ArrayList();// No memory usage in device
     
     public ArrayList<Trigger> triggersInvolved=new ArrayList();
     
