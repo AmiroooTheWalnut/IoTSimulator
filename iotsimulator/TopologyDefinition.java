@@ -40,7 +40,7 @@ public class TopologyDefinition implements Serializable{
         initTopologyLevel2.roles.add(TopologyRole.Sensing);
         
         initTopologyLevel1.devices.get(0).children.add(initTopologyLevel2.devices.get(0));
-        initTopologyLevel2.devices.get(0).parent=initTopologyLevel1.devices.get(0);
+        initTopologyLevel2.devices.get(0).parentDevice=initTopologyLevel1.devices.get(0);
         initTopologyLevel2.devices.get(0).parentDeviceIndex=0;
         topology.topologyLevels.add(initTopologyLevel1);
         topology.topologyLevels.add(initTopologyLevel2);

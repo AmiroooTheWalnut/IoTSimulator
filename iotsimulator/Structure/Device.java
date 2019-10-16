@@ -28,7 +28,8 @@ public class Device implements Serializable {
     public long retrySendToParentInterval = 10;
 
     public String name = "UnnamedDevice";
-    public Device parent;
+    public TopologyLevel ownerTopology;
+    public Device parentDevice;
     public ArrayList<Device> children = new ArrayList();
     public int parentDeviceIndex = -1;
     public ArrayList<Metric> metrics = new ArrayList();

@@ -7,7 +7,6 @@ package iotsimulator;
 
 import iotsimulator.Structure.DataExchange;
 import iotsimulator.Structure.Device;
-import iotsimulator.Structure.Metric;
 import iotsimulator.Structure.Topology;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -96,8 +95,9 @@ public class TimeController implements Serializable {
     public void resume(MetricManager metricManager) {
         int watchCounter = 0;
         for (int i = 0; i < allDevices.size(); i++) {
+//            if(allDevices.get(i).ownerTopology)
             for (int j = 0; j < allDevices.get(i).metrics.size(); j++) {
-                setupTimer(watchCounter, i, j, metricManager);
+                setupTimerForSensing(watchCounter, i, j, metricManager);
                 watchCounter = watchCounter + 1;
             }
         }
@@ -116,12 +116,12 @@ public class TimeController implements Serializable {
         }, 0, refreshRate,TimeUnit.MILLISECONDS);
     }
 
-    private void setupTimer(int watchCounter, int deviceIndex, int metricIndex, MetricManager metricManager) {
+    private void setupTimerForSensing(int watchCounter, int deviceIndex, int metricIndex, MetricManager metricManager) {
         watches.get(watchCounter).scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 double generatedMetricValue = metricManager.getMetricValue(allDevices.get(deviceIndex).metrics.get(metricIndex), currentTime);
-                DataExchange message=new DataExchange(allDevices.get(deviceIndex),allDevices.get(deviceIndex).parent,currentTime,String.valueOf(generatedMetricValue),allDevices.get(deviceIndex).metrics.get(metricIndex));
+                DataExchange message=new DataExchange(allDevices.get(deviceIndex),allDevices.get(deviceIndex).parentDevice,currentTime,String.valueOf(generatedMetricValue),allDevices.get(deviceIndex).metrics.get(metricIndex));
                 allDevices.get(deviceIndex).sendToParent(message,thisTimeController);
                 message.toDevice.checkTriggers(parent.triggerMonitor,currentTime);
             }
