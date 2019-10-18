@@ -15,6 +15,11 @@ public class TriggerPredictor implements Serializable{
     
     static final long serialVersionUID = 1L;
     
+    public void generateNextSensorValue()
+    {
+        
+    }
+    
     public void predictTriggers()
     {
         
