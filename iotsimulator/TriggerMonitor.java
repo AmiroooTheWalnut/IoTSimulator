@@ -17,6 +17,10 @@ public class TriggerMonitor implements Serializable{
     
     static final long serialVersionUID = 1L;
     
+    public double memoryUsageForActivity=1;
+    public double cPUUsageForActivity=1;
+    public double storageUsageForActivity=1;
+    
     public ArrayList<Trigger> triggers=new ArrayList();
     
 }

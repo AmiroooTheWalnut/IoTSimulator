@@ -21,10 +21,10 @@ import java.util.concurrent.TimeUnit;
 public class TimeController implements Serializable {
 
     static final long serialVersionUID = 1L;
-    
+
     transient IOTSimulator parent;
-    
-    transient TimeController thisTimeController=this;
+
+    transient TimeController thisTimeController = this;
 
     public int predictionBufferSize = 50;
     public int interpolationBufferSize = 40;
@@ -33,7 +33,7 @@ public class TimeController implements Serializable {
     public int numTimeSteps;
 
     transient public long currentTime;
-    
+
     transient public long simulationVirtualStartTime;
 
     private int refreshRate = 1000;
@@ -42,17 +42,17 @@ public class TimeController implements Serializable {
 
     transient private long simulationRealStartTime;
 
-    transient ArrayList<ScheduledThreadPoolExecutor> watches;
+    transient ArrayList<ScheduledThreadPoolExecutor> metricWatches;
+    transient ScheduledThreadPoolExecutor predictionWatch;
     transient ScheduledThreadPoolExecutor trunkTimer;
 
     transient Topology model;
     transient public ArrayList<Device> allDevices = new ArrayList();
 
     transient public boolean isActive = false;
-    
-    TimeController(IOTSimulator iOTSimulator)
-    {
-        parent=iOTSimulator;
+
+    TimeController(IOTSimulator iOTSimulator) {
+        parent = iOTSimulator;
     }
 
     public void initDevices(Topology passed_model) {
@@ -65,30 +65,41 @@ public class TimeController implements Serializable {
             }
         }
     }
-    
+
     public void start(Topology passed_model, MetricManager metricManager) {
         isActive = true;
         simulationVirtualStartTime = metricManager.startingTime;
         actualEndingTime = (long) (metricManager.endingTime * (simulationLengthPercentage / 100f));
         model = passed_model;
         initDevices(model);
-        watches = new ArrayList();
+        metricWatches = new ArrayList();
         for (int i = 0; i < allDevices.size(); i++) {
-            for (int j = 0; j < allDevices.get(i).metrics.size(); j++) {
-                allDevices.get(i).metrics.get(j).lastRecordIndex = 0;
-                allDevices.get(i).allocateResourcesToMetric(allDevices.get(i).metrics.get(j));
-                watches.add(new ScheduledThreadPoolExecutor(1));
+            for (int j = 0; j < allDevices.size(); j++) {
+                if (allDevices.get(i).ownerTopology.roles.get(j).equals("Sensing")) {
+                    for (int k = 0; k < allDevices.get(i).metrics.size(); k++) {
+                        allDevices.get(i).metrics.get(k).lastRecordIndex = 0;
+                        allDevices.get(i).allocateResourcesToMetric(allDevices.get(i).metrics.get(k));
+                        metricWatches.add(new ScheduledThreadPoolExecutor(1));
+                    }
+                }else if (allDevices.get(i).ownerTopology.roles.get(j).equals("Trigger monitoring")) {
+                    allDevices.get(i).allocateResourcesToTriggerMonitor(parent.triggerMonitor);
+                    predictionWatch = new ScheduledThreadPoolExecutor(1);
+                }else if (allDevices.get(i).ownerTopology.roles.get(j).equals("Rearrangment")) {
+                    
+                }
             }
+
         }
         resume(metricManager);
     }
 
     public void pause() {
-        simulationVirtualStartTime=currentTime;
+        simulationVirtualStartTime = currentTime;
         trunkTimer.shutdownNow();
-        for (int i = 0; i < watches.size(); i++) {
-            watches.get(i).shutdownNow();
-            watches.set(i, new ScheduledThreadPoolExecutor(1));
+        predictionWatch.shutdown();
+        for (int i = 0; i < metricWatches.size(); i++) {
+            metricWatches.get(i).shutdownNow();
+            metricWatches.set(i, new ScheduledThreadPoolExecutor(1));
         }
     }
 
@@ -100,8 +111,10 @@ public class TimeController implements Serializable {
                 setupTimerForSensing(watchCounter, i, j, metricManager);
                 watchCounter = watchCounter + 1;
             }
+
         }
         trunkTimer = new ScheduledThreadPoolExecutor(1);
+        predictionWatch = new ScheduledThreadPoolExecutor(1);
         simulationRealStartTime = System.currentTimeMillis();
         trunkTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -113,25 +126,37 @@ public class TimeController implements Serializable {
                     System.out.println("Simulation finished");
                 }
             }
-        }, 0, refreshRate,TimeUnit.MILLISECONDS);
+        }, 0, refreshRate, TimeUnit.MILLISECONDS);
     }
 
     private void setupTimerForSensing(int watchCounter, int deviceIndex, int metricIndex, MetricManager metricManager) {
-        watches.get(watchCounter).scheduleAtFixedRate(new TimerTask() {
+        metricWatches.get(watchCounter).scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 double generatedMetricValue = metricManager.getMetricValue(allDevices.get(deviceIndex).metrics.get(metricIndex), currentTime);
-                DataExchange message=new DataExchange(allDevices.get(deviceIndex),allDevices.get(deviceIndex).parentDevice,currentTime,String.valueOf(generatedMetricValue),allDevices.get(deviceIndex).metrics.get(metricIndex));
-                message.toDevice.checkTriggers(message,parent.triggerMonitor,currentTime);
-                allDevices.get(deviceIndex).sendToParent(message,thisTimeController);
+                DataExchange message = new DataExchange(allDevices.get(deviceIndex), allDevices.get(deviceIndex).parentDevice, currentTime, String.valueOf(generatedMetricValue), allDevices.get(deviceIndex).metrics.get(metricIndex));
+                message.toDevice.checkTriggers(message, parent.triggerMonitor, currentTime);
+                allDevices.get(deviceIndex).sendToParent(message, thisTimeController);
             }
-        }, 0, allDevices.get(deviceIndex).metrics.get(metricIndex).frequency,TimeUnit.MILLISECONDS);
+        }, 0, allDevices.get(deviceIndex).metrics.get(metricIndex).frequency, TimeUnit.MILLISECONDS);
+    }
+    
+    private void setupTimerForSensing(int watchCounter, int deviceIndex, int metricIndex, MetricManager metricManager) {
+        metricWatches.get(watchCounter).scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                double generatedMetricValue = metricManager.getMetricValue(allDevices.get(deviceIndex).metrics.get(metricIndex), currentTime);
+                DataExchange message = new DataExchange(allDevices.get(deviceIndex), allDevices.get(deviceIndex).parentDevice, currentTime, String.valueOf(generatedMetricValue), allDevices.get(deviceIndex).metrics.get(metricIndex));
+                message.toDevice.checkTriggers(message, parent.triggerMonitor, currentTime);
+                allDevices.get(deviceIndex).sendToParent(message, thisTimeController);
+            }
+        }, 0, allDevices.get(deviceIndex).metrics.get(metricIndex).frequency, TimeUnit.MILLISECONDS);
     }
 
     private void finishSimulatiom() {
         trunkTimer.shutdownNow();
-        for (int i = 0; i < watches.size(); i++) {
-            watches.get(i).shutdownNow();
+        for (int i = 0; i < metricWatches.size(); i++) {
+            metricWatches.get(i).shutdownNow();
         }
         isActive = false;
     }

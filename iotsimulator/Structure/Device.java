@@ -128,6 +128,12 @@ public class Device implements Serializable {
         usedMemory = usedMemory + metric.memoryUsageForActivity;
         usedStorage = usedStorage + metric.storageUsageForActivity;
     }
+    
+    public void allocateResourcesToTriggerMonitor(TriggerMonitor triggerMonitor) {
+        usedCPU = usedCPU + triggerMonitor.cPUUsageForActivity;
+        usedMemory = usedMemory + triggerMonitor.memoryUsageForActivity;
+        usedStorage = usedStorage + triggerMonitor.storageUsageForActivity;
+    }
 
     public void sendToParent(DataExchange message, TimeController timeController) {
         sendingQueue.add(message);
