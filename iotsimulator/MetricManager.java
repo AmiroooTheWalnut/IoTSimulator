@@ -25,6 +25,7 @@ public class MetricManager implements Serializable {
 
     public String cSVFilePath;
 //    public CsvReader cSVReader = new CsvReader();
+    public ArrayList<String> types;
     public CsvContainer data;
 
     public ArrayList<Long> timeStamps = new ArrayList();//IN NANO SECONDS***

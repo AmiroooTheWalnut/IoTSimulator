@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author myname
  */
-public class CustomTuple3  implements Serializable{
+public class CustomTuple3 implements Serializable{
     
     static final long serialVersionUID = 1L;
     

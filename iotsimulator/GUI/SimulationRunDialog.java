@@ -602,10 +602,10 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                     }
                 }
             }, 2000, 1000,TimeUnit.MILLISECONDS);
-            parent.iOTSimulator.timeController.start(parent.iOTSimulator.topologyDefinition.topology, parent.iOTSimulator.metricManager);
+            parent.iOTSimulator.timeController.start(parent.iOTSimulator.topologyDefinition.topology, parent.iOTSimulator);
             jButton1.setText("Pause");
         } else if (jButton1.getText().equals("Resume")) {
-            parent.iOTSimulator.timeController.resume(parent.iOTSimulator.metricManager);
+            parent.iOTSimulator.timeController.resume(parent.iOTSimulator);
             jButton1.setText("Pause");
         } else if (jButton1.getText().equals("Pause")) {
             parent.iOTSimulator.timeController.pause();
