@@ -21,6 +21,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
+import weka.core.Instances;
 
 /**
  *
@@ -56,7 +57,7 @@ public class CSVDataPanel extends javax.swing.JPanel {
             public void stateChanged(ChangeEvent e) {
                 int selectedMetric = jList3.getSelectedIndex();
                 if (selectedMetric > -1) {
-                    parent.iOTSimulator.metricManager.types.set(selectedMetric, "numeric");
+                    parent.iOTSimulator.metricManager.types.set(selectedMetric, MetricManager.NUMERIC);
                 }
             }
         });
@@ -66,7 +67,7 @@ public class CSVDataPanel extends javax.swing.JPanel {
             public void stateChanged(ChangeEvent e) {
                 int selectedMetric = jList3.getSelectedIndex();
                 if (selectedMetric > -1) {
-                    parent.iOTSimulator.metricManager.types.set(selectedMetric, "nominal");
+                    parent.iOTSimulator.metricManager.types.set(selectedMetric, MetricManager.NOMINAL);
                 }
             }
         });
@@ -451,8 +452,9 @@ public class CSVDataPanel extends javax.swing.JPanel {
                 parent.iOTSimulator.metricManager.types = new ArrayList();
 
                 for (int i = 0; i < columns.size(); i++) {
-                    parent.iOTSimulator.metricManager.types.add("numeric");
+                    parent.iOTSimulator.metricManager.types.add(MetricManager.NUMERIC);
                 }
+                
 
                 jList1.setModel(new javax.swing.AbstractListModel() {
                     @Override
@@ -541,7 +543,7 @@ public class CSVDataPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         int selectedMetric = jList3.getSelectedIndex();
         if (selectedMetric > -1) {
-            if (parent.iOTSimulator.metricManager.types.get(selectedMetric).equals("numeric")) {
+            if (parent.iOTSimulator.metricManager.types.get(selectedMetric).equals(MetricManager.NUMERIC)) {
                 jRadioButton5.setSelected(true);
             } else {
                 jRadioButton9.setSelected(true);
@@ -594,7 +596,7 @@ public class CSVDataPanel extends javax.swing.JPanel {
             public void stateChanged(ChangeEvent e) {
                 int selectedMetric = jList3.getSelectedIndex();
                 if (selectedMetric > -1) {
-                    parent.iOTSimulator.metricManager.types.set(selectedMetric, "numeric");
+                    parent.iOTSimulator.metricManager.types.set(selectedMetric, MetricManager.NUMERIC);
                 }
             }
         });
@@ -604,7 +606,7 @@ public class CSVDataPanel extends javax.swing.JPanel {
             public void stateChanged(ChangeEvent e) {
                 int selectedMetric = jList3.getSelectedIndex();
                 if (selectedMetric > -1) {
-                    parent.iOTSimulator.metricManager.types.set(selectedMetric, "nominal");
+                    parent.iOTSimulator.metricManager.types.set(selectedMetric, MetricManager.NOMINAL);
                 }
             }
         });

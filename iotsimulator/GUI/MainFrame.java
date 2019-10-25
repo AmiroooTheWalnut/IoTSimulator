@@ -321,7 +321,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_setupTopologyButtonActionPerformed
 
     private void saveKryoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveKryoButtonActionPerformed
-        JFileChooser fc_save = new JFileChooser();
+        JFileChooser fc_save = new JFileChooser(new java.io.File("."));
         fc_save.setAcceptAllFileFilterUsed(false);
         int returnVal = fc_save.showSaveDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -335,7 +335,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_saveKryoButtonActionPerformed
 
     private void loadKryoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadKryoButtonActionPerformed
-        JFileChooser jFileChooser1 = new javax.swing.JFileChooser();
+        JFileChooser jFileChooser1 = new javax.swing.JFileChooser(new java.io.File("."));
         jFileChooser1.setAcceptAllFileFilterUsed(false);
         int returnVal = jFileChooser1.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -362,7 +362,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_loadKryoButtonActionPerformed
 
     private void saveSerializableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSerializableButtonActionPerformed
-        JFileChooser fc_save = new JFileChooser();
+        JFileChooser fc_save = new JFileChooser(new java.io.File("."));
         fc_save.setAcceptAllFileFilterUsed(false);
         int returnVal = fc_save.showSaveDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {

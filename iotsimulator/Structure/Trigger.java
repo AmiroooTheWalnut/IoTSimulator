@@ -7,6 +7,7 @@ package iotsimulator.Structure;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import weka.classifiers.Classifier;
 
 /**
  *
@@ -30,6 +31,8 @@ public class Trigger implements Serializable {
     public ArrayList<Metric> metrics = new ArrayList();
 
     public int metricIndices[];
+    
+    public Classifier triggerModel;
 
     public boolean isTriggered() {
         switch (type) {

@@ -8,6 +8,10 @@ package iotsimulator;
 import iotsimulator.Structure.Trigger;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import weka.classifiers.Classifier;
+import weka.core.Instances;
 
 /**
  *
@@ -22,5 +26,16 @@ public class TriggerMonitor implements Serializable{
     public double storageUsageForActivity=1;
     
     public ArrayList<Trigger> triggers=new ArrayList();
+    
+    public Classifier makeModel(Instances data, Classifier model)
+    {
+        try {
+            model.buildClassifier(data);
+            return model;
+        } catch (Exception ex) {
+            Logger.getLogger(TriggerMonitor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
     
 }

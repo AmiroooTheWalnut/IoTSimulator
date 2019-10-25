@@ -5,44 +5,124 @@
  */
 package iotsimulator;
 
+import weka.core.converters.CSVLoader;
 import iotsimulator.Structure.Device;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import weka.classifiers.Classifier;
 import weka.classifiers.evaluation.NumericPrediction;
 import weka.classifiers.timeseries.WekaForecaster;
+import weka.core.Attribute;
 import weka.core.Instances;
+import weka.core.converters.CSVLoader;
+import weka.filters.Filter;
 import weka.filters.supervised.attribute.TSLagMaker;
+import weka.filters.unsupervised.attribute.NumericToNominal;
+import weka.filters.unsupervised.attribute.Remove;
 
 /**
  *
  * @author user
  */
-public class TriggerPredictor implements Serializable{
-    
+public class TriggerPredictor implements Serializable {
+
     static final long serialVersionUID = 1L;
-    
+
     String type;
     Classifier classifier;
     String name;
-    public double frequency=1000;//MILLISECONDS AFTER GETTING IDLE
+    public double frequency = 1000;//MILLISECONDS AFTER GETTING IDLE
 
     static Double results[];
-    
-    public Instances generateInstances(Device triggerMonitoringDevice)
-    {
-        for(int i=0;i<triggerMonitoringDevice.children.size();i++)
-        {
-            for(int j=0;j<triggerMonitoringDevice.children.get(i).metrics.size();j++)
-            {
-                
+
+    public Instances generateInstancesForDevice(Device triggerMonitoringDevice) {
+        for (int i = 0; i < triggerMonitoringDevice.children.size(); i++) {
+            for (int j = 0; j < triggerMonitoringDevice.children.get(i).metrics.size(); j++) {
+
             }
         }
         return null;//TEMPORARY!!!
     }
-    
-    public double generateNextSensorValue(Instances realSensorValues, int numberOfPredictionSteps)
-    {
+
+    public Instances generateInstancesFromCSV(String cSVPath, ArrayList<String> types) {
+
+        try {
+            CSVLoader csvLoader = new CSVLoader();
+            csvLoader.setSource(new File(cSVPath));
+            Instances data = csvLoader.getDataSet();
+            NumericToNominal filter = new NumericToNominal();
+            ArrayList<Integer> indicesList = new ArrayList();
+            for (int i = 0; i < types.size(); i++) {
+                if (types.get(i).equals(MetricManager.NOMINAL)) {
+                    indicesList.add(i);
+                }
+            }
+            if (indicesList.size() > 0) {
+                int[] indices = new int[indicesList.size()];
+
+                for (int i = 0; i < indicesList.size(); i++) {
+                    if (indicesList.get(i) != null) {
+                        indices[i] = indicesList.get(i);
+                    }
+                }
+                filter.setAttributeIndicesArray(indices);
+                filter.setInputFormat(data);
+                data = Filter.useFilter(data, filter);
+            }
+            return data;
+        } catch (IOException ex) {
+            Logger.getLogger(TriggerPredictor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(TriggerPredictor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public Instances generateInstancesFromCSV(String cSVPath, ArrayList<String> types, int metricIndices[]) {
+
+        try {
+            CSVLoader csvLoader = new CSVLoader();
+            csvLoader.setSource(new File(cSVPath));
+            Instances data = csvLoader.getDataSet();
+            NumericToNominal filter = new NumericToNominal();
+            ArrayList<Integer> indicesList = new ArrayList();
+            for (int i = 0; i < types.size(); i++) {
+                if (types.get(i).equals(MetricManager.NOMINAL)) {
+                    indicesList.add(i);
+                }
+            }
+            if (indicesList.size() > 0) {
+                int[] indices = new int[indicesList.size()];
+
+                for (int i = 0; i < indicesList.size(); i++) {
+                    if (indicesList.get(i) != null) {
+                        indices[i] = indicesList.get(i);
+                    }
+                }
+                filter.setAttributeIndicesArray(indices);
+                filter.setInputFormat(data);
+                data = Filter.useFilter(data, filter);
+            }
+            Remove removeFilter = new Remove();
+            removeFilter.setAttributeIndicesArray(metricIndices);
+            removeFilter.setInvertSelection(true);
+            removeFilter.setInputFormat(data);
+            data = Filter.useFilter(data, removeFilter);
+            return data;
+        } catch (IOException ex) {
+            Logger.getLogger(TriggerPredictor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(TriggerPredictor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public double generateNextSensorValue(Instances realSensorValues, int numberOfPredictionSteps) {
         if (type.equals("DM")) {
             WekaForecaster forecaster = new WekaForecaster();
             TSLagMaker lagMaker = forecaster.getTSLagMaker();
@@ -105,7 +185,7 @@ public class TriggerPredictor implements Serializable{
 
         return -1;
     }
-    
+
     static private double[] getPredictionForNextMonth(List<List<NumericPrediction>> preds, int steps) {
         double output[] = new double[3];
 
@@ -122,10 +202,9 @@ public class TriggerPredictor implements Serializable{
         }
         return output;
     }
-    
-    public void predictTriggers()
-    {
-        
+
+    public void predictTriggers() {
+
     }
-    
+
 }

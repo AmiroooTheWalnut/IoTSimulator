@@ -23,6 +23,9 @@ public class MetricManager implements Serializable {
 
     static final long serialVersionUID = 1L;
 
+    public static String NUMERIC="numeric";
+    public static String NOMINAL="nominal";
+    
     public String cSVFilePath;
 //    public CsvReader cSVReader = new CsvReader();
     public ArrayList<String> types;

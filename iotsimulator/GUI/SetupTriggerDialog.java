@@ -6,8 +6,11 @@
 package iotsimulator.GUI;
 
 import iotsimulator.Structure.Trigger;
+import java.awt.Frame;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import weka.core.Instances;
 
 /**
  *
@@ -52,7 +55,7 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
                 return parent.iOTSimulator.metricManager.selectedMetrics.get(index).name;
             }
         });
-        
+
         jList2.setModel(new javax.swing.AbstractListModel() {
             @Override
             public int getSize() {
@@ -347,13 +350,12 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
                 tempTrigger.metrics.add(parent.iOTSimulator.metricManager.selectedMetrics.get(metricIndices[i]));
                 parent.iOTSimulator.metricManager.selectedMetrics.get(metricIndices[i]).triggersInvolved.add(tempTrigger);
             }
-            if(jTextField1.getText().length()>0)
-            {
-                tempTrigger.name=jTextField1.getText();
-            }else{
-                tempTrigger.name=String.valueOf("Trigger"+parent.iOTSimulator.triggerMonitor.triggers.size());
+            if (jTextField1.getText().length() > 0) {
+                tempTrigger.name = jTextField1.getText();
+            } else {
+                tempTrigger.name = String.valueOf("Trigger" + parent.iOTSimulator.triggerMonitor.triggers.size());
             }
-            
+
             parent.iOTSimulator.triggerMonitor.triggers.add(tempTrigger);
         }
         jList2.setModel(new javax.swing.AbstractListModel() {
@@ -373,6 +375,11 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        Instances generatedInstances = parent.iOTSimulator.triggerPredictor.generateInstancesFromCSV(parent.iOTSimulator.metricManager.cSVFilePath, parent.iOTSimulator.metricManager.types);
+        SetupModelTriggerDialog setupModelTriggerDialog=new SetupModelTriggerDialog(this,(Frame)SwingUtilities.windowForComponent(this),true);
+        setupModelTriggerDialog.setInstances(generatedInstances);
+        setupModelTriggerDialog.setVisible(true);
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -449,7 +456,7 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
+    public javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JList<String> jList1;
     private javax.swing.JList<String> jList2;
