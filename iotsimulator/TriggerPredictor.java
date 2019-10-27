@@ -5,6 +5,7 @@
  */
 package iotsimulator;
 
+import iotsimulator.Structure.DataArff;
 import weka.core.converters.CSVLoader;
 import iotsimulator.Structure.Device;
 import java.io.File;
@@ -40,7 +41,7 @@ public class TriggerPredictor implements Serializable {
 
     static Double results[];
 
-    public Instances generateInstancesForDevice(Device triggerMonitoringDevice) {
+    public DataArff generateInstancesForDevice(Device triggerMonitoringDevice) {
         for (int i = 0; i < triggerMonitoringDevice.children.size(); i++) {
             for (int j = 0; j < triggerMonitoringDevice.children.get(i).metrics.size(); j++) {
 
@@ -49,80 +50,9 @@ public class TriggerPredictor implements Serializable {
         return null;//TEMPORARY!!!
     }
 
-    public Instances generateInstancesFromCSV(String cSVPath, ArrayList<String> types) {
+    
 
-        try {
-            CSVLoader csvLoader = new CSVLoader();
-            csvLoader.setSource(new File(cSVPath));
-            Instances data = csvLoader.getDataSet();
-            NumericToNominal filter = new NumericToNominal();
-            ArrayList<Integer> indicesList = new ArrayList();
-            for (int i = 0; i < types.size(); i++) {
-                if (types.get(i).equals(MetricManager.NOMINAL)) {
-                    indicesList.add(i);
-                }
-            }
-            if (indicesList.size() > 0) {
-                int[] indices = new int[indicesList.size()];
-
-                for (int i = 0; i < indicesList.size(); i++) {
-                    if (indicesList.get(i) != null) {
-                        indices[i] = indicesList.get(i);
-                    }
-                }
-                filter.setAttributeIndicesArray(indices);
-                filter.setInputFormat(data);
-                data = Filter.useFilter(data, filter);
-            }
-            return data;
-        } catch (IOException ex) {
-            Logger.getLogger(TriggerPredictor.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(TriggerPredictor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
-    public Instances generateInstancesFromCSV(String cSVPath, ArrayList<String> types, int metricIndices[]) {
-
-        try {
-            CSVLoader csvLoader = new CSVLoader();
-            csvLoader.setSource(new File(cSVPath));
-            Instances data = csvLoader.getDataSet();
-            NumericToNominal filter = new NumericToNominal();
-            ArrayList<Integer> indicesList = new ArrayList();
-            for (int i = 0; i < types.size(); i++) {
-                if (types.get(i).equals(MetricManager.NOMINAL)) {
-                    indicesList.add(i);
-                }
-            }
-            if (indicesList.size() > 0) {
-                int[] indices = new int[indicesList.size()];
-
-                for (int i = 0; i < indicesList.size(); i++) {
-                    if (indicesList.get(i) != null) {
-                        indices[i] = indicesList.get(i);
-                    }
-                }
-                filter.setAttributeIndicesArray(indices);
-                filter.setInputFormat(data);
-                data = Filter.useFilter(data, filter);
-            }
-            Remove removeFilter = new Remove();
-            removeFilter.setAttributeIndicesArray(metricIndices);
-            removeFilter.setInvertSelection(true);
-            removeFilter.setInputFormat(data);
-            data = Filter.useFilter(data, removeFilter);
-            return data;
-        } catch (IOException ex) {
-            Logger.getLogger(TriggerPredictor.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(TriggerPredictor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
-    public double generateNextSensorValue(Instances realSensorValues, int numberOfPredictionSteps) {
+    public double generateNextSensorValue(DataArff realSensorValues, int numberOfPredictionSteps) {
         if (type.equals("DM")) {
             WekaForecaster forecaster = new WekaForecaster();
             TSLagMaker lagMaker = forecaster.getTSLagMaker();
@@ -136,7 +66,7 @@ public class TriggerPredictor implements Serializable {
                 lagMaker.setMaxLag(12);
                 lagMaker.setAddMonthOfYear(true);
                 lagMaker.setAddQuarterOfYear(true);
-                forecaster.buildForecaster(realSensorValues);
+                forecaster.buildForecaster(realSensorValues.instances);
 //                forecaster.buildForecaster(new Instances(RealDemands, 0, knownPartWarmup));
 //                forecaster.primeForecaster(new Instances(RealDemands, 0, currentMonthIndex + 1));
 

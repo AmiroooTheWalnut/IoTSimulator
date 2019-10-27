@@ -147,8 +147,6 @@ public class SetupSensorDataDialog extends javax.swing.JDialog {
             
             parent.iOTSimulator.metricManager.setupTimeStamps();
             
-            
-            
         }else if(generatedDataRadioButton.isSelected()){
             parent.iOTSimulator.metricManager.timeIndex=0;
             parent.iOTSimulator.metricManager.metricIndices=generatedDataPanel.generatedMetricesIndices;
@@ -164,6 +162,7 @@ public class SetupSensorDataDialog extends javax.swing.JDialog {
             parent.iOTSimulator.metricManager.setupTimeStamps();
             
         }
+        
         this.setVisible(false);
     }//GEN-LAST:event_confirmButtonActionPerformed
 

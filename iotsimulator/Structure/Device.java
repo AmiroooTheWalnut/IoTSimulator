@@ -9,8 +9,6 @@ import iotsimulator.TimeController;
 import iotsimulator.TriggerMonitor;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 import org.json.JSONArray;
 
 /**

@@ -420,6 +420,8 @@ public class GeneratedDataPanel extends javax.swing.JPanel {
                     cSVReader.setContainsHeader(true);
                     try {
                         parent.iOTSimulator.metricManager.data = cSVReader.read(new StringReader(resultString));
+                        
+                        parent.iOTSimulator.metricManager.arffData=parent.iOTSimulator.metricManager.generateInstancesFromString(resultString,parent.iOTSimulator.metricManager.types);
 
                         int timeIndex = 0;
                         columns = parent.iOTSimulator.metricManager.data.getHeader();

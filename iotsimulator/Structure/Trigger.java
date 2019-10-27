@@ -85,6 +85,12 @@ public class Trigger implements Serializable {
                 }
                 return isTriggered;
             case "MODEL":
+                for (int i = 0; i < metrics.size(); i++) {
+                    if (metrics.get(i).interpolationBuffer.size() > 1) {
+                        
+                    }
+                }
+//                triggerModel.classifyInstance(instnc);
                 return false;//NOT IMPLEMENTED YET
             default:
                 return false;

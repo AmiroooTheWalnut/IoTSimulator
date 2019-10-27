@@ -376,7 +376,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_saveSerializableButtonActionPerformed
 
     private void loadSerializableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSerializableButtonActionPerformed
-        JFileChooser jFileChooser1 = new javax.swing.JFileChooser();
+        JFileChooser jFileChooser1 = new javax.swing.JFileChooser(new java.io.File("."));
         jFileChooser1.setAcceptAllFileFilterUsed(false);
         int returnVal = jFileChooser1.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {

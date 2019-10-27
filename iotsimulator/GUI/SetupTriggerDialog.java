@@ -10,6 +10,7 @@ import java.awt.Frame;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import weka.classifiers.Classifier;
 import weka.core.Instances;
 
 /**
@@ -19,6 +20,8 @@ import weka.core.Instances;
 public class SetupTriggerDialog extends javax.swing.JDialog {
 
     MainFrame parent;
+    
+    Classifier temporaryModel;
 
     //AbstractClassifier generatedModel;NOT IMPLEMENTED YET.
     /**
@@ -344,7 +347,7 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
                 tempTrigger.thresholdLow = Double.parseDouble(jFormattedTextField3.getText());
             } else if (jRadioButton1.isSelected()) {
                 tempTrigger.type = Trigger.MODEL;
-                //tempTrigger.model=generatedModel;//NOT IMPLEMENTED YET
+                tempTrigger.triggerModel=temporaryModel;
             }
             for (int i = 0; i < metricIndices.length; i++) {
                 tempTrigger.metrics.add(parent.iOTSimulator.metricManager.selectedMetrics.get(metricIndices[i]));
@@ -375,11 +378,8 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        Instances generatedInstances = parent.iOTSimulator.triggerPredictor.generateInstancesFromCSV(parent.iOTSimulator.metricManager.cSVFilePath, parent.iOTSimulator.metricManager.types);
-        SetupModelTriggerDialog setupModelTriggerDialog=new SetupModelTriggerDialog(this,(Frame)SwingUtilities.windowForComponent(this),true);
-        setupModelTriggerDialog.setInstances(generatedInstances);
+        SetupModelTriggerDialog setupModelTriggerDialog=new SetupModelTriggerDialog(this,jList1.getSelectedIndices(),(Frame)SwingUtilities.windowForComponent(this),true);
         setupModelTriggerDialog.setVisible(true);
-        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -442,6 +442,11 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
             jFormattedTextField3.setEnabled(false);
             jButton1.setEnabled(true);
         }
+    }
+    
+    public void setTemporaryModel(Classifier preparedModel)
+    {
+        temporaryModel=preparedModel;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -8,6 +8,7 @@ package iotsimulator;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.util.DefaultInstantiatorStrategy;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -17,7 +18,10 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.objenesis.strategy.InstantiatorStrategy;
+import org.objenesis.strategy.SerializingInstantiatorStrategy;
 import org.objenesis.strategy.StdInstantiatorStrategy;
+import weka.core.Instance;
 
 /**
  *
@@ -120,7 +124,10 @@ public class IOTSimulator implements Serializable {
 
     public void saveKryo(String passed_file_path) {
         Kryo kryo = new Kryo();
-        kryo.setInstantiatorStrategy(new Kryo.DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
+        kryo.setRegistrationRequired(false);
+        kryo.setReferences(true);
+        kryo.register(Instance.class);
+        kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new SerializingInstantiatorStrategy()));
         Output output;
         try {
             output = new Output(new FileOutputStream(passed_file_path + ".bin"));
@@ -134,7 +141,10 @@ public class IOTSimulator implements Serializable {
 
     public void loadKryo(String file_path, String file_name) {
         Kryo kryo = new Kryo();
-        kryo.setInstantiatorStrategy(new Kryo.DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
+        kryo.setRegistrationRequired(false);
+        kryo.setReferences(true);
+        kryo.register(Instance.class);
+        kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new SerializingInstantiatorStrategy()));
         Input input;
         try {
 

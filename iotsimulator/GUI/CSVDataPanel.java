@@ -21,7 +21,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
-import weka.core.Instances;
 
 /**
  *
@@ -339,6 +338,7 @@ public class CSVDataPanel extends javax.swing.JPanel {
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Step 3"));
 
+        jList3.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jList3.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 jList3ValueChanged(evt);
@@ -450,11 +450,12 @@ public class CSVDataPanel extends javax.swing.JPanel {
                 columns = parent.iOTSimulator.metricManager.data.getHeader();
 
                 parent.iOTSimulator.metricManager.types = new ArrayList();
-
+                
                 for (int i = 0; i < columns.size(); i++) {
                     parent.iOTSimulator.metricManager.types.add(MetricManager.NUMERIC);
                 }
                 
+                parent.iOTSimulator.metricManager.arffData=parent.iOTSimulator.metricManager.generateInstancesFromCSV(parent.iOTSimulator.metricManager.cSVFilePath,parent.iOTSimulator.metricManager.types);
 
                 jList1.setModel(new javax.swing.AbstractListModel() {
                     @Override

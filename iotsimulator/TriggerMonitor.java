@@ -5,13 +5,15 @@
  */
 package iotsimulator;
 
+import iotsimulator.Structure.DataArff;
 import iotsimulator.Structure.Trigger;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import weka.classifiers.Classifier;
-import weka.core.Instances;
+import weka.classifiers.ParallelIteratedSingleClassifierEnhancer;
+import weka.classifiers.trees.RandomForest;
 
 /**
  *
@@ -27,10 +29,14 @@ public class TriggerMonitor implements Serializable{
     
     public ArrayList<Trigger> triggers=new ArrayList();
     
-    public Classifier makeModel(Instances data, Classifier model)
+    public Classifier makeModel(DataArff data, Classifier model, int numCPUs)
     {
         try {
-            model.buildClassifier(data);
+            if(model instanceof ParallelIteratedSingleClassifierEnhancer)
+            {
+                ((ParallelIteratedSingleClassifierEnhancer)model).setNumExecutionSlots(numCPUs);
+            }
+            model.buildClassifier(data.instances);
             return model;
         } catch (Exception ex) {
             Logger.getLogger(TriggerMonitor.class.getName()).log(Level.SEVERE, null, ex);
