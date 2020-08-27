@@ -5,7 +5,10 @@
  */
 package iotsimulator;
 
+import iotsimulator.Structure.FrequencySolution;
+import iotsimulator.Structure.TriggerCombination;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  *
@@ -14,5 +17,23 @@ import java.io.Serializable;
 public class SolutionStorageManager implements Serializable{
     
     static final long serialVersionUID = 1L;
+    
+    public IOTSimulator parent;
+    public ArrayList<FrequencySolution> solutions;
+    
+    public SolutionStorageManager(IOTSimulator iOTSimulator) {
+        parent = iOTSimulator;
+        solutions=new ArrayList();
+    }
+    
+    public FrequencySolution getSolution(TriggerCombination input)
+    {
+        return null;
+    }
+    
+    public void storeSolution(FrequencySolution solution)
+    {
+        
+    }
     
 }

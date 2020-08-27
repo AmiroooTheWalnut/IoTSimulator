@@ -6,6 +6,7 @@
 package iotsimulator.GUI;
 
 import iotsimulator.Structure.Trigger;
+import iotsimulator.Structure.TriggerModel;
 import java.awt.Frame;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ListSelectionModel;
@@ -20,8 +21,8 @@ import weka.core.Instances;
 public class SetupTriggerDialog extends javax.swing.JDialog {
 
     MainFrame parent;
-    
-    Classifier temporaryModel;
+
+    TriggerModel temporaryModel;
 
     //AbstractClassifier generatedModel;NOT IMPLEMENTED YET.
     /**
@@ -70,6 +71,18 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
                 return parent.iOTSimulator.triggerMonitor.triggers.get(index).name;
             }
         });
+
+        jList3.setModel(new javax.swing.AbstractListModel() {
+            @Override
+            public int getSize() {
+                return parent.iOTSimulator.metricManager.availableMetrics.size();
+            }
+
+            @Override
+            public Object getElementAt(int index) {
+                return parent.iOTSimulator.metricManager.availableMetrics.get(index).name;
+            }
+        });
     }
 
     /**
@@ -85,6 +98,10 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
+        jButton4 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jList3 = new javax.swing.JList<>();
+        jLabel7 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jRadioButton2 = new javax.swing.JRadioButton();
         jRadioButton3 = new javax.swing.JRadioButton();
@@ -115,20 +132,45 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
 
         jScrollPane1.setViewportView(jList1);
 
+        jButton4.setText("Make tree model for each metric");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jScrollPane3.setViewportView(jList3);
+
+        jLabel7.setText("Select class attribute:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -235,7 +277,7 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
                             .addComponent(jButton3)
                             .addComponent(jLabel6)
                             .addComponent(jTextField1))
-                        .addGap(0, 124, Short.MAX_VALUE)))
+                        .addGap(0, 115, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -293,7 +335,7 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jButton2)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -347,7 +389,7 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
                 tempTrigger.thresholdLow = Double.parseDouble(jFormattedTextField3.getText());
             } else if (jRadioButton1.isSelected()) {
                 tempTrigger.type = Trigger.MODEL;
-                tempTrigger.triggerModel=temporaryModel;
+                tempTrigger.triggerModel = temporaryModel;
             }
             for (int i = 0; i < metricIndices.length; i++) {
                 tempTrigger.metrics.add(parent.iOTSimulator.metricManager.selectedMetrics.get(metricIndices[i]));
@@ -378,16 +420,19 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        SetupModelTriggerDialog setupModelTriggerDialog=new SetupModelTriggerDialog(this,jList1.getSelectedIndices(),(Frame)SwingUtilities.windowForComponent(this),true);
+        SetupModelTriggerDialog setupModelTriggerDialog = new SetupModelTriggerDialog(this, jList1.getSelectedIndices(), (Frame) SwingUtilities.windowForComponent(this), true);
         setupModelTriggerDialog.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         int deletingTrigger = jList2.getSelectedIndex();
-        for (int i = 0; i < parent.iOTSimulator.triggerMonitor.triggers.get(deletingTrigger).metrics.size(); i++) {
-            parent.iOTSimulator.triggerMonitor.triggers.get(deletingTrigger).metrics.get(i).triggersInvolved.remove(parent.iOTSimulator.triggerMonitor.triggers.get(deletingTrigger));
+        if (deletingTrigger > -1) {
+            for (int i = 0; i < parent.iOTSimulator.triggerMonitor.triggers.get(deletingTrigger).metrics.size(); i++) {
+                parent.iOTSimulator.triggerMonitor.triggers.get(deletingTrigger).metrics.get(i).triggersInvolved.remove(parent.iOTSimulator.triggerMonitor.triggers.get(deletingTrigger));
+            }
+            parent.iOTSimulator.triggerMonitor.triggers.remove(parent.iOTSimulator.triggerMonitor.triggers.get(deletingTrigger));
+            refreshDialog();
         }
-        parent.iOTSimulator.triggerMonitor.triggers.remove(parent.iOTSimulator.triggerMonitor.triggers.get(deletingTrigger));
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jList2ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList2ValueChanged
@@ -420,6 +465,35 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jList2ValueChanged
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        int selectedClassIndes = jList3.getSelectedIndex();
+        if (selectedClassIndes > -1) {
+            TriggerModel models[] = parent.iOTSimulator.triggerMonitor.makeModelForEachAttribute(parent.iOTSimulator.metricManager.arffData, parent.iOTSimulator.metricManager.selectedMetrics, parent.iOTSimulator.metricManager.availableMetrics.get(selectedClassIndes).name, parent.iOTSimulator.metricManager.data.getHeader().get(parent.iOTSimulator.metricManager.timeIndex), 1);
+            for (int i = 0; i < models.length; i++) {
+                Trigger tempTrigger = new Trigger();
+                tempTrigger.metricIndices = new int[]{i};
+                tempTrigger.type = Trigger.MODEL;
+                tempTrigger.triggerModel = models[i];
+                tempTrigger.name = String.valueOf("Trigger" + parent.iOTSimulator.triggerMonitor.triggers.size());
+                parent.iOTSimulator.triggerMonitor.triggers.add(tempTrigger);
+            }
+            jList2.setModel(new javax.swing.AbstractListModel() {
+                @Override
+                public int getSize() {
+                    return parent.iOTSimulator.triggerMonitor.triggers.size();
+                }
+
+                @Override
+                public Object getElementAt(int index) {
+                    return parent.iOTSimulator.triggerMonitor.triggers.get(index).name;
+                }
+            });
+            jList1.clearSelection();
+            jRadioButton2.setSelected(true);
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     public void handleTypeRadioButtons() {
         if (jRadioButton2.isSelected()) {
             jFormattedTextField1.setEnabled(true);
@@ -443,10 +517,9 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
             jButton1.setEnabled(true);
         }
     }
-    
-    public void setTemporaryModel(Classifier preparedModel)
-    {
-        temporaryModel=preparedModel;
+
+    public void setTemporaryModel(TriggerModel preparedModel) {
+        temporaryModel = preparedModel;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -454,6 +527,7 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JFormattedTextField jFormattedTextField2;
     private javax.swing.JFormattedTextField jFormattedTextField3;
@@ -463,8 +537,10 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     public javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JList<String> jList1;
     private javax.swing.JList<String> jList2;
+    private javax.swing.JList<String> jList3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -475,6 +551,7 @@ public class SetupTriggerDialog extends javax.swing.JDialog {
     private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

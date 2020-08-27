@@ -5,6 +5,8 @@
  */
 package iotsimulator.Structure;
 
+import iotsimulator.IOTSimulator;
+import iotsimulator.Optimizer;
 import iotsimulator.TimeController;
 import iotsimulator.TriggerMonitor;
 import java.io.Serializable;
@@ -19,8 +21,12 @@ public class Device implements Serializable {
 
     static final long serialVersionUID = 1L;
 
+    IOTSimulator rootSimulator;
+
     public long latency = 20;//Miliseconds //EACH DEVICE SHOULD HAVE UNIQUE LATENCY***REVISE LATER
     public long timeout = 1000;//Miliseconds trying to send to parent.
+    public long predictionFrequency=1000;
+    public int numberOfTimeStampsToPredict=5;
 
     public boolean isWaitForParentResponse = true;
     public long retrySendToParentInterval = 10;
@@ -52,41 +58,48 @@ public class Device implements Serializable {
 
     transient public int maxConsoleSize = 1000;
 
-    public void checkTriggers(DataExchange message,TriggerMonitor triggerMonitor, long time) {
-        Thread thread = new Thread(new Runnable() {
+    public void predictNextMetric() {
+
+    }
+    
+    public void runOptimization(Optimizer optimizer, TriggerCombination problem)
+    {
+        Thread thread=new Thread(new Runnable(){
             @Override
             public void run() {
-                for (int i = 0; i < triggerMonitor.triggers.size(); i++) {
-                    if (triggerMonitor.triggers.get(i).isTriggered() == true) {
-                        message.metric.triggerBuffer.add(true);
-                        triggerConsole.append("Trigger: ");
-                        triggerConsole.append("Time: ").append(time).append(" ");
-                        triggerConsole.append("Metrices: ");
-                        for (int j = 0; j < triggerMonitor.triggers.get(i).metrics.size(); j++) {
-                            triggerConsole.append(triggerMonitor.triggers.get(i).metrics.get(j).name).append(" ");
-                        }
-                        triggerConsole.append("Type: ").append(triggerMonitor.triggers.get(i).type);
-
-                        triggerConsole.append(System.lineSeparator());
-
-                        if (triggerConsole.length() > maxConsoleSize) {
-                            triggerConsole.delete(0, 100);
-                        }
-                    }else{
-                        message.metric.triggerBuffer.add(false);
-                    }
-                }
+                optimizer.solveModelOnDemand(problem);
             }
         });
         thread.start();
     }
 
-    public void predictNextMetric() {
-
-    }
-
     public void receiveMessageFromChild(DataExchange message) {
         receivingQueue.add(message);
+
+        //temporary
+        for (int i = 0; i < rootSimulator.triggerMonitor.triggers.size(); i++) {
+            if (rootSimulator.triggerMonitor.triggers.get(i).getSensingTriggerBoolean()) {
+//            needsModelBeSolved = true;
+//            message.metric.triggerBuffer.add(triggerState);
+            message.toDevice.triggerConsole.append("Trigger: Activated");
+            message.toDevice.triggerConsole.append("Time: ").append(message.time).append(" ");
+            message.toDevice.triggerConsole.append("Metrices: ");
+            for (int j = 0; j < rootSimulator.triggerMonitor.triggers.get(i).metrics.size(); j++) {
+                message.toDevice.triggerConsole.append(rootSimulator.triggerMonitor.triggers.get(i).metrics.get(j).name).append(" ");
+            }
+            message.toDevice.triggerConsole.append("Type: ").append(rootSimulator.triggerMonitor.triggers.get(i).type);
+
+            message.toDevice.triggerConsole.append(System.lineSeparator());
+
+            if (message.toDevice.triggerConsole.length() > message.toDevice.maxConsoleSize) {
+                message.toDevice.triggerConsole.delete(0, 100);
+            }
+        }
+        }
+        
+
+        //temporary
+//        rootSimulator.triggerMonitor.checkTriggers(message);
 
         signalConsole.append("Received from: ");
         signalConsole.append(message.fromDevice.name).append(" ");
@@ -126,24 +139,23 @@ public class Device implements Serializable {
         usedMemory = usedMemory + metric.memoryUsageForActivity;
         usedStorage = usedStorage + metric.storageUsageForActivity;
     }
-    
+
     public void allocateResourcesToTriggerMonitor(TriggerMonitor triggerMonitor) {
         usedCPU = usedCPU + triggerMonitor.cPUUsageForActivity;
         usedMemory = usedMemory + triggerMonitor.memoryUsageForActivity;
         usedStorage = usedStorage + triggerMonitor.storageUsageForActivity;
     }
 
-    public void sendToParent(DataExchange message, TimeController timeController) {
+    public boolean sendToParent(DataExchange message, TimeController timeController) {
         sendingQueue.add(message);
         Double messageValue = Double.valueOf(message.message);
         message.metric.interpolationBuffer.add(message);
+        message.metric.predictionBuffer.add(message);
         if (message.metric.interpolationBuffer.size() > timeController.interpolationBufferSize) {
             message.metric.interpolationBuffer.remove(0);
         }
-        message.metric.predictionBuffer.add(message);
         if (message.metric.predictionBuffer.size() > timeController.predictionBufferSize) {
             message.metric.predictionBuffer.remove(0);
-            message.metric.triggerBuffer.remove(0);
         }
         boolean successSenderResourceConsumption = message.consumeSenderResources();
         if (successSenderResourceConsumption == true) {
@@ -173,8 +185,9 @@ public class Device implements Serializable {
                 message.setupTimeoutReleaseResourceTimer();
             }
         } else {
-            return;
+            return false;
         }
+        return false;
     }
 
     public void removeSendingDataExchange(DataExchange dataExchange) {

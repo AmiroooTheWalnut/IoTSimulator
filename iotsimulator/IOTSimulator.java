@@ -9,10 +9,12 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.util.DefaultInstantiatorStrategy;
+import iotsimulator.Structure.TopologyDefinition;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -38,9 +40,10 @@ public class IOTSimulator implements Serializable {
     public TimeController timeController;
     public TriggerMonitor triggerMonitor;
     public TriggerPredictor triggerPredictor;
+    public SimulationOptions simulationOptions;
 
     public IOTSimulator() {
-
+        prepareMatlabFiles();
     }
 
     public IOTSimulator(IOTSimulator input) {
@@ -51,6 +54,20 @@ public class IOTSimulator implements Serializable {
         timeController = input.timeController;
         triggerMonitor = input.triggerMonitor;
         triggerPredictor = input.triggerPredictor;
+        simulationOptions=input.simulationOptions;
+        prepareMatlabFiles();
+    }
+    
+    private void prepareMatlabFiles()
+    {
+        String destDirectory = ".";
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream("MatlabKrigingCode.zip");
+        UnzipUtility unzipper = new UnzipUtility();
+        try {
+            unzipper.unzip(is, destDirectory);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void unpackProject(IOTSimulator input) {
@@ -64,13 +81,13 @@ public class IOTSimulator implements Serializable {
     }
 
     public void newProject() {
-        metricManager = new MetricManager();
-        topologyDefinition = new TopologyDefinition();
-        optimizer = new Optimizer();
-        solutionStorageManager = new SolutionStorageManager();
+        metricManager = new MetricManager(this);
+        topologyDefinition = new TopologyDefinition(this);
+        optimizer = new Optimizer(this);
+        solutionStorageManager = new SolutionStorageManager(this);
         timeController = new TimeController(this);
-        triggerMonitor = new TriggerMonitor();
-        triggerPredictor = new TriggerPredictor();
+        triggerMonitor = new TriggerMonitor(this);
+        triggerPredictor = new TriggerPredictor(this);
     }
 
     private IOTSimulator deepClone() {
@@ -188,6 +205,7 @@ public class IOTSimulator implements Serializable {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
         String projectFile = args[0];
 
     }

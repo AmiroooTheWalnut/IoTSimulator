@@ -586,7 +586,13 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                         if (jPanel9.isVisible() == true) {
                             int selectedDeviceIndex = jList3.getSelectedIndex();
                             if (selectedDeviceIndex > -1) {
-                                refreshDeviceMonitorPanel(selectedDeviceIndex);
+                                try {
+                                    refreshDeviceMonitorPanel(selectedDeviceIndex);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(SimulationRunDialog.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (InvocationTargetException ex) {
+                                    Logger.getLogger(SimulationRunDialog.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                             }
                         }
                         if (jPanel11.isVisible() == true) {
@@ -595,7 +601,13 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                                 int selectedMetricIndex = jList4.getSelectedIndex();
                                 if (selectedMetricIndex > -1) {
                                     Metric metric = parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).metrics.get(selectedMetricIndex);
-                                    refreshMetricMonitorPanel(metric);
+                                    try {
+                                        refreshMetricMonitorPanel(metric);
+                                    } catch (InterruptedException ex) {
+                                        Logger.getLogger(SimulationRunDialog.class.getName()).log(Level.SEVERE, null, ex);
+                                    } catch (InvocationTargetException ex) {
+                                        Logger.getLogger(SimulationRunDialog.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                 }
                             }
                         }
@@ -680,7 +692,7 @@ public class SimulationRunDialog extends javax.swing.JDialog {
         
     }
 
-    public void refreshDeviceMonitorPanel(int selectedDeviceIndex) {
+    public void refreshDeviceMonitorPanel(int selectedDeviceIndex) throws InterruptedException, InvocationTargetException {
         if (isBlockedRefreshTimer == false) {
             isBlockedRefreshTimer = true;
 
@@ -698,23 +710,16 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                     deviceChart.setNotify(false);
                 }
             };
-            try {
                 if (SwingUtilities.isEventDispatchThread() == true) {
                     refresh.run();
                 } else {
                     SwingUtilities.invokeAndWait(refresh);
                 }
-
-            } catch (InterruptedException ex) {
-                Logger.getLogger(TestingArena.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvocationTargetException ex) {
-                Logger.getLogger(TestingArena.class.getName()).log(Level.SEVERE, null, ex);
-            }
             isBlockedRefreshTimer = false;
         }
     }
 
-    public void refreshMetricMonitorPanel(Metric metric) {
+    public void refreshMetricMonitorPanel(Metric metric) throws InterruptedException, InvocationTargetException {
         if (isBlockedRefreshTimer == false) {
             isBlockedRefreshTimer = true;
 
@@ -739,18 +744,11 @@ public class SimulationRunDialog extends javax.swing.JDialog {
                     metricChart.setNotify(false);
                 }
             };
-            try {
                 if (SwingUtilities.isEventDispatchThread() == true) {
                     refresh.run();
                 } else {
                     SwingUtilities.invokeAndWait(refresh);
                 }
-
-            } catch (InterruptedException ex) {
-                Logger.getLogger(TestingArena.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvocationTargetException ex) {
-                Logger.getLogger(TestingArena.class.getName()).log(Level.SEVERE, null, ex);
-            }
             isBlockedRefreshTimer = false;
         }
     }
@@ -764,7 +762,7 @@ public class SimulationRunDialog extends javax.swing.JDialog {
             cPULabel.setText(String.valueOf(decimalFormat.format(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedCPU)));
             memoryLabel.setText(String.valueOf(decimalFormat.format(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedMemory)));
             storageLabel.setText(String.valueOf(decimalFormat.format(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedStorage)));
-//            jTextPane1.setText(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).signalConsole.toString());
+            jTextPane1.setText(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).signalConsole.toString());
             jTextPane2.setText(parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).triggerConsole.toString());
 
             int bandwidth = (int) ((parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).usedBandWidth / parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).CPUCapacity) * 100);
@@ -811,7 +809,13 @@ public class SimulationRunDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
         int selectedDeviceIndex = jList3.getSelectedIndex();
         if (selectedDeviceIndex > -1) {
-            refreshDeviceMonitorPanel(selectedDeviceIndex);
+            try {
+                refreshDeviceMonitorPanel(selectedDeviceIndex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(SimulationRunDialog.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvocationTargetException ex) {
+                Logger.getLogger(SimulationRunDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_jList3ValueChanged
 
@@ -848,7 +852,13 @@ public class SimulationRunDialog extends javax.swing.JDialog {
             int selectedMetricIndex = jList4.getSelectedIndex();
             if (selectedMetricIndex > -1) {
                 Metric metric = parent.iOTSimulator.timeController.allDevices.get(selectedDeviceIndex).metrics.get(selectedMetricIndex);
-                refreshMetricMonitorPanel(metric);
+                try {
+                    refreshMetricMonitorPanel(metric);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(SimulationRunDialog.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvocationTargetException ex) {
+                    Logger.getLogger(SimulationRunDialog.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }//GEN-LAST:event_jList4ValueChanged

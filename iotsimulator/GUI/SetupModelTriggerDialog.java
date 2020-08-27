@@ -6,6 +6,7 @@
 package iotsimulator.GUI;
 
 import iotsimulator.Structure.DataArff;
+import iotsimulator.Structure.TriggerModel;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,7 +22,7 @@ import weka.core.Instances;
  */
 public class SetupModelTriggerDialog extends javax.swing.JDialog {
 
-    ArrayList<Classifier> models = new ArrayList();
+    ArrayList<TriggerModel> models = new ArrayList();
 
     SetupTriggerDialog parentDialog;
     
@@ -54,7 +55,9 @@ public class SetupModelTriggerDialog extends javax.swing.JDialog {
     }
 
     public void initAlgorithms() {
-        models.add(new RandomForest());
+        TriggerModel triggerModel=new TriggerModel();
+        triggerModel.model=new RandomForest();
+        models.add(triggerModel);
     }
 
     /**
@@ -268,10 +271,10 @@ public class SetupModelTriggerDialog extends javax.swing.JDialog {
             }
             data.instances.setClass(data.instances.attribute(parentDialog.parent.iOTSimulator.metricManager.availableMetrics.get(classIndex).name));
             for (int i = 0; i < models.size(); i++) {
-                parentDialog.parent.iOTSimulator.triggerMonitor.makeModel(data, models.get(i),(int)jSpinner1.getValue());
+                models.set(i, parentDialog.parent.iOTSimulator.triggerMonitor.makeModel(data, models.get(i).model,(int)jSpinner1.getValue()));
                 try {
                     Evaluation eval = new Evaluation(data.instances);
-                    eval.evaluateModel(models.get(i), data.instances);
+                    eval.evaluateModel(models.get(i).model, data.instances);
                     double[][] confusionMatrixValues = eval.confusionMatrix();
                     String result = "";
                     for (int j = 0; j < confusionMatrixValues.length; j++) {

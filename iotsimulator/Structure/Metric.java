@@ -17,11 +17,14 @@ public class Metric implements Serializable{
     static final long serialVersionUID = 1L;
     
     public String name;
-    int columnIndex=-1;
+    public int columnIndex=-1;
     String columnName=null;
+    public String type;
     public long frequency=1000;//IN MILI SECONDS
     
     public boolean isAssigned=false;
+    
+    public double weight;
     
     public double memoryUsageForActivity=1;
     public double cPUUsageForActivity=1;
@@ -32,17 +35,26 @@ public class Metric implements Serializable{
     public double storageUsageForTransmit=1;
     
     public ArrayList<DataExchange> predictionBuffer=new ArrayList();
+    public ArrayList<DataExchange> predictedBuffer=new ArrayList();
     public ArrayList<DataExchange> interpolationBuffer=new ArrayList();// No memory usage in device
-    public ArrayList<Boolean> triggerBuffer=new ArrayList();// No memory usage in device
+    public ArrayList<TriggerState> triggerBuffer=new ArrayList();// No memory usage in device
     
     public ArrayList<Trigger> triggersInvolved=new ArrayList();
     
     public int lastRecordIndex=0;
     
-    public Metric(int passed_columnIndex,String passed_columnName)
+    public Metric(int passed_columnIndex,String passed_columnName,String passed_type)
     {
         columnIndex=passed_columnIndex;
         columnName=passed_columnName;
+        type=passed_type;
         name=columnName;
     }
+    
+    public void checkBufferSizes()
+    {
+        
+    }
+    
+    
 }

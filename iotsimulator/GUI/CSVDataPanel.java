@@ -396,7 +396,7 @@ public class CSVDataPanel extends javax.swing.JPanel {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Step 4"));
 
-        jLabel2.setText("Exclude metric:");
+        jLabel2.setText("Include metric:");
 
         jScrollPane2.setViewportView(jList2);
 
@@ -454,8 +454,6 @@ public class CSVDataPanel extends javax.swing.JPanel {
                 for (int i = 0; i < columns.size(); i++) {
                     parent.iOTSimulator.metricManager.types.add(MetricManager.NUMERIC);
                 }
-                
-                parent.iOTSimulator.metricManager.arffData=parent.iOTSimulator.metricManager.generateInstancesFromCSV(parent.iOTSimulator.metricManager.cSVFilePath,parent.iOTSimulator.metricManager.types);
 
                 jList1.setModel(new javax.swing.AbstractListModel() {
                     @Override

@@ -6,25 +6,19 @@
 package iotsimulator;
 
 import iotsimulator.Structure.DataArff;
-import weka.core.converters.CSVLoader;
+import iotsimulator.Structure.DataExchange;
 import iotsimulator.Structure.Device;
-import java.io.File;
-import java.io.IOException;
+import iotsimulator.Structure.Metric;
+import iotsimulator.Structure.TriggerCombination;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import weka.classifiers.Classifier;
-import weka.classifiers.evaluation.NumericPrediction;
+import weka.classifiers.evaluation.Prediction;
+import weka.classifiers.functions.LinearRegression;
 import weka.classifiers.timeseries.WekaForecaster;
-import weka.core.Attribute;
+import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
-import weka.core.converters.CSVLoader;
-import weka.filters.Filter;
 import weka.filters.supervised.attribute.TSLagMaker;
-import weka.filters.unsupervised.attribute.NumericToNominal;
-import weka.filters.unsupervised.attribute.Remove;
 
 /**
  *
@@ -34,58 +28,67 @@ public class TriggerPredictor implements Serializable {
 
     static final long serialVersionUID = 1L;
 
-    String type;
+    public IOTSimulator parent;
+
+    String type = "DM";
     Classifier classifier;
     String name;
     public double frequency = 1000;//MILLISECONDS AFTER GETTING IDLE
 
     static Double results[];
 
-    public DataArff generateInstancesForDevice(Device triggerMonitoringDevice) {
-        for (int i = 0; i < triggerMonitoringDevice.children.size(); i++) {
-            for (int j = 0; j < triggerMonitoringDevice.children.get(i).metrics.size(); j++) {
-
-            }
-        }
-        return null;//TEMPORARY!!!
+    public TriggerPredictor(IOTSimulator iOTSimulator) {
+        parent = iOTSimulator;
     }
 
-    
+    private void setClassifier() {
+//        classifier = new LinearRegression();
+        classifier = new RandomForest();
+    }
 
-    public double generateNextSensorValue(DataArff realSensorValues, int numberOfPredictionSteps) {
+    public DataExchange[][] generateNextSensorValuesByFullPredict(DataArff realSensorValues, int numberOfPredictionSteps, int timeIndex) {
         if (type.equals("DM")) {
+            setClassifier();
+            DataExchange output[][];
             WekaForecaster forecaster = new WekaForecaster();
             TSLagMaker lagMaker = forecaster.getTSLagMaker();
 
             try {
-                forecaster.setFieldsToForecast("Demand");
-                forecaster.setCalculateConfIntervalsForForecasts(1);
+                lagMaker.setTimeStampField(realSensorValues.instances.attribute(timeIndex).name());
+//                lagMaker.setMinLag(1);
+//                lagMaker.setMaxLag(12);
+
+                String targetField = "";
+                for (int i = 0; i < realSensorValues.instances.numAttributes(); i++) {
+                    if (i != timeIndex) {
+                        if (i == 0 || targetField.length() == 0) {
+                            targetField = realSensorValues.instances.attribute(i).name();
+                        } else {
+                            targetField = targetField + "," + realSensorValues.instances.attribute(i).name();
+                        }
+                    }
+                }
+
                 forecaster.setBaseForecaster(classifier);
-                lagMaker.setTimeStampField("Month");
-                lagMaker.setMinLag(1);
-                lagMaker.setMaxLag(12);
-                lagMaker.setAddMonthOfYear(true);
-                lagMaker.setAddQuarterOfYear(true);
+                forecaster.setFieldsToForecast(targetField);
+
                 forecaster.buildForecaster(realSensorValues.instances);
-//                forecaster.buildForecaster(new Instances(RealDemands, 0, knownPartWarmup));
-//                forecaster.primeForecaster(new Instances(RealDemands, 0, currentMonthIndex + 1));
+                forecaster.primeForecaster(realSensorValues.instances);
 
                 int numStepsToForecast = numberOfPredictionSteps;
-                List<List<NumericPrediction>> forecast = forecaster.forecast(numStepsToForecast);
-//            List<List<NumericPrediction>> forecast=forecaster.forecast(1, new Instances(RealDemands,0,currentMonthIndex+1));
+                List<List<Prediction>> forecast = forecaster.forecast(numStepsToForecast);
 
-                double forecastedValues[] = getPredictionForNextMonth(forecast, numStepsToForecast);
-//            success = true;
-//            System.out.println(success);
-//            System.out.println(forecastedValues[1]);
-//                double rangeMidToHighConfidenceInterval = forecastedValues[0] - forecastedValues[1];
-//                double offset = rangeMidToHighConfidenceInterval / 1.0;
-                return forecastedValues[0];
+                double timeDiffStep = lagMaker.getDeltaTime();
+                
+                double endTime=realSensorValues.instances.lastInstance().value(0);
+                
+                output = getPredictions(forecast,endTime,timeDiffStep,realSensorValues.instances,timeIndex);
+                return output;
             } catch (Exception ex) {
                 ex.printStackTrace();
                 String msg = ex.getMessage().toLowerCase();
                 if (msg.indexOf("not in classpath") > -1) {
-                    return -1;
+                    return null;
                 }
             }
         } else if (type.equals("ARMA")) {
@@ -113,28 +116,120 @@ public class TriggerPredictor implements Serializable {
 //            }
         }
 
-        return -1;
+        return null;
     }
 
-    static private double[] getPredictionForNextMonth(List<List<NumericPrediction>> preds, int steps) {
-        double output[] = new double[3];
+//    public double[][] generateNextSensorValuesByOverlay(DataArff realSensorValues, int numberOfPredictionSteps, int timeIndex, int classIndex) {
+//        if (type.equals("DM")) {
+//            setClassifier();
+//            double output[][];
+//            WekaForecaster forecaster = new WekaForecaster();
+//            TSLagMaker lagMaker = forecaster.getTSLagMaker();
+//
+//            try {
+//                lagMaker.setTimeStampField(realSensorValues.instances.attribute(timeIndex).name());
+////                lagMaker.setMinLag(1);
+////                lagMaker.setMaxLag(12);
+//
+//                String overlayFields = "";
+//                String targetField = "";
+//                targetField = realSensorValues.instances.attribute(classIndex).name();
+//                for (int i = 0; i < realSensorValues.instances.numAttributes(); i++) {
+//                    if (i != classIndex) {
+//                        if (i == 0) {
+//                            overlayFields = realSensorValues.instances.attribute(i).name();
+//                        } else {
+//                            overlayFields = overlayFields + "," + realSensorValues.instances.attribute(i).name();
+//                        }
+//                    }
+//                }
+//
+//                forecaster.setBaseForecaster(classifier);
+//                forecaster.setOverlayFields(overlayFields);
+//                forecaster.setFieldsToForecast(targetField);
+//
+//                forecaster.buildForecaster(realSensorValues.instances);
+//
+//                int numStepsToForecast = numberOfPredictionSteps;
+//                List<List<Prediction>> forecast = forecaster.forecast(numStepsToForecast);
+//
+//                output=getPredictions(forecast,classIndex);
+//                return output;
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//                String msg = ex.getMessage().toLowerCase();
+//                if (msg.indexOf("not in classpath") > -1) {
+//                    return null;
+//                }
+//            }
+//        } else if (type.equals("ARMA")) {
+////            try {
+////                double[] dataArray = new double[currentMonthIndex];
+////                for (int d = 0; d < dataArray.length; d++) {
+////                    dataArray[d] = RealDemands.instance(d).value(2);
+////                }
+////
+////                //System.out.println(arraylist.size());
+////                ARIMA arima = new ARIMA(dataArray);
+////
+////                double range = 0;
+////                double counter = 0;
+////                for (int d = 0; d < 4; d++) {
+////                    range = Math.abs(dataArray[dataArray.length - 1 - d] - dataArray[dataArray.length - 1 - d - 1]);
+////                    counter = counter + 1;
+////                }
+////                range = range / counter;
+////
+////                int[] model = arima.getARIMAmodel();
+////                return arima.aftDeal(arima.predictValue(model[0], model[1])) + range / 1.0;
+////            } catch (Exception ex) {
+////                return -1;
+////            }
+//        }
+//
+//        return null;
+//    }
+    
+    private DataExchange[][] getPredictions(List<List<Prediction>> preds, double lastTime, double timeDiffStep,Instances header,int timeIndex) {
+        DataExchange output[][] = new DataExchange[preds.size()][preds.get(0).size()];
 
-        for (int i = 0; i < steps; i++) {
-            List<NumericPrediction> predsForTargetsAtStep = preds.get(i);
-
-            for (int j = 0; j < predsForTargetsAtStep.size(); j++) {
-                NumericPrediction p = predsForTargetsAtStep.get(j);
-                double[][] limits = p.predictionIntervals();
-                output[0] = p.predicted();
-                output[1] = limits[0][0];
-                output[2] = limits[0][1];
+        for (int i = 0; i < preds.size(); i++) {
+            int counter=0;
+            for (int j = 0; j < preds.get(0).size(); j++) {
+                String value=String.valueOf(preds.get(i).get(j).predicted());
+                if(counter==timeIndex)
+                {
+                    counter=counter+1;
+                }
+                output[i][j]=new DataExchange(null,null,(long)(lastTime+(i+1)*timeDiffStep),value,findMetric(header.attribute(counter).name()));
+                counter=counter+1;
             }
         }
         return output;
     }
+    
+    public Metric findMetric(String name)
+    {
+        for(int i=0;i<parent.metricManager.selectedMetrics.size();i++)
+        {
+            if(parent.metricManager.selectedMetrics.get(i).name.equals(name))
+            {
+                return parent.metricManager.selectedMetrics.get(i);
+            }
+        }
+        return null;
+    }
+    
+    public void predictTriggers(Device triggerMonitoringDevice) {
+//        DataArff data = generateInstancesForDevice(triggerMonitoringDevice);
+//        double predictedValues[][] = generateNextSensorValues(data, 10);
+//        for (int i = 0; i < predictedValues.length; i++) {
+//            parent.triggerMonitor.checkTriggers(new DataExchange());
+//        }
+    }
 
-    public void predictTriggers() {
-
+    public TriggerCombination getFutureTriggerCombination() {
+        return null;
     }
 
 }

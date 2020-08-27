@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author user
  */
-public class DataExchange {
+public class DataExchange implements Comparable {
 
     public Device fromDevice;
     public Device toDevice;
@@ -160,5 +160,19 @@ public class DataExchange {
 //                System.out.println("success Timer died!!!");
             }
         },0,fromDevice.latency,TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if(time>((DataExchange)o).time)
+        {
+            return 1;
+        }else if(time<((DataExchange)o).time)
+        {
+            return -1;
+        }else
+        {
+            return 0;
+        }
     }
 }
